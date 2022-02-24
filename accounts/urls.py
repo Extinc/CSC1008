@@ -2,5 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from. import views
 urlpatterns = [
-    path('', views.Login, name="Login"),
+    path('', views.signin, name="login"),
+    path('rindex', views.register, name="register"),
+    path('signout', views.signout, name="signout"),
 ]
