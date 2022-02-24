@@ -1,0 +1,28 @@
+.navbar-dark .nav-item .nav-link {
+  color: #fff;
+}
+
+.navbar-dark .nav-item .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  border-radius: 0.25rem;
+  color: #fff;
+}
+
+.fa-li {
+  position: relative;
+  left: 0;
+}
+
+
+.gradient-login-2 {
+  /* fallback for old browsers */
+  background: #fccb90;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  /*background: -webkit-linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);*/
+
+  /*background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);*/
+  background: #1a55ad;
+
+}
