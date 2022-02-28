@@ -8,3 +8,7 @@
  DATABASE              : SQLITE (IMPLEMENTED VIA DJANGO TEMPLATES)
  API                   : onemap
  ```
+
+Using requirements.txt for installation
+
+pip install -r /path/to/requirements.txt
