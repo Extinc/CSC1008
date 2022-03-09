@@ -1,0 +1,23 @@
+Installation Steps for Virtual Environment(Windows)
+
+Creating a virtual environment
+py -m venv env
+
+x64 (64 bit)
+Open C:\Windows\system32\cmd.exe (Run in Admin Mode)
+Run the command powershell Set-ExecutionPolicy RemoteSigned
+
+Activating a virtual environment
+.\env\Scripts\activate
+
+Clone Git Into Virtual Environment
+git clone https://github.com/VoidBlanc/DSAProj.git
+
+Navigate to Location
+cd DSAPROJ
+
+Install Requirements
+pip install -r requirements.txt (Python 2), or pip3 install -r requirements.txt (Python 3)
+
+Entering the Virtual Environment
+& c:/Users/(Your Username)/Documents/GitHub/env/Scripts/Activate.ps1 
