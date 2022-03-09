@@ -11,7 +11,7 @@
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v5.1.3): util/index.js
+   * Bootstrap (v5.1.3): util/routes.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -6787,7 +6787,7 @@
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v5.1.3): index.umd.js
+   * Bootstrap (v5.1.3): routes.umd.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
    * --------------------------------------------------------------------------
    */

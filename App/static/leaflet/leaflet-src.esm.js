@@ -6869,7 +6869,7 @@ var LayerGroup = Layer.extend({
 	},
 
 	// @method setZIndex(zIndex: Number): this
-	// Calls `setZIndex` on every layer contained in this group, passing the z-index.
+	// Calls `setZIndex` on every layer contained in this group, passing the z-routes.
 	setZIndex: function (zIndex) {
 		return this.invoke('setZIndex', zIndex);
 	},
@@ -7412,7 +7412,7 @@ var Marker = Layer.extend({
 		riseOnHover: false,
 
 		// @option riseOffset: Number = 250
-		// The z-index offset used for the `riseOnHover` feature.
+		// The z-routes offset used for the `riseOnHover` feature.
 		riseOffset: 250,
 
 		// @option pane: String = 'markerPane'
