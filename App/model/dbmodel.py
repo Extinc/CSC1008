@@ -6,38 +6,29 @@ from App.settings.config import Config
 
 base = declarative_base()
 
-
-
-# For Account
-class User(base, db.Model):
-    __tablename__ = 'User'
-    id = db.Column(db.Integer, primary_key=True)
-    user = db.Column(db.String(255), nullable=False, unique=True)
-    password = db.Column(db.String(255), nullable=False)
-
 # For Map
 
-class Roads(base):
+class Roads(base, db.Model):
     __tablename__ = 'SG_Points'
     pk_uid = db.Column(db.Integer, primary_key=True)
-    osm_id = db.Column(String)
-    operator = db.Column(Integer)
-    ref = db.Column(String)
-    oneway = db.Column(String)
-    maxspeed = db.Column(Integer)
-    layer = db.Column(Integer)
-    bridge = db.Column(String)
-    tunnel = db.Column(String)
-    geometry = db.Column(Geometry('POINT', srid=Config.MAP_SRID))
+    osm_id = db.Column(db.String)
+    operator = db.Column(db.Integer)
+    ref = db.Column(db.String)
+    oneway = db.Column(db.String)
+    maxspeed = db.Column(db.Integer)
+    layer = db.Column(db.Integer)
+    bridge = db.Column(db.String)
+    tunnel = db.Column(db.String)
+    geometry = db.Column(Geometry(geometry_type='POINT', srid=Config.MAP_SRID))
 
-class RoadLine(base):
+class RoadLine(base, db.Model):
     __tablename__ = 'Road_lines'
     pk_uid = db.Column(Integer, primary_key=True)
-    osm_id = db.Column(String)
-    ref = db.Column(String)
-    oneway = db.Column(String)
-    maxspeed = db.Column(Integer)
-    layer = Column(Integer)
-    bridge = db.Column(String)
-    tunnel = db.Column(String)
-    geometry = db.Column(Geometry('LINESTRING', srid=Config.MAP_SRID))
+    osm_id = db.Column(db.String)
+    ref = db.Column(db.String)
+    oneway = db.Column(db.String)
+    maxspeed = db.Column(db.Integer)
+    layer = Column(db.Integer)
+    bridge = db.Column(db.String)
+    tunnel = db.Column(db.String)
+    geometry = db.Column(Geometry(geometry_type='LINESTRING', srid=Config.MAP_SRID))

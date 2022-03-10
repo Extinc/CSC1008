@@ -1,8 +1,10 @@
+import os
+
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQL_ECHO = False
     MAP_SRID = 4326
-
+    SECRET_KEY = os.urandom(32)
 
 class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///settings/db2.sqlite'
