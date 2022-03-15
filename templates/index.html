@@ -1,0 +1,9 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+    {% include 'base/navbar.html' %}
+    {% if request.user.is_authenticated %}
+        <a>{{ fname }}</a>
+    {% endif %}
+    {{ testdata }}
+{% endblock content %}

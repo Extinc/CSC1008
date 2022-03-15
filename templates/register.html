@@ -1,0 +1,52 @@
+{% extends 'base/login_register.html' %}
+
+{% block login_register_content %}
+    <form method="post" action="">
+        {% csrf_token %}
+        <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Register Account</h5>
+        <div class="form-floating mb-4">
+
+            <input type="text" id="username" name="username" placeholder="Enter username" class="form-control"
+                   required/>
+            <label class="form-label" for="username">Username</label>
+        </div>
+
+        <div class="form-floating mb-4">
+
+            <input type="text" id="fname" name="fname" placeholder="enter first name" class="form-control" required/>
+            <label class="form-label" for="fname">Enter your First Name</label>
+        </div>
+
+        <div class="form-floating mb-4">
+
+            <input type="text" id="lname" name="lname" placeholder="enter last name" class="form-control" required/>
+            <label class="form-label" for="lname">Enter your Last Name</label>
+        </div>
+        <div class="form-floating mb-4">
+            <input type="email" id="email" name="email" placeholder="enter email" class="form-control" required/>
+            <label class="form-label" for="email">Email</label>
+        </div>
+
+
+        <div class="form-floating mb-4">
+
+            <input type="password" id="pass1" name="pass1" placeholder="Enter your password" class="form-control"
+                   required/>
+            <label class="form-label" for="pass1">Create a Password</label>
+        </div>
+
+        <div class="form-floating mb-4">
+
+            <input type="password" id="pass2" name="pass2" placeholder="confirm your password" class="form-control"
+                   required/>
+            <label class="form-label" for="pass2">Confirm your Password</label>
+        </div>
+        <div class="pt-1 mb-4">
+        <button class="btn btn-dark btn-lg btn-block w-100" type="submit">Submit</button>
+        </div>
+        <p class="mb-5 pb-lg-2" style="color: #393f81;">Have an account? <a
+                href="/login" style="color: #393f81;">Login here</a></p>
+    </form>
+
+
+{% endblock login_register_content %}

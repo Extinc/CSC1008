@@ -1,0 +1,75 @@
+from django.utils import timezone
+from django.contrib.auth.models import User, Group
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.forms import inlineformset_factory
+from django.contrib.auth import authenticate, login, logout
+
+from django.contrib import messages
+
+from django.contrib.auth.decorators import login_required
+
+
+# Create your views here.
+def login(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['pass']
+
+        user = authenticate(username=username, password=password)
+        args = {}
+        # MISSING USER AUTHENTICATION
+
+        if user is not None:
+            login(request, user)
+            fname = user.first_name
+            args['title'] = 'Home'
+            args['fname'] = fname
+            User.objects.filter(username=username).update(last_login=timezone.now())
+            return render(request, "index.html", args)
+        else:
+            messages.error(request, "Username / Password Incorrect")
+
+    return render(request, 'login.html', {'title': "Login"})
+
+
+def register(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+    else:
+        if request.method == "POST":
+            username = request.POST['username']
+            fname = request.POST['fname']
+            lname = request.POST['lname']
+            email = request.POST['email']
+            pass1 = request.POST['pass1']
+            pass2 = request.POST['pass2']
+
+            if User.objects.filter(username=username):
+                messages.error(request, "Username already exist! Please try some other username")
+
+            if len(username) > 10:
+                messages.error(request, "Username must be under 10 characters")
+
+            if pass1 != pass2:
+                messages.error(request, "Passwords didn't match!")
+
+            if not username.isalnum():
+                messages.error(request, "Username must be Alpha-Numeric!")
+            customergrp = Group.objects.get(name='customer')
+            user = User.objects.create_user(username=username, email=email, password=pass1)
+            user.first_name = fname
+            user.last_name = lname
+
+            user.save()
+            user.groups.add(customergrp)
+            messages.success(request, "Your Account has been successfully created")
+            return redirect('login')
+
+        return render(request, 'register.html', {'title': "Register"})
+
+
+def logout(request):
+    logout(request)
+    messages.success(request, "Logged out successfully")
+    return redirect("index")

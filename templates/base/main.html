@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}" integrity="EOQQAD7Fyueb25xfLqClMgQm9UNNO9JeZu4IyyDJi/U=">
+    <link rel="stylesheet" type="text/css" href="{% static '/bootstrap/css/bootstrap.min.css' %}" integrity="YvdLHPgkqJ8DVUxjjnGVlMMJtNimJ6dYkowFFvp4kKs=">
+    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static '/bootstrap/js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+{% block content %}
+
+{% endblock content %}
+</body>
+</html>
