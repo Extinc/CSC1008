@@ -1,7 +1,7 @@
-from lib2to3.pgen2 import driver
-from App.classes.AcceptedRides import AcceptedRides
-from App.classes.Driver import Driver
-from App.classes.UserRequest import UserRequest
+
+from classes.AcceptedRides import AcceptedRides
+from classes.Driver import Driver
+from classes.UserRequest import UserRequest
 
 
 class Matched:
