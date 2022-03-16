@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'LIFTMAIN.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'LIFTMAIN/Database/db.sqlite3',
     }
 }
 
@@ -119,3 +119,9 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CUSTOM SETTINGS
+ONEMAP_DEV_URL = onemapdev_url = 'https://developers.onemap.sg'
+ONEMAP_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjg0NjUsInVzZXJfaWQiOjg0NjUsImVtYWlsIjoiYWxwaGF0b29uQGhvdG1haWwuY29tIiwiZm9yZXZlciI6ZmFsc2UsImlzcyI6Imh0dHA6XC9cL29tMi5kZmUub25lbWFwLnNnXC9hcGlcL3YyXC91c2VyXC9zZXNzaW9uIiwiaWF0IjoxNjQ3MTUyMjAxLCJleHAiOjE2NDc1ODQyMDEsIm5iZiI6MTY0NzE1MjIwMSwianRpIjoiMTczN2Y3OWI2YjA3ZGMxZGY3MDczNTI4NDFjNTUxYzEifQ.r0LRxUefCvw7-Op_B1hzM4bFo3s5iFXeeNKiC9xfdk4'
+
+MAPBOX_PUBLIC_KEY = "pk.eyJ1IjoiZXhraW5naXN0IiwiYSI6ImNsMHQ0Y3Y5djBqbXIzaXBrNXhqMnJuaTcifQ.Y1D1Hz3dQMtAcrZtJaK1Qw"

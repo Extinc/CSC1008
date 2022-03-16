@@ -11,7 +11,6 @@ class DoublyLinkedList:
   def __init__(self):
     self.head = None # Initally there are no elements in the list
     self.tail = None
-  
 
   def push_front(self, new_data): # Adding an element before the first element
     new_node = Node(new_data) # creating a new node with the desired value

@@ -1,17 +1,17 @@
 from django.utils import timezone
 from django.contrib.auth.models import User, Group
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.forms import inlineformset_factory
 from django.contrib.auth import authenticate, login, logout
-
 from django.contrib import messages
-
+from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY
 from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
-def login(request):
+
+
+
+def signin(request):
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['pass']
@@ -22,11 +22,9 @@ def login(request):
 
         if user is not None:
             login(request, user)
-            fname = user.first_name
-            args['title'] = 'Home'
-            args['fname'] = fname
             User.objects.filter(username=username).update(last_login=timezone.now())
-            return render(request, "index.html", args)
+
+            return redirect('HomePage')
         else:
             messages.error(request, "Username / Password Incorrect")
 
@@ -35,7 +33,7 @@ def login(request):
 
 def register(request):
     if request.user.is_authenticated:
-        return redirect('index')
+        return redirect('HomePage')
     else:
         if request.method == "POST":
             username = request.POST['username']
@@ -64,12 +62,12 @@ def register(request):
             user.save()
             user.groups.add(customergrp)
             messages.success(request, "Your Account has been successfully created")
-            return redirect('login')
+            return redirect('Login')
 
         return render(request, 'register.html', {'title': "Register"})
 
 
-def logout(request):
+def signout(request):
     logout(request)
     messages.success(request, "Logged out successfully")
-    return redirect("index")
+    return redirect("landing")
