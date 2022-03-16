@@ -512,6 +512,3 @@ g.graph = {'244907908': {'3084109357': 8.547, '4600689388': 190.137, '4600582780
 dijkstra(g.graph, '244907908', '244317027')
 # dijkstra(g.graph, 'A', 'E')
 
-
-# print(g.getEdges("t"))
-print("Following is DFS of a disconnected graph")
