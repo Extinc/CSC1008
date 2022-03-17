@@ -1,6 +1,8 @@
 class Node:
-    def __init__(self, data):
-        self.data = data
+    def __init__(self,object):
+        for i in object.items():
+            self.object[i] = object[i]
+            print(object[i]) 
         self.next = None
 
 class SinglyLinkedList:
@@ -21,8 +23,8 @@ class SinglyLinkedList:
             print('search error: invalid index')
         else:
             return temp
-    def AtEnd(self, newdata):
-      NewNode = Node(newdata)
+    def insertAtEnd(self, object):
+      NewNode = Node(object)
       if self.headval is None:
          self.headval = NewNode
          return
