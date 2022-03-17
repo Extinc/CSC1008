@@ -7,7 +7,21 @@ class Driver:
     
 class Node:
     def __init__(self,object):
-        print(object.__dict__)
+        details = object.__dict__
+        count = len(details)
+        i = 0
+        while i<count:
+            set = details.popitem()
+            var = set[0]
+            val = set[1]
+            print(var)
+            print(val)
+            self.var = val
+            
+            i+=1
+            
+        
+        
         self.next = None
 
 class SinglyLinkedList:
