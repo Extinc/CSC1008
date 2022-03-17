@@ -8,7 +8,8 @@ node_data = []
 f = open(DRIVE_EDGE_DATA)
 data = json.load(f)
 for feature in data["features"]:
-    edge_data.append({"source": feature["properties"]["source"], "dest": feature["properties"]["dest"], "length": feature["properties"]["length"], "highway": feature["properties"]["highway"], "geometry": feature["geometry"]["coordinates"]})
+    if feature["properties"]["access"] != "no" or feature["properties"]["access"] == "no,permissive":
+        edge_data.append({"source": feature["properties"]["source"], "dest": feature["properties"]["dest"], "length": feature["properties"]["length"], "highway": feature["properties"]["highway"], "geometry": feature["geometry"]["coordinates"]})
 f.close()
 
 f = open(DRIVE_NODE_DATA)

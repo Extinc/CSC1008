@@ -1,7 +1,7 @@
 
-from classes.AcceptedRides import AcceptedRides
-from classes.Driver import Driver
-from classes.UserRequest import UserRequest
+from AcceptedRides import AcceptedRides
+from Driver import Driver
+from UserRequest import UserRequest
 
 
 class Matched:

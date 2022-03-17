@@ -1,3 +1,6 @@
+
+
+
 class AcceptedRides:
   def __init__(self, rideId,passengerId,pickUpLocation,driverLocation,pickUpTime,destination,rideDistance,price,typeOfCar,driverId):
     self.rideId = rideId
@@ -13,3 +16,6 @@ class AcceptedRides:
 
     def getDriverDistance(driverLocation,pickUpLocation):
       return driverLocation-pickUpLocation
+
+    def getDriverDistance(driverLocation, pickUpLocation):
+      pass

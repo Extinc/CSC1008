@@ -8,6 +8,9 @@
             {% csrf_token %}
             <button type="button" onclick="plot_route()">ROUTE BUTTON TEST</button>
         </form>
+        <div class="col-4">
+        <input type="text" >
+        </div>
         <div id='map' style='width: 1500px; height: 1000px;'></div>
         <script>
             mapboxgl.accessToken = '{{ mapbox_key }}';
@@ -15,10 +18,8 @@
                 container: 'map',
                 center: [103.84042953664608, 1.3593394625724913],
                 zoom: 13, // starting zoom
-                {#style: 'mapbox://styles/mapbox/streets-v11', // style URL or style object#}
                 style: 'mapbox://styles/exkingist/cl0s7xq5v001i14n5vioj61u5'
             });
-
 
             function plot_route() {
                 $.post(

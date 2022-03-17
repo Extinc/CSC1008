@@ -6,7 +6,6 @@ from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY
 from ..codes.Routes import roadedge_df,roadnode_df
 from ..datastructure.Graph import Graph, dijkstra
 
-
 # Create your views here.
 def landing_page(request):
     return render(request, 'landing.html')
