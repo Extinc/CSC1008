@@ -6,21 +6,20 @@ class Driver:
     self.status = status
     
 class Node:
-    def __init__(self,object):
-        details = object.__dict__
-        count = len(details)
-        for i in range(count):
-            set = details.popitem()
-            var = set[0]
-            val = set[1]
-            setattr(self,var,val)
-            print(var)
-            print(val)
-            
-            
+    def __init__(self,driver):
+        details = driver.__dict__
+        d = details.values()
+        list = ' '.join(str(val) for val in d)
         
-        
+        # while i<count:
+        #     set = details.popitem()
+        #     var = set[0]
+        #     val= set[1]
+        #     setattr(self,var,val) #equivalent to self.var = val
+            
+        #     i+=1
         self.next = None
+        self.list = list
 
 class SinglyLinkedList:
     def __init__(self):
@@ -105,7 +104,7 @@ class SinglyLinkedList:
         output = "Current list content: [ "
         temp = self.head
         while temp is not None:
-            output += str(temp.data) + " "
+            output += str(temp.list) + ","
             temp = temp.next
         output += "]"
         print(output)
@@ -125,6 +124,10 @@ def createDriverList():
 
 def addDriver(dList):
     DRW1923 = Driver("DRW1923",128012,8,"Finding Rider")
-    node = dList.insertAtEnd(DRW1923)
+    DRW1233 = Driver("DRW2332",1212312,28,"Idle")
+
+    dList.insertAtEnd(DRW1923)
+    dList.insertAtEnd(DRW1233)
+    dList.printList()
 
 createDriverList()
