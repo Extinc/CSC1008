@@ -6,16 +6,18 @@ class Driver:
     self.status = status
 
 class riderRequest:
-  def __init__(self,rideId, passengerId,pickUpLocation,pickUpTime,destination,rideDistance,typeOfCar,status):
-    self.rideId = rideId
+  def __init__(self, passengerId,pickUpLocation,pickUpTime,destination,rideDistance,typeOfCar,status,type):
     self.passengerId= passengerId
     self.pickUpLocation = pickUpLocation
     self.pickUpTime =pickUpTime
     self.destination = destination
     #self.rideDistance = getRideDistance(pickUpLocation,destination)#in meter
+    self.rideDistance = rideDistance
+    self.price = "300"
     #self.price = getPrice(rideDistance,typeOfCar)
     self.typeOfCar = typeOfCar
     self.status = status
+    self.type = type
 
     def getRideDistance(pickUpLocation,destination):
       distance = destination-pickUpLocation #example only
@@ -38,6 +40,26 @@ class riderRequest:
           price*=1.5
         return price
 
+
+
+class AcceptedRides:
+  def __init__(self, passengerId,pickUpLocation,driverLocation,pickUpTime,destination,rideDistance,price,typeOfCar,driverId,type):
+    self.passengerId= passengerId
+    self.pickUpLocation = pickUpLocation
+    self.pickUpTime =pickUpTime
+    self.destination = destination
+    #self.driverDistance = getDriverDistance(driverLocation,pickUpLocation)
+    self.rideDistance = rideDistance
+    self.price = price
+    self.typeOfCar = typeOfCar
+    self.driverId = driverId
+    self.type = type
+
+    def getDriverDistance(driverLocation,pickUpLocation):
+      return driverLocation-pickUpLocation
+
+    def getDriverDistance(driverLocation, pickUpLocation):
+      pass
     
 class Node:
     def __init__(self,driver):
@@ -164,8 +186,13 @@ def addUser(userList,object):
 dList =createUserList()
 DRW1923 = Driver("DRW1923",128012,8,"Finding Rider")
 rList = createUserList()
-FES2103 = riderRequest("SQE762812","FES2103",2819102,"1331522",3928181,31023,8,"Finding Driver")
+FES2103 = riderRequest("FES2103",2819102,"1331522",3928181,31023,8,"Finding Driver","Shared")
 
 addUser(rList,FES2103)
 addUser(dList,DRW1923)
+
+aList = createUserList()
+SQE762812=AcceptedRides(FES2103.passengerId,FES2103.pickUpLocation,DRW1923.driverLocation,FES2103.pickUpTime,FES2103.destination,FES2103.rideDistance,FES2103.price,FES2103.typeOfCar,DRW1923.userId,FES2103.type)
+mList = createUserList()
+addUser(mList,SQE762812)
 
