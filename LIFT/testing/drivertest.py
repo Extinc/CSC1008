@@ -4,6 +4,40 @@ class Driver:
     self.driverLocation = driverLocation
     self.typeOfCar = typeOfCar
     self.status = status
+
+class riderRequest:
+  def __init__(self,rideId, passengerId,pickUpLocation,pickUpTime,destination,rideDistance,typeOfCar,status):
+    self.rideId = rideId
+    self.passengerId= passengerId
+    self.pickUpLocation = pickUpLocation
+    self.pickUpTime =pickUpTime
+    self.destination = destination
+    #self.rideDistance = getRideDistance(pickUpLocation,destination)#in meter
+    #self.price = getPrice(rideDistance,typeOfCar)
+    self.typeOfCar = typeOfCar
+    self.status = status
+
+    def getRideDistance(pickUpLocation,destination):
+      distance = destination-pickUpLocation #example only
+      return distance
+
+    def getPrice(distance,typeOfCar):
+        price = 3 #standard price for less than 1km
+        distance-=1000
+        if distance<10000: #up to 10+1km
+          while distance>0:
+            price+=0.22
+            distance-=400 #every 400m
+        elif distance>10000: #10+1+remainingkm
+          distance-10000
+          price+=0.22*25 #25x400 =10000
+          while distance>0:
+            price+=0.22
+            distance -=350 #every 350m
+        if typeOfCar == "8 Seater" :
+          price*=1.5
+        return price
+
     
 class Node:
     def __init__(self,driver):
@@ -118,16 +152,20 @@ class SinglyLinkedList:
             temp = temp.next
         return size
 
-def createDriverList():
-    dList =  SinglyLinkedList()
-    addDriver(dList)
+def createUserList():
+    userList =  SinglyLinkedList()
+    return userList
 
-def addDriver(dList):
-    DRW1923 = Driver("DRW1923",128012,8,"Finding Rider")
-    DRW1233 = Driver("DRW2332",1212312,28,"Idle")
+def addUser(userList,object):
 
-    dList.insertAtEnd(DRW1923)
-    dList.insertAtEnd(DRW1233)
-    dList.printList()
+    userList.insertAtEnd(object)
+    userList.printList()
 
-createDriverList()
+dList =createUserList()
+DRW1923 = Driver("DRW1923",128012,8,"Finding Rider")
+rList = createUserList()
+FES2103 = riderRequest("SQE762812","FES2103",2819102,"1331522",3928181,31023,8,"Finding Driver")
+
+addUser(rList,FES2103)
+addUser(dList,DRW1923)
+
