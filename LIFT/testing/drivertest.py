@@ -43,24 +43,39 @@ class riderRequest:
 
 
 class AcceptedRides:
-  def __init__(self, passengerId,pickUpLocation,driverLocation,pickUpTime,destination,rideDistance,price,typeOfCar,driverId,type):
-    self.passengerId= passengerId
-    self.pickUpLocation = pickUpLocation
-    self.pickUpTime =pickUpTime
-    self.destination = destination
-    #self.driverDistance = getDriverDistance(driverLocation,pickUpLocation)
-    self.rideDistance = rideDistance
-    self.price = price
-    self.typeOfCar = typeOfCar
-    self.driverId = driverId
-    self.type = type
+    def __init__(self, passengerId,pickUpLocation,driverLocation,pickUpTime,destination,rideDistance,price,typeOfCar,driverId):
+        self.passengerId= passengerId
+        self.pickUpLocation = pickUpLocation
+        self.pickUpTime =pickUpTime
+        self.destination = destination
+        #self.driverDistance = getDriverDistance(driverLocation,pickUpLocation)
+        self.rideDistance = rideDistance
+        self.price = price
+        self.typeOfCar = typeOfCar
+        self.driverId = driverId
+        self.type = type
 
-    def getDriverDistance(driverLocation,pickUpLocation):
-      return driverLocation-pickUpLocation
+        def getDriverDistance(driverLocation,pickUpLocation):
+            return driverLocation-pickUpLocation
 
-    def getDriverDistance(driverLocation, pickUpLocation):
-      pass
-    
+        def getDriverDistance(driverLocation, pickUpLocation):
+            pass
+
+class sharedRides:
+    def __init__(self, p1Id,p2Id, p1PickUpLocation,p2PickUpLocation,driverLocation,pickUpTime,destination,rideDistance,price,typeOfCar,driverId):
+        self.p1Id= p1Id
+        self.p2Id = p2Id
+        self.p1PickUpLocation = p1PickUpLocation
+        self.p2PickUpLocation = p2PickUpLocation
+        #self.driverDistance = getDriverDistance(driverLocation,pickUpLocation)
+        self.pickUpTime =pickUpTime
+        self.destination = destination
+        self.rideDistance = rideDistance
+        self.price = price
+        self.typeOfCar = typeOfCar
+        self.driverId = driverId
+        pass
+
 class Node:
     def __init__(self,driver):
         details = driver.__dict__
