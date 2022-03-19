@@ -1,7 +1,18 @@
 class Node:
-    def __init__(self, data):
-        self.data = data
+    def __init__(self,driver):
+        details = driver.__dict__
+        d = details.values()
+        list = ' '.join(str(val) for val in d)
+        
+        # while i<count:
+        #     set = details.popitem()
+        #     var = set[0]
+        #     val= set[1]
+        #     setattr(self,var,val) #equivalent to self.var = val
+            
+        #     i+=1
         self.next = None
+        self.list = list
 
 class SinglyLinkedList:
     def __init__(self):
@@ -21,15 +32,15 @@ class SinglyLinkedList:
             print('search error: invalid index')
         else:
             return temp
-    def AtEnd(self, newdata):
-      NewNode = Node(newdata)
-      if self.headval is None:
-         self.headval = NewNode
+    def insertAtEnd(self, object):
+      NewNode = Node(object)
+      if self.head is None:
+         self.head = NewNode
          return
-      laste = self.headval
-      while(laste.nextval):
-         laste = laste.nextval
-      laste.nextval=NewNode
+      laste = self.head
+      while(laste.next):
+         laste = laste.next
+      laste.next=NewNode
 
     def insertAtHead(self, node):
         if self.head is None:
@@ -86,15 +97,38 @@ class SinglyLinkedList:
         output = "Current list content: [ "
         temp = self.head
         while temp is not None:
-            output += str(temp.data) + " "
+            output += str(temp.list) + ","
             temp = temp.next
         output += "]"
         print(output)
 
+    def printDetail(self,index):
+        temp = self.head
+        prev = None
+        counter = 0
+        while temp is not None and counter < index:
+            prev = temp
+            temp = temp.next
+            counter += 1
+
+        if temp is None:
+            print('search error: invalid index')
+        else:
+            if prev is None:
+                self.head = temp.next
+            else:
+                prev.next = temp.next
+            print(temp.list)
+            return temp.list
+        
+
     #return the number of elements in the queue
     def size(self):
         temp = self.head
-        size = 0
+        if temp is not None:
+            size = 1
+        else:
+            size = 0
         while temp is not None:
             size += 1
             temp = temp.next

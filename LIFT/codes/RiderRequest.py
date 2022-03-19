@@ -1,17 +1,15 @@
-from lib2to3.pgen2 import driver
-
-
-class UserRequest:
-  def __init__(self,rideId, passengerId,pickUpLocation,pickUpTime,destination,rideDistance,typeOfCar,status):
-    self.rideId = rideId
+class RiderRequest:
+  def __init__(self, passengerId,pickUpLocation,pickUpTime,destination,rideDistance,typeOfCar,rideType):
     self.passengerId= passengerId
     self.pickUpLocation = pickUpLocation
     self.pickUpTime =pickUpTime
     self.destination = destination
-    self.rideDistance = getRideDistance(pickUpLocation,destination)#in meter
-    self.price = getPrice(rideDistance,typeOfCar)
+    #self.rideDistance = getRideDistance(pickUpLocation,destination)#in meter
+    self.rideDistance = rideDistance
+    self.price = "300"
+    #self.price = getPrice(rideDistance,typeOfCar)
     self.typeOfCar = typeOfCar
-    self.status = status
+    self.rideType = rideType
 
     def getRideDistance(pickUpLocation,destination):
       distance = destination-pickUpLocation #example only
@@ -33,7 +31,3 @@ class UserRequest:
         if typeOfCar == "8 Seater" :
           price*=1.5
         return price
-
-    
-
-    
