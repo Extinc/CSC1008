@@ -53,7 +53,6 @@ class AcceptedRides:
         self.price = price
         self.typeOfCar = typeOfCar
         self.driverId = driverId
-        self.type = type
 
         def getDriverDistance(driverLocation,pickUpLocation):
             return driverLocation-pickUpLocation
@@ -62,16 +61,15 @@ class AcceptedRides:
             pass
 
 class sharedRides:
-    def __init__(self, p1Id,p2Id, p1PickUpLocation,p2PickUpLocation,driverLocation,pickUpTime,destination,rideDistance,price,typeOfCar,driverId):
+    def __init__(self, p1Id,p2Id, startLocation,loc2,loc3,finalLocation,driverLocation,pickUpTime,typeOfCar,driverId):
         self.p1Id= p1Id
         self.p2Id = p2Id
-        self.p1PickUpLocation = p1PickUpLocation
-        self.p2PickUpLocation = p2PickUpLocation
+        self.startLocation = startLocation
+        self.loc2 = loc2
+        self.loc3 = loc3
+        self.finalLocation = finalLocation
         #self.driverDistance = getDriverDistance(driverLocation,pickUpLocation)
         self.pickUpTime =pickUpTime
-        self.destination = destination
-        self.rideDistance = rideDistance
-        self.price = price
         self.typeOfCar = typeOfCar
         self.driverId = driverId
         pass
@@ -180,10 +178,33 @@ class SinglyLinkedList:
         output += "]"
         print(output)
 
+    def printDetail(self,index):
+        temp = self.head
+        prev = None
+        counter = 0
+        while temp is not None and counter < index:
+            prev = temp
+            temp = temp.next
+            counter += 1
+
+        if temp is None:
+            print('search error: invalid index')
+        else:
+            if prev is None:
+                self.head = temp.next
+            else:
+                prev.next = temp.next
+            print(temp.list)
+            return temp.list
+        
+
     #return the number of elements in the queue
     def size(self):
         temp = self.head
-        size = 0
+        if temp is not None:
+            size = 1
+        else:
+            size = 0
         while temp is not None:
             size += 1
             temp = temp.next
@@ -197,17 +218,61 @@ def addUser(userList,object):
 
     userList.insertAtEnd(object)
     userList.printList()
+def splitString(userString):
+    return str(userString).split(' ')
+
+def findNearestRider(object,sList):
+    firstRider = splitString(str(object.printDetail(0)))
+    nextRider = splitString(str(object.printDetail(1)))
+    print("test",nextRider)
+    
+    for i in range(0,object.size()-1):
+        print(i)
+        nextRider = splitString(str(object.printDetail(int(i))))
+        pToP =distance(firstRider[1],nextRider[1]) #compare pickup for rider 1 and next rider
+        pToD = distance(firstRider[3],nextRider[1]) #compare dropoff for rider 1 and pickup for rider2
+        if(int(pToP) <5000 or int(pToD)<5000):
+            if pToP>=pToD:
+                newSR = sharedRides(firstRider[0],nextRider[0],firstRider[1],firstRider[3],nextRider[1],nextRider[3],"driver Location",firstRider[2],firstRider[5],"driverId") #for when its destination is closer to first rider so car goes from 
+            if pToD>pToP:
+                newSR = sharedRides(firstRider[0],nextRider[0],firstRider[1],nextRider[1],firstRider[3],nextRider[3],"driver Location",firstRider[2],firstRider[5],"driverId") #normal case where it picks up passenger along the way
+        addUser(sList,newSR)
+        print("New Shared Ride",sList.printDetail(0))
+
+def distance(location1,location2):
+    if int(location1) >= int(location2):
+        distance = int(location1) - int(location2)
+    else:
+        distance = int(location2)-int(location1)
+    print("distance",distance)
+    return distance  
+
 
 dList =createUserList()
+
+#retrieve ID based on account
+
 DRW1923 = Driver("DRW1923",128012,8,"Finding Rider")
 rList = createUserList()
 FES2103 = riderRequest("FES2103",2819102,"1331522",3928181,31023,8,"Finding Driver","Shared")
-
+FES2211 = riderRequest("FES2211",2819102,"1331522",3928181,31023,8,"Finding Driver","Shared")
 addUser(rList,FES2103)
+addUser(rList,FES2211)
 addUser(dList,DRW1923)
 
 aList = createUserList()
-SQE762812=AcceptedRides(FES2103.passengerId,FES2103.pickUpLocation,DRW1923.driverLocation,FES2103.pickUpTime,FES2103.destination,FES2103.rideDistance,FES2103.price,FES2103.typeOfCar,DRW1923.userId,FES2103.type)
-mList = createUserList()
-addUser(mList,SQE762812)
+SQE762812=AcceptedRides(FES2103.passengerId,FES2103.pickUpLocation,DRW1923.driverLocation,FES2103.pickUpTime,FES2103.destination,FES2103.rideDistance,FES2103.price,FES2103.typeOfCar,DRW1923.userId)
+SQ2312812=AcceptedRides(FES2103.passengerId,FES2103.pickUpLocation,DRW1923.driverLocation,FES2103.pickUpTime,FES2103.destination,FES2103.rideDistance,FES2103.price,FES2103.typeOfCar,DRW1923.userId)
+rmList = createUserList() #rider match
+addUser(rmList,SQE762812) #test
+addUser(rmList,SQ2312812) #ticles
+sList = createUserList()
+print("test2",rmList.size())
+#firstRider = splitString(str(mList.printDetail(0)))
+#print(firstRider[1]) #print first rider pick up location
+
+findNearestRider(rList,sList)#pass in 
+
+
+
 
