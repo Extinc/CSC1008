@@ -32,7 +32,7 @@
                         csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
                     },
                     function (data) {
-                        {#console.log(data['coordinates']);#}
+                        // {#console.log(data['coordinates']);#}
                         map.addSource('route', {
                             'type': 'geojson',
                             'data': {
