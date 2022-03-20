@@ -8,6 +8,10 @@
             {% csrf_token %}
             <button type="button" onclick="plot_route()">ROUTE BUTTON TEST</button>
         </form>
+        <form>
+            {% csrf_token %}
+            <button type="button" onclick="select_pickup()">SELECT PICK UP TEST</button>
+        </form>
         <div class="col-4">
         <input type="text" >
         </div>
@@ -56,6 +60,23 @@
             }
 
 
+        </script>
+        <script>
+            function select_pickup() {
+                $.ajax({
+                        type: "POST",
+                        url: "/select_pickup/",
+                        data: {
+                        csrfmiddlewaretoken: "{{csrf_token}}",
+                        },
+                        success: function () {
+                        //   $("#result").html("<h2>Received!</h2>");
+                        },
+                    });
+                    }
+
+                    
+                
         </script>
 
     {% endif %}
