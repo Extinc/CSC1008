@@ -65,13 +65,13 @@ def plot_route(request):
             # print(geom['coordinates'])
         return JsonResponse(geom, safe=False)
     
-    #get lon n lat of user using ip addr
-    def select_pickup(request):
-        ip = requests.get('https://api.ipify.org?format=json')
-        ip_data = json.loads(ip.text)
-        res = requests.get('http://ip-api.com/json/'+ip_data['ip'])
-        location_data_one = res.text
-        location_data = json.loads(location_data_one)
-        print("lat: " + str(location_data["lat"]))
-        print("lon: " + str(location_data["lon"]))
-        return render(request,'index.html',{'location_data':location_data})
+#get lon n lat of user using ip addr
+def select_pickup(request):
+    ip = requests.get('https://api.ipify.org?format=json')
+    ip_data = json.loads(ip.text)
+    res = requests.get('http://ip-api.com/json/'+ip_data['ip'])
+    location_data_one = res.text
+    location_data = json.loads(location_data_one)
+    print("lat: " + str(location_data["lat"]))
+    print("lon: " + str(location_data["lon"]))
+    return render(request,'index.html',{'location_data':location_data})
