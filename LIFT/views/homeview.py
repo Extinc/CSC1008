@@ -1,6 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from flask import request
+import requests
+import json
 
 from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY
 from ..codes.Routes import roadedge_df,roadnode_df
@@ -61,3 +64,14 @@ def plot_route(request):
                 'geometry'].values[0]
             # print(geom['coordinates'])
         return JsonResponse(geom, safe=False)
+    
+    #get lon n lat of user using ip addr
+    def select_pickup(request):
+        ip = requests.get('https://api.ipify.org?format=json')
+        ip_data = json.loads(ip.text)
+        res = requests.get('http://ip-api.com/json/'+ip_data['ip'])
+        location_data_one = res.text
+        location_data = json.loads(location_data_one)
+        print("lat: " + str(location_data["lat"]))
+        print("lon: " + str(location_data["lon"]))
+        return render(request,'index.html',{'location_data':location_data})
