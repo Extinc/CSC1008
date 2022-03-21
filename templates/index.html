@@ -30,52 +30,52 @@
       size="10"
     />
 
-  <form>
+    <label for="rideprice"> Price of ride is</label>
+    <input
+      type="text"
+      id="price"
+      name="rideprice"
+      required
+      minlength="4"
+      maxlength="8"
+      size="10"
+    />
+
+    <form>
       {% csrf_token %}
       <button type="button" onclick="plot_route()">ROUTE BUTTON TEST</button>
-  </form>
-  <form>
-      {% csrf_token %}
-      <button type="button" onclick="select_pickup()">SELECT PICK UP TEST</button>
-  </form>
-      <div class="col-4">
-      <input type="text" >
-      </div>
-      <div id='map' style='width: 1500px; height: 1000px;'></div>
-      <label for="rideprice"> Price of ride is</label>
-      <input
-        type="text"
-        id="price"
-        name="rideprice"
-        required
-        minlength="4"
-        maxlength="8"
-        size="10"
-      />
     </form>
-  <form>
-    <button type="button" onclick="getInfo()">Get Ride Information</button>
-  </form>
-    <div id="result"></div>
+    <form>
+      <button type="button" onclick="getInfo()">Get Ride Information</button>
+    </form>
+    <form>
+      {% csrf_token %}
+      <button type="button" onclick="select_pickup()">
+        SELECT PICK UP TEST
+      </button>
+    </form>
     <div class="col-4">
       <input type="text" />
     </div>
-    <div id="map" style="width: 1500px; height: 750px"></div>
+    <div id="map" style="width: 1500px; height: 1000px"></div>
+  </form>
+  <!-- <form>
+    <button type="button" onclick="getInfo()">Get Ride Information</button>
+  </form> -->
+  <div id="result"></div>
+  <div class="col-4">
+    <input type="text" />
+  </div>
+  <div id="map" style="width: 1500px; height: 750px"></div>
 
-
-
-
-
-    <script>
-        mapboxgl.accessToken = '{{ mapbox_key }}';
-        var map = new mapboxgl.Map({
-            container: 'map',
-            center: [103.84042953664608, 1.3593394625724913],
-            zoom: 13, // starting zoom
-            style: 'mapbox://styles/exkingist/cl0s7xq5v001i14n5vioj61u5'
-        });
-
-
+  <script>
+    mapboxgl.accessToken = "{{ mapbox_key }}";
+    var map = new mapboxgl.Map({
+      container: "map",
+      center: [103.84042953664608, 1.3593394625724913],
+      zoom: 13, // starting zoom
+      style: "mapbox://styles/exkingist/cl0s7xq5v001i14n5vioj61u5",
+    });
 
     function plot_route() {
       $.post(
@@ -130,20 +130,19 @@
       });
     }
     function select_pickup() {
-                $.ajax({
-                        type: "POST",
-                        url: "/select_pickup/",
-                        data: {
-                        csrfmiddlewaretoken: "{{csrf_token}}",
-                        },
-                        success: function () {
-                        //   $("#result").html("<h2>Received!</h2>");
-                        },
-                    });
-                    }
+      $.ajax({
+        type: "POST",
+        url: "/select_pickup/",
+        data: {
+          csrfmiddlewaretoken: "{{csrf_token}}",
+        },
+        success: function () {
+          //   $("#result").html("<h2>Received!</h2>");
+        },
+      });
+    }
   </script>
 
-
-    {% endif %}
-    </body>
+  {% endif %}
+</body>
 {% endblock content %}
