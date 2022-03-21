@@ -10,4 +10,4 @@ class PointInfo(models.Model):
     POSTALCODE = models.CharField(max_length=250, null=True)
     HIGHWAY = models.TextField(null=True)
     def __str__(self):
-        return '{} by {}'.format(self.BUILDINGNAME, self.id)
+        return 'id : {} : Building Name : {}\t Postal Code : {} '.format( self.id, self.BUILDINGNAME, self.POSTALCODE)
