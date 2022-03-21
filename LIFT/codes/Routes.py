@@ -37,7 +37,7 @@ roadedge_df = pd.DataFrame(edge_data)
 roadnode_df = pd.DataFrame(node_data)
 points_df = pd.DataFrame(list(PointInfo.objects.all().values('id', 'BUILDINGNAME', 'BLOCK', 'ROAD', 'POSTALCODE')))
 
-# print(points_df)
+print(points_df)
 
 # totalcount = 0
 # count=0
