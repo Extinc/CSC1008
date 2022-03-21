@@ -1,15 +1,13 @@
-class RiderRequest:
-  def __init__(self, passengerId,pickUpLocation,pickUpTime,destination,rideDistance,typeOfCar,rideType):
+class riderRequest:
+  def __init__(self, passengerId,pickUpLocation,pickUpTime,destination,rideDistance,seatNo):
     self.passengerId= passengerId
     self.pickUpLocation = pickUpLocation
     self.pickUpTime =pickUpTime
     self.destination = destination
     #self.rideDistance = getRideDistance(pickUpLocation,destination)#in meter
     self.rideDistance = rideDistance
-    self.price = "300"
     #self.price = getPrice(rideDistance,typeOfCar)
-    self.typeOfCar = typeOfCar
-    self.rideType = rideType
+    self.seatNo = seatNo
 
     def getRideDistance(pickUpLocation,destination):
       distance = destination-pickUpLocation #example only
@@ -28,6 +26,7 @@ class RiderRequest:
           while distance>0:
             price+=0.22
             distance -=350 #every 350m
-        if typeOfCar == "8 Seater" :
+        if seatNo == 8 :
           price*=1.5
         return price
+

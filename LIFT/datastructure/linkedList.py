@@ -1,3 +1,4 @@
+
 class Node:
     def __init__(self,driver):
         details = driver.__dict__
@@ -42,12 +43,13 @@ class SinglyLinkedList:
          laste = laste.next
       laste.next=NewNode
 
-    def insertAtHead(self, node):
+    def insertAtHead(self, object):
+        NewNode = Node(object)
         if self.head is None:
-            self.head = node
+            self.head = NewNode
         else:
-            node.next = self.head
-            self.head = node
+            NewNode.next = self.head
+            self.head = NewNode
 
     def delete(self, value):
         prev = None
@@ -100,9 +102,8 @@ class SinglyLinkedList:
             output += str(temp.list) + ","
             temp = temp.next
         output += "]"
-        print(output)
 
-    def printDetail(self,index):
+    def printDetail(self,index): #pop
         temp = self.head
         prev = None
         counter = 0
@@ -114,11 +115,6 @@ class SinglyLinkedList:
         if temp is None:
             print('search error: invalid index')
         else:
-            if prev is None:
-                self.head = temp.next
-            else:
-                prev.next = temp.next
-            print(temp.list)
             return temp.list
         
 

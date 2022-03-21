@@ -1,5 +1,5 @@
 class AcceptedRides:
-    def __init__(self, passengerId,pickUpLocation,driverLocation,pickUpTime,destination,rideDistance,price,typeOfCar,driverId):
+    def __init__(self, passengerId,pickUpLocation,driverLocation,pickUpTime,destination,rideDistance,price,seatNo,driverId):
         self.passengerId= passengerId
         self.pickUpLocation = pickUpLocation
         self.pickUpTime =pickUpTime
@@ -7,7 +7,7 @@ class AcceptedRides:
         #self.driverDistance = getDriverDistance(driverLocation,pickUpLocation)
         self.rideDistance = rideDistance
         self.price = price
-        self.typeOfCar = typeOfCar
+        self.seatNo = seatNo
         self.driverId = driverId
 
         def getDriverDistance(driverLocation,pickUpLocation):
@@ -15,5 +15,3 @@ class AcceptedRides:
 
         def getDriverDistance(driverLocation, pickUpLocation):
             pass
-
-

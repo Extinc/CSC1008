@@ -1,5 +1,5 @@
 class Driver:
-  def __init__(self, userId, driverLocation,typeOfCar):
+  def __init__(self, userId, driverLocation,seatNo):
     self.userId = userId
     self.driverLocation = driverLocation
-    self.typeOfCar = typeOfCar
+    self.seatNo = seatNo
