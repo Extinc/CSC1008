@@ -1,4 +1,3 @@
-
 class Node:
     def __init__(self,driver):
         details = driver.__dict__
@@ -103,7 +102,7 @@ class SinglyLinkedList:
             temp = temp.next
         output += "]"
 
-    def printDetail(self,index): #pop
+    def listDetail(self,index): #pop
         temp = self.head
         prev = None
         counter = 0
@@ -114,6 +113,7 @@ class SinglyLinkedList:
 
         if temp is None:
             print('search error: invalid index')
+            return "Not Found"
         else:
             return temp.list
         
