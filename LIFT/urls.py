@@ -7,6 +7,7 @@ urlpatterns = [
     path('plot_route/', homeview.plot_route),
     path('getInfo/',homeview.getInfo),
     #path('showPrice/',homeview.showPrice),
+    path('select_pickup/', homeview.select_pickup),
     path('login', loginview.signin, name="Login"),
     path('register', loginview.register, name="Register"),
     path('signout', loginview.signout, name="Logout"),
