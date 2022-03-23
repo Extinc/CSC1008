@@ -1,0 +1,286 @@
+{% extends 'base/main.html' %} {% block content %}
+
+    <body>
+    {% include 'base/navbar.html' %} {% if request.user.is_authenticated %}
+        <!-- <form>
+        {% csrf_token %}
+        <button type="button" onclick="plot_route()">ROUTE BUTTON TEST</button>
+    </form> -->
+        <form action="" method="POST" id="test">
+            {% csrf_token %}
+            <button type="button" onclick="plot_route()">PLOT ROUTE</button>
+            <label for="startinglocation">Enter starting location here</label>
+            <input
+                    type="text"
+                    id="startinglocation"
+                    name="startinglocation"
+                    required
+                    minlength="4"
+                    maxlength="8"
+                    size="10"
+            />
+
+            <label for="endinglocation">Enter ending location here</label>
+            <input
+                    type="text"
+                    id="endinglocation"
+                    name="endinglocation"
+                    required
+                    minlength="4"
+                    maxlength="8"
+                    size="10"
+            />
+
+            <label for="rideprice"> Price of ride is</label>
+            <input
+                    type="text"
+                    id="price"
+                    name="rideprice"
+                    required
+                    minlength="4"
+                    maxlength="8"
+                    size="10"
+            />
+            
+            <dl id="typeOfRide" class ="chooseRide">
+                <dt><a href="#" ><span>Select Type Of Ride</span></a></dt>
+                <dd>
+                    <ul class = "options">
+                        <li><a href="#" ><img src=".\static\images\5seater.png" alt="" /><span class="value">5 Seater</span></a></li>
+                        <li><a href="#" ><img src=".\static\images\8seater.png" alt="" /><span class="value">8 Seater</span></a></li>
+                        <li><a href="#" ><img src=".\static\images\share.png" alt="" /><span class="value">Shared Rides</span></a></li>
+                           
+                    </ul>
+                </dd>
+            </dl>
+            <span id="car"></span>
+
+            <dl id="pickupTime" class="chooseTime">
+                <dt><a href="#"><span>Select Pick Up Time</span></a></dt>
+                <dd>
+                    <ul class = "options">
+                        <li><a href="#" ><img src=".\static\images\now.png" alt="" /><span class="value">Now</span></a></li>
+                        <li><a href="#" ><img src=".\static\images\scheduled.png" alt="" /><span class="value">Scheduled Ride</span></a></li>
+                           
+                    </ul>
+                </dd>
+            </dl>
+            <span id="time"></span>
+
+            <form>
+                {% csrf_token %}
+                <button type="button" onclick="plot_route()">ROUTE BUTTON TEST</button>
+            </form>
+            <form>
+                <button type="button" onclick="getInfo()">Get Ride Information</button>
+            </form>
+            <form>
+                {% csrf_token %}
+                <button type="button" onclick="select_pickup()">
+                    SELECT PICK UP TEST
+                </button>
+            </form>
+            <div class="col-4">
+                <input type="text"/>
+            </div>
+            <div id="map" style="width: 1500px; height: 1000px"></div>
+        </form>
+        <!-- <form>
+          <button type="button" onclick="getInfo()">Get Ride Information</button>
+        </form> -->
+        <div id="result"></div>
+        <div class="col-4">
+            <input type="text"/>
+        </div>
+        <div id="map" style="width: 1500px; height: 750px"></div>
+
+        <script>
+
+            mapboxgl.accessToken = "{{ mapbox_key }}";
+            var map = new mapboxgl.Map({
+                container: "map",
+                pitch: 45,
+                center: [103.84042953664608, 1.3593394625724913],
+                zoom: 13, // starting zoom
+                style: "mapbox://styles/exkingist/cl0s7xq5v001i14n5vioj61u5",
+            });
+            const geolocate = new mapboxgl.GeolocateControl({
+                positionOptions: {
+                    enableHighAccuracy: true,
+                },
+                trackUserLocation: true
+            });
+            map.addControl(geolocate);
+
+            // Used to Get lat and longitude coordinates
+            // TODO: USE THIS LOCATION when user press.
+            geolocate.on('geolocate', function (position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                console.log('lat, lng', latitude, longitude);
+            });
+            
+            map.on('load', () => {
+                // Insert the layer beneath any symbol layer.
+                const layers = map.getStyle().layers;
+                const labelLayerId = layers.find(
+                    (layer) => layer.type === 'symbol' && layer.layout['text-field']
+                ).id;
+
+                // The 'building' layer in the Mapbox Streets
+                // vector tileset contains building height data
+                // from OpenStreetMap.
+                map.addLayer(
+                    {
+                        'id': 'add-3d-buildings',
+                        'source': 'composite',
+                        'source-layer': 'building',
+                        'filter': ['==', 'extrude', 'true'],
+                        'type': 'fill-extrusion',
+                        'minzoom': 15,
+                        'paint': {
+                            'fill-extrusion-color': '#aaa',
+
+                            // Use an 'interpolate' expression to
+                            // add a smooth transition effect to
+                            // the buildings as the user zooms in.
+                            'fill-extrusion-height': [
+                                'interpolate',
+                                ['linear'],
+                                ['zoom'],
+                                15,
+                                0,
+                                15.05,
+                                ['get', 'height']
+                            ],
+                            'fill-extrusion-base': [
+                                'interpolate',
+                                ['linear'],
+                                ['zoom'],
+                                15,
+                                0,
+                                15.05,
+                                ['get', 'min_height']
+                            ],
+                            'fill-extrusion-opacity': 0.6
+                        }
+                    },
+                    labelLayerId
+                );
+            });
+
+            function plot_route() {
+                $.post(
+                    "/plot_route/",
+                    {
+                        reply: false,
+                        csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+                    },
+                    function (data) {
+                        //{ #console.log(data['coordinates']); }
+                        map.addSource("route", {
+                            type: "geojson",
+                            data: {
+                                type: "Feature",
+                                properties: {},
+                                geometry: data,
+                            },
+                        });
+
+                        map.addLayer({
+                            id: "route",
+                            type: "line",
+                            source: "route",
+                            layout: {
+                                "line-join": "round",
+                                "line-cap": "round",
+                            },
+                            paint: {
+                                "line-color": "#ee2323",
+                                "line-width": 8,
+                            },
+                        });
+                    }
+                );
+            }
+
+            function getInfo() {
+                //document.getElementById("rideprice").value = price;
+                $.ajax({
+                    type: "POST",
+                    url: "/getInfo/",
+                    data: {
+                        csrfmiddlewaretoken: "{{csrf_token}}",
+                        starting: $('input[name="startinglocation"]').val(),
+                        ending: $('input[name="endinglocation"]').val(),
+                        //price: $('input[name="rideprice"]').val(),
+                    },
+                    success: function (result) {
+                        //   $("#result").html("<h2>Received!</h2>");
+                        $("#price").val(result);
+                    },
+                });
+            }
+
+            function select_pickup() {
+                $.ajax({
+                    type: "POST",
+                    url: "/select_pickup/",
+                    data: {
+                        csrfmiddlewaretoken: "{{csrf_token}}",
+                    },
+                    success: function () {
+                        //   $("#result").html("<h2>Received!</h2>");
+                    },
+                });
+            }
+        $(".chooseRide dt a").click(function() {
+            $(".chooseRide dd ul").toggle();
+        });
+                    
+        $(".chooseRide dd ul li a").click(function() {
+            var text = $(this).html();
+            $(".chooseRide dt a span").html(text);
+            $(".chooseRide dd ul").hide();
+            $("#car").html("Selected value is: " + getSelectedValue("typeOfRide"));
+        });
+                    
+        function getSelectedValue(id) {
+            return $("#" + id).find("dt a span.value").html();
+        }
+    
+        $(document).bind('click', function(e) {
+            var $clicked = $(e.target);
+            if (! $clicked.parents().hasClass("chooseRide"))
+                $(".chooseRide dd ul").hide();
+        });
+
+
+
+
+        $(".chooseTime dt a").click(function() {
+            $(".chooseTime dd ul").toggle();
+        });
+                    
+        $(".chooseTime dd ul li a").click(function() {
+            var text = $(this).html();
+            $(".chooseTime dt a span").html(text);
+            $(".chooseTime dd ul").hide();
+            $("#time").html("Selected value is: " + getSelectedValue("pickupTime"));
+        });
+                    
+        function getSelectedValue(id) {
+            return $("#" + id).find("dt a span.value").html();
+        }
+    
+        $(document).bind('click', function(e) {
+            var $clicked = $(e.target);
+            if (! $clicked.parents().hasClass("chooseTime"))
+                $(".chooseTime dd ul").hide();
+        });
+    
+        </script>
+
+    {% endif %}
+    </body>
+{% endblock content %}
