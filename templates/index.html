@@ -40,6 +40,31 @@
                     maxlength="8"
                     size="10"
             />
+            
+            <dl id="typeOfRide" class ="chooseRide">
+                <dt><a href="#" ><span>Select Type Of Ride</span></a></dt>
+                <dd>
+                    <ul class = "options">
+                        <li><a href="#" ><img src=".\static\images\5seater.png" alt="" /><span class="value">5 Seater</span></a></li>
+                        <li><a href="#" ><img src=".\static\images\8seater.png" alt="" /><span class="value">8 Seater</span></a></li>
+                        <li><a href="#" ><img src=".\static\images\share.png" alt="" /><span class="value">Shared Rides</span></a></li>
+                           
+                    </ul>
+                </dd>
+            </dl>
+            <span id="car"></span>
+
+            <dl id="pickupTime" class="chooseTime">
+                <dt><a href="#"><span>Select Pick Up Time</span></a></dt>
+                <dd>
+                    <ul class = "options">
+                        <li><a href="#" ><img src=".\static\images\5seater.png" alt="" /><span class="value">Now</span></a></li>
+                        <li><a href="#" ><img src=".\static\images\8seater.png" alt="" /><span class="value">Idk but tahts all we have planned</span></a></li>
+                           
+                    </ul>
+                </dd>
+            </dl>
+            <span id="time"></span>
 
             <form>
                 {% csrf_token %}
@@ -208,6 +233,51 @@
                     },
                 });
             }
+        $(".chooseRide dt a").click(function() {
+            $(".chooseRide dd ul").toggle();
+        });
+                    
+        $(".chooseRide dd ul li a").click(function() {
+            var text = $(this).html();
+            $(".chooseRide dt a span").html(text);
+            $(".chooseRide dd ul").hide();
+            $("#car").html("Selected value is: " + getSelectedValue("typeOfRide"));
+        });
+                    
+        function getSelectedValue(id) {
+            return $("#" + id).find("dt a span.value").html();
+        }
+    
+        $(document).bind('click', function(e) {
+            var $clicked = $(e.target);
+            if (! $clicked.parents().hasClass("chooseRide"))
+                $(".chooseRide dd ul").hide();
+        });
+
+
+
+
+        $(".chooseTime dt a").click(function() {
+            $(".chooseTime dd ul").toggle();
+        });
+                    
+        $(".chooseTime dd ul li a").click(function() {
+            var text = $(this).html();
+            $(".chooseTime dt a span").html(text);
+            $(".chooseTime dd ul").hide();
+            $("#time").html("Selected value is: " + getSelectedValue("pickupTime"));
+        });
+                    
+        function getSelectedValue(id) {
+            return $("#" + id).find("dt a span.value").html();
+        }
+    
+        $(document).bind('click', function(e) {
+            var $clicked = $(e.target);
+            if (! $clicked.parents().hasClass("chooseTime"))
+                $(".chooseTime dd ul").hide();
+        });
+    
         </script>
 
     {% endif %}

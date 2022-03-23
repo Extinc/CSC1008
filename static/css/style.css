@@ -27,3 +27,18 @@ background: linear-gradient(to bottom, #4286f4, #373B44); /* W3C, IE 10+/ Edge, 
 
 }
 
+.chooseTime{
+  
+  background-color: #39e991 !important;
+  border-color: #39e991 !important;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.chooseRide{
+ 
+  background-color: #39e991 !important;
+  border-color: #39e991 !important; 
+}

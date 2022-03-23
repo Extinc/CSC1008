@@ -68,16 +68,23 @@ def getInfo(request):
     #distanceCalculation("1.4180309,103.8386927","1.4410467,103.839182",request)
     print(request.POST['starting'])
     print(request.POST['ending'])
-
-    urls = ONEMAP_DEV_URL+ "/privateapi/routingsvc/route"
-    params ={}
-    params["start"] = "1.4180309,103.8386927"
-    params["end"] = "1.4410467,103.839182"
-    params["routeType"] = "drive"
-    params['token'] = ONEMAP_TOKEN
-    response = requests.get(urls, params=params)
-    #print(response.json()["route_summary"]["total_distance"])
-    totaldistance = response.json()["route_summary"]["total_distance"]
+    #start = request.POST['starting'] #same for end
+    
+    start = "1.4180309,103.8386927"
+    #end = request.POST['ending'] #we can delete the one below once we retrieve the vals
+    end = "1.4410467,103.839182"
+    print(end)
+    totaldistance = distanceCalculation(start,end) 
+    print(totaldistance)
+    # urls = ONEMAP_DEV_URL+ "/privateapi/routingsvc/route"
+    # params ={}
+    # params["start"] = "1.4180309,103.8386927"
+    # params["end"] = "1.4410467,103.839182"
+    # params["routeType"] = "drive"
+    # params['token'] = ONEMAP_TOKEN
+    # response = requests.get(urls, params=params)
+    # #print(response.json()["route_summary"]["total_distance"])
+    # totaldistance = response.json()["route_summary"]["total_distance"]
     #getPrice(totaldistance,request)
     print("totaldistance is : "  + str(totaldistance))
 
@@ -110,3 +117,13 @@ def select_pickup(request):
     print("lat: " + str(location_data["lat"]))
     print("lon: " + str(location_data["lon"]))
     return render(request,'index.html',{'location_data':location_data})
+
+def distanceCalculation(startLocation,endLocation):
+    urls = ONEMAP_DEV_URL+ "/privateapi/routingsvc/route"
+    params ={}
+    params["start"] = "1.4410467,103.839182"
+    params["end"] = "1.4410467,103.839182"
+    params["routeType"] = "drive"
+    params['token'] = ONEMAP_TOKEN
+    response = requests.get(urls, params=params)
+    return response.json()
