@@ -94,27 +94,30 @@ def getInfo(request):
     start = "1.4180309,103.8386927"
     end = "1.4410467,103.839182"
     print(end)
-    totaldistance = BookingFunctions.distanceCalculation(start, end)
-    print("updated" , totaldistance)
+    totalDistance = BookingFunctions.distanceCalculation(start, end)
+    print("updated" , totalDistance)
+    priceDistance = totalDistance
     
     #Price calculation
     price = 3  # standard price for less than 1km
-    totaldistance = int(totaldistance)
-    if totaldistance < 10000:
-        while totaldistance > 0:
+    priceDistance = int(priceDistance)
+    if priceDistance < 10000:
+        while priceDistance > 0:
             price += 0.22
-            totaldistance -= 400
-    elif totaldistance > 10000:
-        totaldistance - 10000
+            priceDistance -= 400
+    elif priceDistance > 10000:
+        priceDistance - 10000
         price += 0.22 * 25
-        while totaldistance > 0:
+        while priceDistance > 0:
             price += 0.22
-            totaldistance -= 350
+            priceDistance -= 350
     formatted_price = "{:.2f}".format(price)
     print("The price is: " + str(formatted_price))
-    
+    rList = BookingFunctions.createUserList()
     #User Object
-    temp = riderRequest(request.user.id,start,now.strftime("%Y %m %d %H %M %S"),end,totaldistance,typeOfRide,price)
+    temp = riderRequest(request.user.id,start,now.strftime("%Y %m %d %H %M %S"),end,totalDistance,typeOfRide,formatted_price)
+    BookingFunctions.addUser(rList,temp)
+    print(rList.listDetail(0))
     print(temp)
     #BookingFunctions.findRides(rList,dList,aList,sList)
     return JsonResponse(formatted_price, safe=False)

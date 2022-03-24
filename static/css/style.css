@@ -65,3 +65,8 @@ background: linear-gradient(to bottom, #4286f4, #373B44); /* W3C, IE 10+/ Edge, 
                   left:0px; padding:5px 0px; position:absolute; top:2px; width:auto; min-width:170px; list-style:none;}
 .chooseTime dd ul li a { padding:5px; display:block; color:#000000;}
 .chooseTime dd ul li a:hover { background-color:#5698a8;}
+
+.readonly{background-color:#bfc4ce;border-radius: 8px;}
+.bookdetails{
+  border-radius: 8px;
+}
