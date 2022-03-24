@@ -47,9 +47,9 @@ def dijkstra(graph, src, dest):
             elif shortest_distance[node] < shortest_distance[min_distance_node]:
                 min_distance_node = node
         path_options = graph[min_distance_node].items()
-        for child, weight in path_options:
-            if weight + shortest_distance[min_distance_node] < shortest_distance[child]:
-                shortest_distance[child] = weight + shortest_distance[min_distance_node]
+        for child, cost in path_options:
+            if cost + shortest_distance[min_distance_node] < shortest_distance[child]:
+                shortest_distance[child] = cost + shortest_distance[min_distance_node]
                 track_predecessor[child] = min_distance_node
         unseenNodes.pop(min_distance_node)
 
