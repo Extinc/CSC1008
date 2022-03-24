@@ -70,22 +70,3 @@ def distance(location1,location2):
         
     #print("rider test",rider)
         
-
-
-
-        
-
-            
-
-
-
-        
-    
-
-def distance(location1,location2):
-    if int(location1) >= int(location2):
-        distance = int(location1) - int(location2)
-    else:
-        distance = int(location2)-int(location1)
-    print("distance",distance)
-    return distance  
