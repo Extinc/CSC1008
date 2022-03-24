@@ -1,6 +1,8 @@
 from LIFT.codes.AcceptedRides import AcceptedRides
 from LIFT.codes.SharedRides import SharedRides
 from LIFT.datastructure.linkedList import SinglyLinkedList
+from LIFTMAIN.settings import ONEMAP_DEV_URL, ONEMAP_TOKEN
+import requests
 
 
 
@@ -70,3 +72,15 @@ def distance(location1,location2):
         
     #print("rider test",rider)
         
+def distanceCalculation(startLocation, endLocation):
+    urls = ONEMAP_DEV_URL+ "/privateapi/routingsvc/route"
+    params ={}
+    params["start"] = str(startLocation)
+    params["end"] = str(endLocation)
+    params["routeType"] = "drive"
+    params['token'] = ONEMAP_TOKEN
+    response = requests.get(urls, params=params)
+    #print(response.json()["route_summary"]["total_distance"])
+    totaldistance = response.json()["route_summary"]["total_distance"]
+    print("totaldistance is : " + str(totaldistance))
+    return totaldistance
