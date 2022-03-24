@@ -213,6 +213,9 @@
                         csrfmiddlewaretoken: "{{csrf_token}}",
                         starting: $('input[name="startinglocation"]').val(),
                         ending: $('input[name="endinglocation"]').val(),
+                        typeOfRide: getSelectedValue("typeOfRide"),
+                        pickUpTime:getSelectedValue("pickupTime"),
+
                         //price: $('input[name="rideprice"]').val(),
                     },
                     success: function (result) {
