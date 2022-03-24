@@ -113,7 +113,6 @@ class SinglyLinkedList:
 
         if temp is None:
             print('search error: invalid index')
-            return "Not Found"
         else:
             return temp.list
         
@@ -129,3 +128,8 @@ class SinglyLinkedList:
             size += 1
             temp = temp.next
         return size
+
+    def isEmpty(self):
+        current_node = self.head
+        return current_node == None
+ 

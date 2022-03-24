@@ -10,4 +10,3 @@ class SharedRides:
         self.pickUpTime =pickUpTime
         self.seatNo = seatNo
         self.driverId = driverId
-        
