@@ -4,6 +4,7 @@ from django.shortcuts import render
 import requests
 import json
 import datetime
+#from LIFT.testing.drivertest import riderRequest
 
 from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY, ONEMAP_DEV_URL, ONEMAP_TOKEN
 from ..codes.Routes import roadedge_df,roadnode_df
@@ -63,7 +64,7 @@ def plot_route(request):
 
 
 def getInfo(request):
-    # distanceCalculation("1.4180309,103.8386927","1.4410467,103.839182",request)
+    #distanceCalculation("1.4180309,103.8386927","1.4410467,103.839182",request)
     print(request.POST['starting'])
     print(request.POST['ending'])
     typeOfRide = request.POST['typeOfRide']
@@ -81,15 +82,15 @@ def getInfo(request):
     print(now.strftime("%Y %m %d %H %M %S"))
     
     # start = request.POST['starting'] #same for end
-    # print("TEST " + str(request.user.id))
+    print("TEST " + str(request.user.id))
     start = "1.4180309,103.8386927"
     # end = request.POST['ending'] #we can delete the one below once we retrieve the vals
     end = "1.4410467,103.839182"
     print(end)
     totaldistance = distanceCalculation(start, end)
-    print(totaldistance)
-    # urls = ONEMAP_DEV_URL+ "/privateapi/routingsvc/route"
-    # params ={}
+    print("updated" , totaldistance)
+    #urls = ONEMAP_DEV_URL+ "/privateapi/routingsvc/route"
+    #params ={}
     # params["start"] = "1.4180309,103.8386927"
     # params["end"] = "1.4410467,103.839182"
     # params["routeType"] = "drive"
@@ -97,11 +98,10 @@ def getInfo(request):
     # response = requests.get(urls, params=params)
     # #print(response.json()["route_summary"]["total_distance"])
     # totaldistance = response.json()["route_summary"]["total_distance"]
-    # getPrice(totaldistance,request)
-    print("totaldistance is : " + str(totaldistance))
+    # print("totaldistance is : " + str(totaldistance))
 
     price = 3  # standard price for less than 1km
-
+    totaldistance = int(totaldistance)
     if totaldistance < 10000:
         while totaldistance > 0:
             price += 0.22
@@ -112,10 +112,9 @@ def getInfo(request):
         while totaldistance > 0:
             price += 0.22
             totaldistance -= 350
-    # if typeOfCar == "8 seater":
-    #     price*=1.5
     formatted_price = "{:.2f}".format(price)
     print("The price is: " + str(formatted_price))
+    #riderRequest(request.user.id,now,totaldistance,type)
     return JsonResponse(formatted_price, safe=False)
     # return HttpResponse(request)
 
@@ -133,11 +132,14 @@ def select_pickup(request):
 
 
 def distanceCalculation(startLocation, endLocation):
-    urls = ONEMAP_DEV_URL + "/privateapi/routingsvc/route"
-    params = {}
-    params["start"] = "1.4410467,103.839182"
-    params["end"] = "1.4410467,103.839182"
+    urls = ONEMAP_DEV_URL+ "/privateapi/routingsvc/route"
+    params ={}
+    params["start"] = str(startLocation)
+    params["end"] = str(endLocation)
     params["routeType"] = "drive"
     params['token'] = ONEMAP_TOKEN
     response = requests.get(urls, params=params)
-    return response.json()
+    #print(response.json()["route_summary"]["total_distance"])
+    totaldistance = response.json()["route_summary"]["total_distance"]
+    print("totaldistance is : " + str(totaldistance))
+    return totaldistance
