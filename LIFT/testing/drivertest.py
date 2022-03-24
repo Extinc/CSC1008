@@ -1,56 +1,70 @@
 class Driver:
-  def __init__(self, userId, driverLat,driverLong,seatNo):
+  def __init__(self, userId, driverLocation,seatNo):
     self.userId = userId
-    self.driverLat = driverLat
-    self.driverLong = self.driverLong
+    self.driverLocation = driverLocation
     self.seatNo = seatNo
 
 class riderRequest:
-  def __init__(self, passengerId,pickUpLat,pickUpLong,pickUpTime,destinationLat, destinationLong,rideDistance,seatNo):
+  def __init__(self, passengerId,pickUpLocation,pickUpTime,destination,rideDistance,seatNo):
     self.passengerId= passengerId
-    self.pickUpLat  = pickUpLat 
-    self.pickUpLong = pickUpLong
+    self.pickUpLocation = pickUpLocation
     self.pickUpTime =pickUpTime
-    self.destinationLat, destinationLong = destinationLat, destinationLong
-    #self.rideDistance = getRideDistance(pickUpLat pickUpLong,destinationLat, destinationLong)#in meter
+    self.destination = destination
+    #self.rideDistance = getRideDistance(pickUpLocation,destination)#in meter
     self.rideDistance = rideDistance
     #self.price = getPrice(rideDistance,typeOfCar)
     self.seatNo = seatNo
 
+    def getRideDistance(pickUpLocation,destination):
+      distance = destination-pickUpLocation #example only
+      return distance
+
+    def getPrice(distance,typeOfCar):
+        price = 3 #standard price for less than 1km
+        distance-=1000
+        if distance<10000: #up to 10+1km
+          while distance>0:
+            price+=0.22
+            distance-=400 #every 400m
+        elif distance>10000: #10+1+remainingkm
+          distance-10000
+          price+=0.22*25 #25x400 =10000
+          while distance>0:
+            price+=0.22
+            distance -=350 #every 350m
+        if seatNo == 8 :
+          price*=1.5
+        return price
+
 
 
 class AcceptedRides:
-    def __init__(self, passengerId,pickUpLat,pickUpLong,driverLat,driverLong,pickUpTime,destinationLat, destinationLong,rideDistance,price,seatNo,driverId):
+    def __init__(self, passengerId,pickUpLocation,driverLocation,pickUpTime,destination,rideDistance,price,seatNo,driverId):
         self.passengerId= passengerId
-        self.pickUpLat  = pickUpLat
-        self.pickUpLong =  pickUpLong
-        self.driverLat = driverLat
-        self.driverLong = self.driverLong
-        self.destinationLat = destinationLat
-        self.destinationLong = destinationLong
+        self.pickUpLocation = pickUpLocation
         self.pickUpTime =pickUpTime
-        #self.driverDistance = getDriverDistance(driverLat,driverLong,pickUpLat pickUpLong)
+        self.destination = destination
+        #self.driverDistance = getDriverDistance(driverLocation,pickUpLocation)
         self.rideDistance = rideDistance
         self.price = price
         self.seatNo = seatNo
         self.driverId = driverId
 
+        def getDriverDistance(driverLocation,pickUpLocation):
+            return driverLocation-pickUpLocation
+
+        def getDriverDistance(driverLocation, pickUpLocation):
+            pass
 
 class SharedRides:
-    def __init__(self, p1Id,p2Id, startLat,startLong,loc2Lat,loc2Long,loc3Lat,loc3Long,finalLocLat,finalLocLong,driverLat,driverLong,pickUpTime,seatNo,driverId):
+    def __init__(self, p1Id,p2Id, startLocation,loc2,loc3,finalLocation,driverLocation,pickUpTime,seatNo,driverId):
         self.p1Id= p1Id
         self.p2Id = p2Id
-        self.startLat = startLat
-        self.startLong = startLong
-        self.loc2Lat = loc2Lat
-        self.loc2Long = loc2Long
-        self.loc3Lat = loc3Lat
-        self.loc3Long = loc3Long
-        finalLocLat = finalLocLat
-        finalLocLong = finalLocLong
-        self.driverLat = driverLat
-        self.driverLong = self.driverLong
-        #self.driverDistance = getDriverDistance(driverLat,driverLong,pickUpLat pickUpLong)
+        self.startLocation = startLocation
+        self.loc2 = loc2
+        self.loc3 = loc3
+        self.finalLocation = finalLocation
+        #self.driverDistance = getDriverDistance(driverLocation,pickUpLocation)
         self.pickUpTime =pickUpTime
         self.seatNo = seatNo
         self.driverId = driverId
@@ -207,9 +221,9 @@ def findNearestRider(rList,sList,driver):
         pToD = distance(firstRider[3],nextRider[1]) #compare dropoff for rider 1 and pickup for rider2
         if(int(pToP) <5000 or int(pToD)<5000 and int(nextRider[5])==1): #check if in range
             if pToP>=pToD: 
-                newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],firstRider[3],nextRider[1],nextRider[3],driver[1],firstRider[2],firstRider[5],driver[0]) #for when its destinationLat, destinationLong is closer to first rider so car goes from 
+                newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],firstRider[3],nextRider[1],nextRider[3],"driver Location",firstRider[2],firstRider[5],driver[0]) #for when its destination is closer to first rider so car goes from 
             if pToD>pToP:
-                newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],nextRider[1],firstRider[3],nextRider[3],driver[1],firstRider[2],firstRider[5],driver[0]) #normal case where it picks up passenger along the way
+                newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],nextRider[1],firstRider[3],nextRider[3],"driver Location",firstRider[2],firstRider[5],driver[0]) #normal case where it picks up passenger along the way
             addUser(sList,newSR)
             print("New Shared Ride",sList.listDetail(i))
             rList.deleteAt(i)
@@ -300,3 +314,7 @@ print("shared",sList.printDetail(1))
 #removal of data
 #adding of driver 
 #finding based on seat and type of car
+
+
+
+
