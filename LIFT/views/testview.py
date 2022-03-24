@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 import requests
 import json
+import datetime
 
 from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY, ONEMAP_DEV_URL, ONEMAP_TOKEN
 from ..codes.Routes import roadedge_df,roadnode_df
@@ -65,8 +66,20 @@ def getInfo(request):
     # distanceCalculation("1.4180309,103.8386927","1.4410467,103.839182",request)
     print(request.POST['starting'])
     print(request.POST['ending'])
-    print(request.POST['typeOfRide'])
+    typeOfRide = request.POST['typeOfRide']
+    if str(typeOfRide) == '5 Seater':
+        typeOfRide =5
+    elif str(typeOfRide) == '8 Seater':
+        typeOfRide =8
+    elif str(typeOfRide) == 'Shared Rides':
+        typeOfRide =1
+    print(typeOfRide)
+
     print(request.POST['pickUpTime'])
+    if str(request.POST['pickUpTime']) == 'Now':
+       now = datetime.datetime.now()
+    print(now.strftime("%Y %m %d %H %M %S"))
+    
     # start = request.POST['starting'] #same for end
     # print("TEST " + str(request.user.id))
     start = "1.4180309,103.8386927"
