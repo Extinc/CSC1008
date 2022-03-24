@@ -17,7 +17,7 @@ class Graph:
             self.data[dest] = {}
 
         self.data[src][dest] = distance
-        self.data[dest][src] = distance
+        # self.data[dest][src] = distance
 
     def getNodes(self):
         return self.data.keys()

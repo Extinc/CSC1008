@@ -1,3 +1,4 @@
+from pickle import GET
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -5,10 +6,12 @@ import requests
 import json
 
 from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY, ONEMAP_DEV_URL, ONEMAP_TOKEN
-from ..codes.Routes import roadedge_df,roadnode_df
+from ..codes.Routes import roadedge_df, roadnode_df, points_df
 from ..datastructure.Graph import Graph, dijkstra
 
 # Create your views here.
+
+
 def landing_page(request):
     return render(request, 'landing.html')
 
@@ -25,10 +28,17 @@ def index(request):
     else:
         return render(request, 'index.html', args)
 
-def get_address(request):
-    search = request.GET.get('search')
-    payload = []
-    if search:
-        pass
-    return JsonResponse({'status': True, 'payload': payload})
 
+def get_address(request):
+    if request.method == "GET":
+        # search = request.GET.get('search')
+        searchval = request.GET['search']
+        payload = []
+        if len(searchval) == 1:
+            test =points_df['BUILDINGNAME'].str.contains(searchval)
+            print(test)
+        else:
+            pass
+        # if search:
+        #     pass
+        return JsonResponse({'status': True, 'payload': payload})
