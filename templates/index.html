@@ -126,6 +126,17 @@
                 );
             }
 
+            $("#searchaddress").keyup(function(){
+                $.ajax({
+                    type: "GET",
+                    url: "/get_addr",
+                    data:{
+                        "search": $("#searchaddress").val()
+                    }, success: function(response){
+
+                    }
+                })
+            });
         </script>
 
     {% endif %}

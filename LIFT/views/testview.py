@@ -64,8 +64,8 @@ def getInfo(request):
     # distanceCalculation("1.4180309,103.8386927","1.4410467,103.839182",request)
     print(request.POST['starting'])
     print(request.POST['ending'])
-    print(request.POST(['typeOfRide']))
-    print(request.POST(['pickUpTime']))
+    print(request.POST['typeOfRide'])
+    print(request.POST['pickUpTime'])
     # start = request.POST['starting'] #same for end
 
     start = "1.4180309,103.8386927"
