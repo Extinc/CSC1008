@@ -9,9 +9,3 @@ class AcceptedRides:
         self.price = price
         self.seatNo = seatNo
         self.driverId = driverId
-
-        def getDriverDistance(driverLocation,pickUpLocation):
-            return driverLocation-pickUpLocation
-
-        def getDriverDistance(driverLocation, pickUpLocation):
-            pass
