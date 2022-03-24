@@ -16,6 +16,7 @@ def testpage(request):
         args['mapbox_key'] = MAPBOX_PUBLIC_KEY
         fname = request.user.first_name
         args['fname'] = fname
+        print(request.user.id)
         return render(request, 'test.html', args)
     else:
         return render(request, 'test.html', args)
@@ -67,7 +68,7 @@ def getInfo(request):
     print(request.POST['typeOfRide'])
     print(request.POST['pickUpTime'])
     # start = request.POST['starting'] #same for end
-
+    # print("TEST " + str(request.user.id))
     start = "1.4180309,103.8386927"
     # end = request.POST['ending'] #we can delete the one below once we retrieve the vals
     end = "1.4410467,103.839182"
