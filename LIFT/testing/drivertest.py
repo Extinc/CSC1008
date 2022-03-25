@@ -252,7 +252,10 @@ def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rid
                     print("no same seat")
                 break
     else:
-        print("Driver Not Found")   
+        print("Driver Not Found")
+    if dList.size()>0 and rList.size()>0:
+        findRides(rList,dList,aList,sList)
+        
         
                 
 
@@ -284,7 +287,6 @@ addUser(rList,FES2112)
 addUser(rList,FES1812)
 addUser(dList,DRW1923)
 addUser(dList,DRW1911)
-
 addUser(dList,DRW1911)
 
 
@@ -295,9 +297,6 @@ sList = createUserList()
 #firstRider = splitString(str(mList.printDetail(0)))
 #print(firstRider[1]) #print first rider pick up location
 
-findRides(rList,dList,aList,sList)
-findRides(rList,dList,aList,sList)
-findRides(rList,dList,aList,sList)
 findRides(rList,dList,aList,sList)
 print("accepted",aList.listDetail(0))
 print("accepted",aList.listDetail(1))

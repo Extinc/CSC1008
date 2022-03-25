@@ -25,6 +25,7 @@
                     size="10"
                     class="bookdetails"
             />
+            <p id="accept"></p>
 
             <label for="endinglocation">Enter ending location here</label>
             <input
@@ -86,16 +87,15 @@
                 <button type="button" onclick="plot_route()">ROUTE BUTTON TEST</button>
             </form>
             <form>
-                <a href="#bookDetails" onclick="getInfo()" class="bookRide">Get Ride Information</a>
-                
-  
-            
+
+                <a onclick="getPrice()" class = "bookRide">Get Price</a>
+                <a onclick="getInfo()" class="bookRide">Get Ride Information</a>
             </form>
             
             <form>
                 {% csrf_token %}
                 <button type="button" onclick="select_pickup()">
-                    SELECT PICK UP TEST
+                    MARKER TEST
                 </button>
             </form>
             <div class="col-4">
@@ -248,7 +248,30 @@
                     }
                 );
             }
+            function getPrice(){
+                $.ajax({
+                    type: "POST",
+                    url: "/getPrice/",
+                    data: {
+                        csrfmiddlewaretoken: "{{csrf_token}}",
+                        starting: $('input[name="startinglocation"]').val(),
+                        ending: $('input[name="endinglocation"]').val(),
 
+                        //price: $('input[name="rideprice"]').val(),
+                    },
+                    success: function (result) {
+                        //   $("#result").html("<h2>Received!</h2>");
+                        $("#price").val(result);
+                        
+                        if (confirm("Price Of Fare "+ result + "\n Click OK to confirm ride")) {
+                            getInfo();   
+                        } else {
+                            
+                        }
+                        document.getElementById("accept").innerHTML = result;
+                    },
+                });
+            }
             function getInfo() {
                 //document.getElementById("rideprice").value = price;
                 $.ajax({
@@ -263,10 +286,6 @@
 
                         //price: $('input[name="rideprice"]').val(),
                     },
-                    success: function (result) {
-                        //   $("#result").html("<h2>Received!</h2>");
-                        $("#price").val(result);
-                    },
                 });
             }
 
@@ -278,6 +297,30 @@
                         csrfmiddlewaretoken: "{{csrf_token}}",
                     },
                     success: function () {
+                        const startMarker = new mapboxgl.Marker({color: '#00FF00'})
+                        const endMarker = new mapboxgl.Marker({color:'#FF0000'})
+                        startLocation = [103.835297,1.418378]
+                        endLocation = [103.835397,1.418378]
+                        startMarker.setPopup(new mapboxgl.Popup().setHTML("<h1>Start</h1>"))
+                        endMarker.setPopup(new mapboxgl.Popup().setHTML("<h1>End</h1>"))
+                        startMarker.setLngLat(startLocation)
+                        startMarker.addTo(map)
+                        endMarker.setLngLat(endLocation)
+                        endMarker.addTo(map)
+
+                        const draggabbleMarker = new mapboxgl.Marker({draggable: true})
+                        draggabbleMarker.setLngLat([103.835197,1.418378])
+                        draggabbleMarker.addTo(map);
+                        draggabbleMarker.setPopup(new mapboxgl.Popup().setHTML("<h1>Draggable Marker</h1>"))
+                        draggabbleMarker.togglePopup();
+
+                        function onDragEnd() 
+                        {
+                            const lngLat = draggabbleMarker.getLngLat();
+                            window.alert(`Longitude: ${lngLat.lng}, Latitude: ${lngLat.lat}`);
+                            console.log(`Longitude: ${lngLat.lng}, Latitude: ${lngLat.lat}`);
+                        }
+                        draggabbleMarker.on('dragend', onDragEnd)
                         //   $("#result").html("<h2>Received!</h2>");
                     },
                 });

@@ -123,3 +123,9 @@ background: linear-gradient(to bottom, #4286f4, #373B44); /* W3C, IE 10+/ Edge, 
       text-align:center;
       font-weight:bold;
     }
+
+#accept{
+  display:none;
+}
+    
+
