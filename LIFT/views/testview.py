@@ -11,6 +11,7 @@ from LIFT.codes import BookingFunctions
 
 from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY, ONEMAP_DEV_URL, ONEMAP_TOKEN
 from ..codes.Routes import roadedge_df,roadnode_df
+from ..codes.CreateList import dList,aList,rList,sList
 from ..datastructure.Graph import Graph, dijkstra
 
 @login_required(login_url='/login')
@@ -113,8 +114,6 @@ def getInfo(request):
             priceDistance -= 350
     formatted_price = "{:.2f}".format(price)
     print("The price is: " + str(formatted_price))
-    rList = BookingFunctions.createUserList()
-    #User Object
     temp = riderRequest(request.user.id,start,now.strftime("%Y %m %d %H %M %S"),end,totalDistance,typeOfRide,formatted_price)
     BookingFunctions.addUser(rList,temp)
     print(rList.listDetail(0))

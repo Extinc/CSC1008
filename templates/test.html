@@ -8,6 +8,11 @@
     </form> -->
         <form action="" method="POST" id="test">
             {% csrf_token %}
+            <div id="bookDetails">
+                <a href="#" class="cancel">×</a>
+
+            </div>
+            <div id="cover"></div>
             <button type="button" onclick="plot_route()">PLOT ROUTE</button>
             <label for="startinglocation">Enter starting location here</label>
             <input
@@ -76,8 +81,12 @@
                 <button type="button" onclick="plot_route()">ROUTE BUTTON TEST</button>
             </form>
             <form>
-                <button type="button" onclick="getInfo()">Get Ride Information</button>
+                <a href="#bookDetails" onclick="getInfo()" class="bookRide">Get Ride Information</a>
+                
+  
+            
             </form>
+            
             <form>
                 {% csrf_token %}
                 <button type="button" onclick="select_pickup()">
@@ -97,7 +106,7 @@
             <input type="text"/>
         </div>
         <div id="map" style="width: 1500px; height: 750px"></div>
-
+    
         <script>
 
             mapboxgl.accessToken = "{{ mapbox_key }}";
