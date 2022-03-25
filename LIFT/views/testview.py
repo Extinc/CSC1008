@@ -124,6 +124,35 @@ def getInfo(request):
     #BookingFunctions.findRides(rList,dList,aList,sList)
     return JsonResponse(formatted_price, safe=False)
 
+
+def getPrice(request):
+    #distanceCalculation("1.4180309,103.8386927","1.4410467,103.839182",request)
+    print(request.POST['starting'])
+    print(request.POST['ending'])
+    start = "1.4180309,103.8386927"
+    end = "1.4410467,103.839182"
+    print(end)
+    totalDistance = BookingFunctions.distanceCalculation(start, end)
+    print("updated" , totalDistance)
+    priceDistance = totalDistance
+    
+    #Price calculation
+    price = 3  # standard price for less than 1km
+    priceDistance = int(priceDistance)
+    if priceDistance < 10000:
+        while priceDistance > 0:
+            price += 0.22
+            priceDistance -= 400
+    elif priceDistance > 10000:
+        priceDistance - 10000
+        price += 0.22 * 25
+        while priceDistance > 0:
+            price += 0.22
+            priceDistance -= 350
+    formatted_price = "{:.2f}".format(price)
+    print("The price is: " + str(formatted_price))
+    return JsonResponse(formatted_price, safe=False)
+
 # get lon n lat of user using ip addr
 def select_pickup(request):
     ip = requests.get('https://api.ipify.org?format=json')

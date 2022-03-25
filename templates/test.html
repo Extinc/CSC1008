@@ -82,6 +82,7 @@
                 <button type="button" onclick="plot_route()">ROUTE BUTTON TEST</button>
             </form>
             <form>
+                <a onclick="getPrice()" class = "bookRide">Get Price</a>
                 <a onclick="getInfo()" class="bookRide">Get Ride Information</a>
             </form>
             <form>
@@ -241,7 +242,28 @@
                 );
             }
             function getPrice(){
-                
+                $.ajax({
+                    type: "POST",
+                    url: "/getPrice/",
+                    data: {
+                        csrfmiddlewaretoken: "{{csrf_token}}",
+                        starting: $('input[name="startinglocation"]').val(),
+                        ending: $('input[name="endinglocation"]').val(),
+
+                        //price: $('input[name="rideprice"]').val(),
+                    },
+                    success: function (result) {
+                        //   $("#result").html("<h2>Received!</h2>");
+                        $("#price").val(result);
+                        
+                        if (confirm("Price Of Fare "+ result + "\n Click OK to confirm ride")) {
+                            getInfo();   
+                        } else {
+                            
+                        }
+                        document.getElementById("accept").innerHTML = result;
+                    },
+                });
             }
             function getInfo() {
                 //document.getElementById("rideprice").value = price;
@@ -256,17 +278,6 @@
                         pickUpTime: getSelectedValue("pickupTime"),
 
                         //price: $('input[name="rideprice"]').val(),
-                    },
-                    success: function (result) {
-                        //   $("#result").html("<h2>Received!</h2>");
-                        $("#price").val(result);
-                        var txt;
-                        if (confirm("Price Of Fare "+ result + "\n Book Ride")) {
-                            txt = "You pressed OK!";
-                        } else {
-                            txt = "You pressed Cancel!";
-                        }
-                        document.getElementById("accept").innerHTML = result;
                     },
                 });
             }

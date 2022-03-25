@@ -10,6 +10,7 @@ urlpatterns = [
     path('test', testview.testpage, name="TestPage"),
     path('plot_route/', testview.plot_route),
     path('getInfo/', testview.getInfo),
+    path('getPrice/', testview.getPrice),
     # path('showPrice/',testview.showPrice),
     path('select_pickup/', testview.select_pickup),
     path('get_addr/', homeview.get_address),
