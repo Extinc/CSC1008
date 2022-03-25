@@ -9,5 +9,13 @@ class PointInfo(models.Model):
     FEATURENAME = models.CharField(max_length=250, null=True)
     POSTALCODE = models.CharField(max_length=250, null=True)
     HIGHWAY = models.TextField(null=True)
+
     def __str__(self):
-        return '{} {} {} '.format( self.id, self.BUILDINGNAME, self.POSTALCODE)
+        return '{} {} {} '.format(self.id, self.BUILDINGNAME, self.POSTALCODE)
+
+
+class PathCache(models.Model):
+    source = models.TextField(null=False)
+    destination = models.TextField(null=False)
+    Data = models.TextField(null=True, primary_key=False)
+    DateTime = models.DateTimeField()

@@ -1,7 +1,10 @@
 from pickle import GET
+
+import location as location
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.db.models import Q
 import requests
 import json
 
@@ -10,7 +13,12 @@ from ..codes.Routes import roadedge_df, roadnode_df, points_df
 from ..datastructure.Graph import Graph, dijkstra
 
 # Create your views here.
+from ..datastructure.Trie import Trie
+from ..models.models import PointInfo
 
+
+search_result = None
+search_data = None
 
 def landing_page(request):
     return render(request, 'landing.html')
@@ -34,11 +42,23 @@ def get_address(request):
         # search = request.GET.get('search')
         searchval = request.GET['search']
         payload = []
+        global search_result, search_data
         if len(searchval) == 1:
-            test =points_df['BUILDINGNAME'].str.contains(searchval)
-            print(test)
+
+            search_data = Trie()
+            search_result = PointInfo.objects.all().filter(Q(BUILDINGNAME__startswith=searchval) | Q(ROAD__startswith=searchval) | Q(POSTALCODE__startswith=searchval))
+
+            for search in search_result:
+                if search.BUILDINGNAME != "":
+                    search_data.insert(1, search.BUILDINGNAME)
+                if search.ROAD != "":
+                    search_data.insert(1,search.ROAD)
+                if search.POSTALCODE != "":
+                    search_data.insert(1, search.POSTALCODE)
+
         else:
-            pass
-        # if search:
-        #     pass
+            # global search_data
+            # search_data.printAutoSuggestions(searchval)
+            search_data.computetop5()
+            print()
         return JsonResponse({'status': True, 'payload': payload})

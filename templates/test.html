@@ -18,7 +18,7 @@
                     minlength="4"
                     maxlength="8"
                     size="10"
-                    class = "bookdetails"
+                    class="bookdetails"
             />
 
             <label for="endinglocation">Enter ending location here</label>
@@ -30,7 +30,7 @@
                     minlength="4"
                     maxlength="8"
                     size="10"
-                    class = "bookdetails"
+                    class="bookdetails"
             />
 
             <label for="rideprice"> Price of ride is</label>
@@ -43,17 +43,20 @@
                     maxlength="8"
                     size="10"
                     readonly
-                    class = "readonly"
+                    class="readonly"
             />
-            
-            <dl id="typeOfRide" class ="chooseRide">
-                <dt><a href="#" ><span class = "black">Select Type Of Ride</span></a></dt>
+
+            <dl id="typeOfRide" class="chooseRide">
+                <dt><a href="#"><span class="black">Select Type Of Ride</span></a></dt>
                 <dd>
-                    <ul class = "options">
-                        <li><a href="#" class ="black"><img src=".\static\images\5seater.png" alt="" /><span class="value">5 Seater</span></a></li>
-                        <li><a href="#" class ="black"><img src=".\static\images\8seater.png" alt="" /><span class="value">8 Seater</span></a></li>
-                        <li><a href="#" class ="black"><img src=".\static\images\share.png" alt="" /><span class="value">Shared Rides</span></a></li>
-                           
+                    <ul class="options">
+                        <li><a href="#" class="black"><img src=".\static\images\5seater.png" alt=""/><span
+                                class="value">5 Seater</span></a></li>
+                        <li><a href="#" class="black"><img src=".\static\images\8seater.png" alt=""/><span
+                                class="value">8 Seater</span></a></li>
+                        <li><a href="#" class="black"><img src=".\static\images\share.png" alt=""/><span class="value">Shared Rides</span></a>
+                        </li>
+
                     </ul>
                 </dd>
             </dl>
@@ -62,10 +65,12 @@
             <dl id="pickupTime" class="chooseTime">
                 <dt><a href="#" class="black"><span>Select Pick Up Time</span></a></dt>
                 <dd>
-                    <ul class = "options">
-                        <li><a href="#" class="black" ><img src=".\static\images\now.png" alt="" /><span class="value">Now</span></a></li>
-                        <li><a href="#" class ="black"><img src=".\static\images\scheduled.png" alt="" /><span class="value">Scheduled Ride</span></a></li>
-                           
+                    <ul class="options">
+                        <li><a href="#" class="black"><img src=".\static\images\now.png" alt=""/><span
+                                class="value">Now</span></a></li>
+                        <li><a href="#" class="black"><img src=".\static\images\scheduled.png" alt=""/><span
+                                class="value">Scheduled Ride</span></a></li>
+
                     </ul>
                 </dd>
             </dl>
@@ -99,8 +104,11 @@
         <div id="map" style="width: 1500px; height: 750px"></div>
 
         <script>
-
+            const speedFactor = 30; // number of frames per longitude degree
+            let animation; // to store and cancel the animation
+            var route_counter = 1;
             mapboxgl.accessToken = "{{ mapbox_key }}";
+
             var map = new mapboxgl.Map({
                 container: "map",
                 pitch: 45,
@@ -123,7 +131,7 @@
                 const longitude = position.coords.longitude;
                 console.log('lat, lng', latitude, longitude);
             });
-            
+
             map.on('load', () => {
                 // Insert the layer beneath any symbol layer.
                 const layers = map.getStyle().layers;
@@ -181,18 +189,26 @@
                         csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
                     },
                     function (data) {
-                        //{ #console.log(data['coordinates']); }
+                        console.log(data['coordinates'].length);
+                        var geojson = {
+                            'type': 'FeatureCollection',
+                            'features': [
+                                {
+                                    'type': 'Feature',
+                                    'geometry': {
+                                        'type': 'LineString',
+                                        'coordinates': [data['coordinates'][0]]
+                                    }
+                                }
+                            ]
+                        };
                         map.addSource("route", {
-                            type: "geojson",
-                            data: {
-                                type: "Feature",
-                                properties: {},
-                                geometry: data,
-                            },
+                            'type': "geojson",
+                            'data': geojson
                         });
 
                         map.addLayer({
-                            id: "route",
+                            id: "line-animation",
                             type: "line",
                             source: "route",
                             layout: {
@@ -204,6 +220,22 @@
                                 "line-width": 8,
                             },
                         });
+
+                        animateLine();
+
+                        function animateLine() {
+                            // append new coordinates to the lineString
+                            if (route_counter !== data['coordinates'].length) {
+                                geojson.features[0].geometry.coordinates.push(data['coordinates'][route_counter]);
+                                console.log(data['coordinates'][route_counter])
+                                // then update the map
+                                route_counter++;
+                                map.getSource('route').setData(geojson);
+                                // Request the next frame of the animation.
+                                animation = requestAnimationFrame(animateLine);
+                            }
+
+                        }
                     }
                 );
             }
@@ -218,7 +250,7 @@
                         starting: $('input[name="startinglocation"]').val(),
                         ending: $('input[name="endinglocation"]').val(),
                         typeOfRide: getSelectedValue("typeOfRide"),
-                        pickUpTime:getSelectedValue("pickupTime"),
+                        pickUpTime: getSelectedValue("pickupTime"),
 
                         //price: $('input[name="rideprice"]').val(),
                     },
@@ -241,51 +273,50 @@
                     },
                 });
             }
-        $(".chooseRide dt a").click(function() {
-            $(".chooseRide dd ul").toggle();
-        });
-                    
-        $(".chooseRide dd ul li a").click(function() {
-            var text = $(this).html();
-            $(".chooseRide dt a span").html(text);
-            $(".chooseRide dd ul").hide();
-            $("#car").html("Selected value is: " + getSelectedValue("typeOfRide"));
-        });
-                    
-        function getSelectedValue(id) {
-            return $("#" + id).find("dt a span.value").html();
-        }
-    
-        $(document).bind('click', function(e) {
-            var $clicked = $(e.target);
-            if (! $clicked.parents().hasClass("chooseRide"))
+
+            $(".chooseRide dt a").click(function () {
+                $(".chooseRide dd ul").toggle();
+            });
+
+            $(".chooseRide dd ul li a").click(function () {
+                var text = $(this).html();
+                $(".chooseRide dt a span").html(text);
                 $(".chooseRide dd ul").hide();
-        });
+                $("#car").html("Selected value is: " + getSelectedValue("typeOfRide"));
+            });
+
+            function getSelectedValue(id) {
+                return $("#" + id).find("dt a span.value").html();
+            }
+
+            $(document).bind('click', function (e) {
+                var $clicked = $(e.target);
+                if (!$clicked.parents().hasClass("chooseRide"))
+                    $(".chooseRide dd ul").hide();
+            });
 
 
+            $(".chooseTime dt a").click(function () {
+                $(".chooseTime dd ul").toggle();
+            });
 
-
-        $(".chooseTime dt a").click(function() {
-            $(".chooseTime dd ul").toggle();
-        });
-                    
-        $(".chooseTime dd ul li a").click(function() {
-            var text = $(this).html();
-            $(".chooseTime dt a span").html(text);
-            $(".chooseTime dd ul").hide();
-            $("#time").html("Selected value is: " + getSelectedValue("pickupTime"));
-        });
-                    
-        function getSelectedValue(id) {
-            return $("#" + id).find("dt a span.value").html();
-        }
-    
-        $(document).bind('click', function(e) {
-            var $clicked = $(e.target);
-            if (! $clicked.parents().hasClass("chooseTime"))
+            $(".chooseTime dd ul li a").click(function () {
+                var text = $(this).html();
+                $(".chooseTime dt a span").html(text);
                 $(".chooseTime dd ul").hide();
-        });
-    
+                $("#time").html("Selected value is: " + getSelectedValue("pickupTime"));
+            });
+
+            function getSelectedValue(id) {
+                return $("#" + id).find("dt a span.value").html();
+            }
+
+            $(document).bind('click', function (e) {
+                var $clicked = $(e.target);
+                if (!$clicked.parents().hasClass("chooseTime"))
+                    $(".chooseTime dd ul").hide();
+            });
+
         </script>
 
     {% endif %}
