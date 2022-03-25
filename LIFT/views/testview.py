@@ -40,7 +40,7 @@ def plot_route(request):
 
         if PathCache.objects.filter(Q(source=start) | Q(destination=end)).count() > 0:
             path_cache = PathCache.objects.get(source=start, destination=end)
-            graph.data = json.loads(path_cache.Data)
+            graph.initGraph(path_cache.Data)
         else:
             next_node = []
             nodecounter = 0

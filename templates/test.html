@@ -106,10 +106,7 @@
         <script>
             const speedFactor = 30; // number of frames per longitude degree
             let animation; // to store and cancel the animation
-            let startTime = 0;
-            let progress = 0; // progress = timestamp - startTime
-            let resetTime = false;
-            var count = 1;
+            var route_counter = 1;
             mapboxgl.accessToken = "{{ mapbox_key }}";
 
             var map = new mapboxgl.Map({
@@ -192,7 +189,7 @@
                         csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
                     },
                     function (data) {
-                        console.log(data['coordinates'][0]);
+                        console.log(data['coordinates'].length);
                         var geojson = {
                             'type': 'FeatureCollection',
                             'features': [
@@ -223,28 +220,21 @@
                                 "line-width": 8,
                             },
                         });
-                        startTime = performance.now();
+
                         animateLine();
 
-
-                        // animated in a circle as a sine wave along the map.
-                        function animateLine(timestamp) {
-                            if (resetTime) {
-                                // resume previous progress
-                                startTime = performance.now() - progress;
-                                resetTime = false;
-                            } else {
-                                progress = timestamp - startTime;
+                        function animateLine() {
+                            // append new coordinates to the lineString
+                            if (route_counter !== data['coordinates'].length) {
+                                geojson.features[0].geometry.coordinates.push(data['coordinates'][route_counter]);
+                                console.log(data['coordinates'][route_counter])
+                                // then update the map
+                                route_counter++;
+                                map.getSource('route').setData(geojson);
+                                // Request the next frame of the animation.
+                                animation = requestAnimationFrame(animateLine);
                             }
 
-                            // append new coordinates to the lineString
-                            geojson.features[0].geometry.coordinates.push(data['coordinates'][count]);
-                            console.log(data['coordinates'][count])
-                            // then update the map
-                            count++;
-                            map.getSource('route').setData(geojson);
-                            // Request the next frame of the animation.
-                            animation = requestAnimationFrame(animateLine);
                         }
                     }
                 );

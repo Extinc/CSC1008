@@ -1,3 +1,4 @@
+import json
 import sys
 
 class Graph:
@@ -24,6 +25,10 @@ class Graph:
 
     def getEdges(self, node):
         return self.data[node]
+
+    def initGraph(self, datalist):
+        # To initialize the graph with json data
+        self.data = json.loads(datalist)
 
 
 def dijkstra(graph, src, dest):
