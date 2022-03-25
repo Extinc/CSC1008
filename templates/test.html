@@ -20,6 +20,7 @@
                     size="10"
                     class="bookdetails"
             />
+            <p id="accept"></p>
 
             <label for="endinglocation">Enter ending location here</label>
             <input
@@ -81,7 +82,7 @@
                 <button type="button" onclick="plot_route()">ROUTE BUTTON TEST</button>
             </form>
             <form>
-                <button type="button" onclick="getInfo()">Get Ride Information</button>
+                <a onclick="getInfo()" class="bookRide">Get Ride Information</a>
             </form>
             <form>
                 {% csrf_token %}
@@ -239,7 +240,9 @@
                     }
                 );
             }
-
+            function getPrice(){
+                
+            }
             function getInfo() {
                 //document.getElementById("rideprice").value = price;
                 $.ajax({
@@ -257,6 +260,13 @@
                     success: function (result) {
                         //   $("#result").html("<h2>Received!</h2>");
                         $("#price").val(result);
+                        var txt;
+                        if (confirm("Price Of Fare "+ result + "\n Book Ride")) {
+                            txt = "You pressed OK!";
+                        } else {
+                            txt = "You pressed Cancel!";
+                        }
+                        document.getElementById("accept").innerHTML = result;
                     },
                 });
             }

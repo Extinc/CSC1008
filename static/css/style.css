@@ -70,3 +70,16 @@ background: linear-gradient(to bottom, #4286f4, #373B44); /* W3C, IE 10+/ Edge, 
 .bookdetails{
   border-radius: 8px;
 }
+
+.bookRide
+    {
+      width: 150px;
+      padding: 10px;
+      color : #f7f0f0;
+      background-color: #1ea160;
+      box-shadow: -8px 8px 10px 3px rgba(0,0,0,0.2);
+      font-weight:bold;
+      text-decoration:none;
+      border-radius: 8px;
+    }
+    

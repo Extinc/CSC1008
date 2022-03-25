@@ -9,9 +9,11 @@ from LIFT.testing.drivertest import riderRequest
 from LIFT.testing.drivertest import AcceptedRides
 from LIFT.codes import BookingFunctions
 
+
 from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY, ONEMAP_DEV_URL, ONEMAP_TOKEN
 from ..codes.Routes import roadedge_df,roadnode_df
 from ..datastructure.Graph import Graph, dijkstra
+from ..codes.BookingFunctions import dList,aList,rList,sList
 
 @login_required(login_url='/login')
 def testpage(request):

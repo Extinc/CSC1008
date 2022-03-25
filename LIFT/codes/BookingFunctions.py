@@ -90,3 +90,8 @@ def distanceCalculation(startLocation, endLocation):
     totaldistance = response.json()["route_summary"]["total_distance"]
     print("totaldistance is : " + str(totaldistance))
     return totaldistance
+
+dList =createUserList()
+rList = createUserList()
+aList = createUserList()
+sList = createUserList()
