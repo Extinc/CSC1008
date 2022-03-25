@@ -1,18 +1,17 @@
-import datetime
-import json
-import requests
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from django.utils import timezone
-from LIFT.codes import BookingFunctions
+import requests
+import json
+import datetime
+from LIFT.testing import drivertest
 from LIFT.testing.drivertest import riderRequest
-from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY
-from ..codes.Routes import roadedge_df, roadnode_df
-from ..datastructure.Graph import Graph, dijkstra
-from ..models.models import PathCache
+from LIFT.testing.drivertest import AcceptedRides
+from LIFT.codes import BookingFunctions
 
+from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY, ONEMAP_DEV_URL, ONEMAP_TOKEN
+from ..codes.Routes import roadedge_df,roadnode_df
+from ..datastructure.Graph import Graph, dijkstra
 
 @login_required(login_url='/login')
 def testpage(request):
@@ -38,28 +37,22 @@ def plot_route(request):
         start = roadnode_df.loc[(roadnode_df['x'] == startcoord[1]) & (roadnode_df['y'] == startcoord[0])]['id'].values[
             0]
 
-        if PathCache.objects.filter(Q(source=start) | Q(destination=end)).count() > 0:
-            path_cache = PathCache.objects.get(source=start, destination=end)
-            graph.initGraph(path_cache.Data)
-        else:
-            next_node = []
-            nodecounter = 0
-            graph.addNode(start)
+        next_node = []
+        nodecounter = 0
+        graph.addNode(start)
 
-            filtered = roadedge_df.loc[roadedge_df['source'] == start].values
-            for node in filtered:
-                graph.addEdge(start, node[1], float(node[2]))
-                next_node.append(node[1])
+        filtered = roadedge_df.loc[roadedge_df['source'] == start].values
+        for node in filtered:
+            graph.addEdge(start, node[1], float(node[2]))
+            next_node.append(node[1])
 
-            while end not in next_node:
-                filtered = roadedge_df.loc[roadedge_df['source'] == next_node[nodecounter]].values
-                for next in filtered:
-                    if next[1] not in next_node:
-                        graph.addEdge(next[0], next[1], float(next[2]))
-                        next_node.append(next[1])
-                nodecounter += 1
-            graph_cache = PathCache.objects.create(source=start,destination=end, DateTime = timezone.now(), Data = json.dumps(graph.data))
-            graph_cache.save()
+        while end not in next_node:
+            filtered = roadedge_df.loc[roadedge_df['source'] == next_node[nodecounter]].values
+            for next in filtered:
+                if next[1] not in next_node:
+                    graph.addEdge(next[0], next[1], float(next[2]))
+                    next_node.append(next[1])
+            nodecounter += 1
 
         shortest_path = dijkstra(graph.data, start, end)
 
@@ -74,38 +67,38 @@ def plot_route(request):
 
 
 def getInfo(request):
-    # distanceCalculation("1.4180309,103.8386927","1.4410467,103.839182",request)
+    #distanceCalculation("1.4180309,103.8386927","1.4410467,103.839182",request)
     print(request.POST['starting'])
     print(request.POST['ending'])
 
-    # Selecting type of car/ride
+    #Selecting type of car/ride
     typeOfRide = request.POST['typeOfRide']
     if str(typeOfRide) == '5 Seater':
-        typeOfRide = 5
+        typeOfRide =5
     elif str(typeOfRide) == '8 Seater':
-        typeOfRide = 8
+        typeOfRide =8
     elif str(typeOfRide) == 'Shared Rides':
-        typeOfRide = 1
+        typeOfRide =1
     print(typeOfRide)
 
-    # Current time
+    #Current time
     print(request.POST['pickUpTime'])
     if str(request.POST['pickUpTime']) == 'Now':
-        now = datetime.datetime.now()
+       now = datetime.datetime.now()
     print(now.strftime("%Y %m %d %H %M %S"))
-
-    # User ID
+    
+    #User ID
     print("TEST " + str(request.user.id))
-
-    # Distance
+    
+    #Distance
     start = "1.4180309,103.8386927"
     end = "1.4410467,103.839182"
     print(end)
     totalDistance = BookingFunctions.distanceCalculation(start, end)
-    print("updated", totalDistance)
+    print("updated" , totalDistance)
     priceDistance = totalDistance
-
-    # Price calculation
+    
+    #Price calculation
     price = 3  # standard price for less than 1km
     priceDistance = int(priceDistance)
     if priceDistance < 10000:
@@ -121,15 +114,13 @@ def getInfo(request):
     formatted_price = "{:.2f}".format(price)
     print("The price is: " + str(formatted_price))
     rList = BookingFunctions.createUserList()
-    # User Object
-    temp = riderRequest(request.user.id, start, now.strftime("%Y %m %d %H %M %S"), end, totalDistance, typeOfRide,
-                        formatted_price)
-    BookingFunctions.addUser(rList, temp)
+    #User Object
+    temp = riderRequest(request.user.id,start,now.strftime("%Y %m %d %H %M %S"),end,totalDistance,typeOfRide,formatted_price)
+    BookingFunctions.addUser(rList,temp)
     print(rList.listDetail(0))
     print(temp)
-    # BookingFunctions.findRides(rList,dList,aList,sList)
+    #BookingFunctions.findRides(rList,dList,aList,sList)
     return JsonResponse(formatted_price, safe=False)
-
 
 # get lon n lat of user using ip addr
 def select_pickup(request):
@@ -141,6 +132,7 @@ def select_pickup(request):
     print("lat: " + str(location_data["lat"]))
     print("lon: " + str(location_data["lon"]))
     return render(request, 'index.html', {'location_data': location_data})
+
 
 # def distanceCalculation(startLocation, endLocation):
 #     urls = ONEMAP_DEV_URL+ "/privateapi/routingsvc/route"
