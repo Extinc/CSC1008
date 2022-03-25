@@ -73,7 +73,10 @@ def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rid
                     print("no same seat")
                 break
     else:
-        print("Driver Not Found")   
+        print("Driver Not Found")
+    
+    if dList.size()>0 and rList.size()>0:
+        findRides(rList,dList,aList,sList)   #recursive until there are no more riders or drivers
         
 def distanceCalculation(startLocation, endLocation):
     urls = ONEMAP_DEV_URL+ "/privateapi/routingsvc/route"
