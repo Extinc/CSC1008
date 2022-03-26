@@ -16,11 +16,11 @@ from LIFT.testing import drivertest
 from LIFT.testing.drivertest import riderRequest
 from LIFT.testing.drivertest import AcceptedRides
 from LIFT.codes import BookingFunctions
-from math import radians, cos, sin, asin, sqrt
+
 from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY, ONEMAP_DEV_URL, ONEMAP_TOKEN
 from ..codes.Routes import roadedge_df, roadnode_df, points_df
 from ..datastructure.Graph import Graph, dijkstra
-from ..codes.BookingFunctions import dList,aList,rList,sList
+from ..codes.BookingFunctions import dList, aList, rList, sList, haversine
 from ..models.models import PointInfo, PathCache
 
 
@@ -48,23 +48,6 @@ def find_nearest(lat, long):
     df = pd.concat([points_df, distance], axis=1).sort_values(by='distance', ascending=True)
     df = df[df['POSTALCODE'].str.len() > 0]
     return df.head(5)
-
-
-def haversine(lon1, lat1, lon2, lat2):
-    """
-    Calculate the great circle distance between two points
-    on the earth (specified in decimal degrees)
-    """
-    # convert decimal degrees to radians
-    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
-    # haversine formula
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-    c = 2 * asin(sqrt(a))
-    # Radius of earth in kilometers is 6371
-    km = 6371* c
-    return km
 
 # Jquery post Request Handling
 def plot_route(request):

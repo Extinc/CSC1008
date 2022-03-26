@@ -2,9 +2,8 @@ from LIFT.codes.AcceptedRides import AcceptedRides
 from LIFT.codes.SharedRides import SharedRides
 from LIFT.datastructure.linkedList import SinglyLinkedList
 from LIFTMAIN.settings import ONEMAP_DEV_URL, ONEMAP_TOKEN
+from math import radians, cos, sin, asin, sqrt
 import requests
-
-
 
 def createUserList():
     userList =  SinglyLinkedList()
@@ -77,7 +76,23 @@ def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rid
     
     if dList.size()>0 and rList.size()>0:
         findRides(rList,dList,aList,sList)   #recursive until there are no more riders or drivers
-        
+
+def haversine(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance between two points
+    on the earth (specified in decimal degrees)
+    """
+    # convert decimal degrees to radians
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    # haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a))
+    # Radius of earth in kilometers is 6371
+    km = 6371* c
+    return km
+
 def distanceCalculation(startLocation, endLocation):
     urls = ONEMAP_DEV_URL+ "/privateapi/routingsvc/route"
     params ={}
@@ -91,7 +106,7 @@ def distanceCalculation(startLocation, endLocation):
     print("totaldistance is : " + str(totaldistance))
     return totaldistance
 
-dList =createUserList()
+dList = createUserList()
 rList = createUserList()
 aList = createUserList()
 sList = createUserList()
