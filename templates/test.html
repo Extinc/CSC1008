@@ -88,10 +88,10 @@
             </form>
             <form>
 
-                <a onclick="getPrice()" class = "bookRide">Get Price</a>
+                <a onclick="getPrice()" class="bookRide">Get Price</a>
                 <a onclick="getInfo()" class="bookRide">Get Ride Information</a>
             </form>
-            
+
             <form>
                 {% csrf_token %}
                 <button type="button" onclick="select_pickup()">
@@ -111,7 +111,7 @@
             <input type="text"/>
         </div>
         <div id="map" style="width: 1500px; height: 750px"></div>
-    
+
         <script>
             const speedFactor = 30; // number of frames per longitude degree
             let animation; // to store and cancel the animation
@@ -132,14 +132,43 @@
                 trackUserLocation: true
             });
             map.addControl(geolocate);
-
             // Used to Get lat and longitude coordinates
             // TODO: USE THIS LOCATION when user press.
             geolocate.on('geolocate', function (position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
-                console.log('lat, lng', latitude, longitude);
+                $.ajax({
+                    type: "GET",
+                    url: "/findnearest/",
+                    data: {
+                        'lat': latitude,
+                        'long': longitude
+                    }, success: function (result) {
+                        const data = JSON.parse(result["data"]);
+                        console.log(data);
+                        for (var i = 0; i < data.length; i++) {
+                            var obj = data[i];
+
+                            var marker = new mapboxgl.Marker()
+                                .setLngLat([obj.long, obj.lat])
+                                .setPopup(new mapboxgl.Popup().setHTML("<p>" + obj.id +"</p>"))
+                                .addTo(map);
+                        }
+                    }
+                });
+                {#console.log('lat, lng', latitude, longitude);#}
             });
+            {##}
+            {#{% for point in pointlist %}#}
+            {#    {% if point.POSTALCODE != "NIL" and point.POSTALCODE|length %}#}
+            {##}
+            {#        var marker = new mapboxgl.Marker()#}
+            {#            .setLngLat([{{ point.long }}, {{ point.lat }}])#}
+            {#            .setPopup(new mapboxgl.Popup().setHTML("<p>{{ point.POSTALCODE }}</p>"))#}
+            {#            .addTo(map);#}
+            {#    {% endif %}#}
+            {#{% endfor %}#}
+
 
             map.on('load', () => {
                 // Insert the layer beneath any symbol layer.
@@ -188,6 +217,8 @@
                     },
                     labelLayerId
                 );
+
+
             });
 
             function plot_route() {
@@ -248,7 +279,8 @@
                     }
                 );
             }
-            function getPrice(){
+
+            function getPrice() {
                 $.ajax({
                     type: "POST",
                     url: "/getPrice/",
@@ -262,16 +294,17 @@
                     success: function (result) {
                         //   $("#result").html("<h2>Received!</h2>");
                         $("#price").val(result);
-                        
-                        if (confirm("Price Of Fare "+ result + "\n Click OK to confirm ride")) {
-                            getInfo();   
+
+                        if (confirm("Price Of Fare " + result + "\n Click OK to confirm ride")) {
+                            getInfo();
                         } else {
-                            
+
                         }
                         document.getElementById("accept").innerHTML = result;
                     },
                 });
             }
+
             function getInfo() {
                 //document.getElementById("rideprice").value = price;
                 $.ajax({
@@ -298,9 +331,9 @@
                     },
                     success: function () {
                         const startMarker = new mapboxgl.Marker({color: '#00FF00'})
-                        const endMarker = new mapboxgl.Marker({color:'#FF0000'})
-                        startLocation = [103.835297,1.418378]
-                        endLocation = [103.835397,1.418378]
+                        const endMarker = new mapboxgl.Marker({color: '#FF0000'})
+                        startLocation = [103.835297, 1.418378]
+                        endLocation = [103.835397, 1.418378]
                         startMarker.setPopup(new mapboxgl.Popup().setHTML("<h1>Start</h1>"))
                         endMarker.setPopup(new mapboxgl.Popup().setHTML("<h1>End</h1>"))
                         startMarker.setLngLat(startLocation)
@@ -309,17 +342,17 @@
                         endMarker.addTo(map)
 
                         const draggabbleMarker = new mapboxgl.Marker({draggable: true})
-                        draggabbleMarker.setLngLat([103.835197,1.418378])
+                        draggabbleMarker.setLngLat([103.835197, 1.418378])
                         draggabbleMarker.addTo(map);
                         draggabbleMarker.setPopup(new mapboxgl.Popup().setHTML("<h1>Draggable Marker</h1>"))
                         draggabbleMarker.togglePopup();
 
-                        function onDragEnd() 
-                        {
+                        function onDragEnd() {
                             const lngLat = draggabbleMarker.getLngLat();
                             window.alert(`Longitude: ${lngLat.lng}, Latitude: ${lngLat.lat}`);
                             console.log(`Longitude: ${lngLat.lng}, Latitude: ${lngLat.lat}`);
                         }
+
                         draggabbleMarker.on('dragend', onDragEnd)
                         //   $("#result").html("<h2>Received!</h2>");
                     },
