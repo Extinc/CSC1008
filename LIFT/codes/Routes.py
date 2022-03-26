@@ -4,7 +4,7 @@ from time import sleep
 import pandas as pd
 import requests
 
-from LIFT.models.models import PointInfo
+from LIFT.models.models import PointInfo, Drivers
 from LIFTMAIN.settings import DRIVE_EDGE_DATA, DRIVE_NODE_DATA, ONEMAP_DEV_URL, ONEMAP_TOKEN
 
 
@@ -37,6 +37,13 @@ roadnode_df = pd.DataFrame(node_data)
 points_df = pd.DataFrame(list(PointInfo.objects.all().values('id', 'BUILDINGNAME', 'BLOCK', 'ROAD', 'POSTALCODE', 'lat', 'long')))
 
 print(points_df)
+counte = 0
+print(PointInfo.objects.all()[counte].lat)
+name = ['Kalum', 'Helena Mansell', 'Nayla Gonzalez', 'Genevieve Robin', 'Maegan Frederick', 'Bill Cabrera','Ocean Philip', 'Suman Mcclure', 'Leland Manning', 'Conan Salt']
+for i in range(6, 16):
+    test = Drivers.objects.create(driverID = i, name = name[counte], driverlat =PointInfo.objects.all()[counte].lat , driverlong = PointInfo.objects.all()[counte].long, seatNo = 5, status = "online")
+    test.save()
+    counte += 1
 
 """_summary_
     Below to to delete the array that is temp used to store the the data

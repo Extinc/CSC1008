@@ -21,3 +21,13 @@ class PathCache(models.Model):
     destination = models.TextField(null=False)
     Data = models.TextField(null=True, primary_key=False)
     DateTime = models.DateTimeField()
+
+
+class Drivers(models.Model):
+    id = models.AutoField(primary_key=True)
+    driverID = models.IntegerField(default=0)
+    name = models.TextField(null=False)
+    driverlat = models.FloatField(default=0)
+    driverlong = models.FloatField(default=0)
+    seatNo = models.IntegerField(default=0)
+    status = models.TextField(null=False)
