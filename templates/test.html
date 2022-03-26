@@ -157,16 +157,16 @@
                 });
                 {#console.log('lat, lng', latitude, longitude);#}
             });
-            {##}
-            {#{% for point in pointlist %}#}
-            {#    {% if point.POSTALCODE != "NIL" and point.POSTALCODE|length %}#}
-            {##}
-            {#        var marker = new mapboxgl.Marker()#}
-            {#            .setLngLat([{{ point.long }}, {{ point.lat }}])#}
-            {#            .setPopup(new mapboxgl.Popup().setHTML("<p>{{ point.POSTALCODE }}</p>"))#}
-            {#            .addTo(map);#}
-            {#    {% endif %}#}
-            {#{% endfor %}#}
+            // {##}
+            // {#{% for point in pointlist %}#}
+            // {#    {% if point.POSTALCODE != "NIL" and point.POSTALCODE|length %}#}
+            // {##}
+            // {#        var marker = new mapboxgl.Marker()#}
+            // {#            .setLngLat([{{ point.long }}, {{ point.lat }}])#}
+            // {#            .setPopup(new mapboxgl.Popup().setHTML("<p>{{ point.POSTALCODE }}</p>"))#}
+            // {#            .addTo(map);#}
+            // {#    {% endif %}#}
+            // {#{% endfor %}#}
 
 
             map.on('load', () => {
