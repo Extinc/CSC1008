@@ -9,6 +9,8 @@ class PointInfo(models.Model):
     FEATURENAME = models.CharField(max_length=250, null=True)
     POSTALCODE = models.CharField(max_length=250, null=True)
     HIGHWAY = models.TextField(null=True)
+    lat = models.FloatField(default=0)
+    long = models.FloatField(default=0)
 
     def __str__(self):
         return '{} {} {} '.format(self.id, self.BUILDINGNAME, self.POSTALCODE)

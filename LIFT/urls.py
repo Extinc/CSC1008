@@ -1,8 +1,7 @@
 from django.urls import path
-from .views import homeview, loginview, bookview, testview
-from django.urls import path
 
 from .views import homeview, loginview, bookview
+from .views import testview
 
 urlpatterns = [
     path('', homeview.landing_page, name="landing"),
@@ -11,6 +10,7 @@ urlpatterns = [
     path('plot_route/', testview.plot_route),
     path('getInfo/', testview.getInfo),
     path('getPrice/', testview.getPrice),
+    path('findnearest/', testview.getNearest),
     # path('showPrice/',testview.showPrice),
     path('select_pickup/', testview.select_pickup),
     path('get_addr/', homeview.get_address),

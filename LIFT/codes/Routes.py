@@ -32,34 +32,11 @@ for feature in data["features"]:
 f.close()
 
 
-
 roadedge_df = pd.DataFrame(edge_data)
 roadnode_df = pd.DataFrame(node_data)
-points_df = pd.DataFrame(list(PointInfo.objects.all().values('id', 'BUILDINGNAME', 'BLOCK', 'ROAD', 'POSTALCODE')))
+points_df = pd.DataFrame(list(PointInfo.objects.all().values('id', 'BUILDINGNAME', 'BLOCK', 'ROAD', 'POSTALCODE', 'lat', 'long')))
 
 print(points_df)
-
-# totalcount = 0
-# count=0
-# result = []
-
-# dat = PointInfo.objects.all().filter(POSTALCODE__exact='NIL')
-# dat = list(dat)
-# print(dat)
-# count = 0
-# for i in dat:
-#     print()
-#     urls = "https://nominatim.openstreetmap.org/lookup?osm_ids=N" + str(i.id) + "&format=json"
-#     response = requests.get(urls)
-#     data1 = response.json()
-#     if len(data1) > 0:
-#         print(str(i.id) + str(data1))
-#         PointInfo.objects.filter(id = i.id).update(POSTALCODE = data1[0]["address"]["postcode"])
-#         PointInfo.objects.filter(id = i.id).update(ROAD = data1[0]["address"]["road"])
-#     count += 1
-#     print(count)
-    # sleep(1.3)
-
 
 """_summary_
     Below to to delete the array that is temp used to store the the data
