@@ -1,5 +1,7 @@
+import math
 from LIFT.codes.AcceptedRides import AcceptedRides
 from LIFT.codes.SharedRides import SharedRides
+from LIFT.datastructure.HashTable import HashTable
 from LIFT.datastructure.linkedList import SinglyLinkedList
 from LIFTMAIN.settings import ONEMAP_DEV_URL, ONEMAP_TOKEN
 from math import radians, cos, sin, asin, sqrt
@@ -28,11 +30,13 @@ def findNearestRider(rList,sList,driver):
             if pToP>=pToD: 
                 newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],firstRider[3],nextRider[1],nextRider[3],driver[1],firstRider[2],firstRider[5],driver[0]) #for when its destination is closer to first rider so car goes from 
                 addUser(sList,newSR)
+                uTable.setVal(firstRider[0],"1") #sharedRide = 1, AcceptedRides = 2. We just need to store an ID for one user since its a shared ride
                 print("New Shared Ride",sList.size())
             else:
                 newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],nextRider[1],firstRider[3],nextRider[3],driver[1],firstRider[2],firstRider[5],driver[0]) #normal case where it picks up passenger along the way
                 
                 addUser(sList,newSR)
+                uTable.setVal(firstRider[0],"1")
                 print("New Shared Ride",sList.size())
                 
 
@@ -59,12 +63,14 @@ def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rid
                         print("No Shared Ride Found")
                         newRide = AcceptedRides(rider[0],rider[1],driver[1],rider[2],rider[3],rider[4],rider[6],rider[5],driver[0])
                         addUser(aList.newRide)
+                        uTable.setVal(rider[0],"2")
                         dList.deleteAt(x)
                         rList.deleteAt(0)
                 elif(int(rider[5]) == int(5) or int(rider[5]) == int(8)):
                     if int(rider[5]) == int(driver[2]):
                         newRide = AcceptedRides(rider[0],rider[1],driver[1],rider[2],rider[3],rider[4],rider[6],rider[5],driver[0])
                         addUser(aList,newRide)
+                        uTable.setVal(rider[0],"2")
                         dList.deleteAt(x)
                         rList.deleteAt(0)
                         break
@@ -105,8 +111,50 @@ def distanceCalculation(startLocation, endLocation):
     totaldistance = response.json()["route_summary"]["total_distance"]
     print("totaldistance is : " + str(totaldistance))
     return totaldistance
+        
+def findList(userId,sList,aList): #uses binary search
+    listStored = uTable.getVal(userId)
+    if int(listStored) == 1:
+        print(sList.size())
+        position = findRideIndex(sList,0,sList.size()-1,userId)
+        return math.ceil(position)
+        
+        
+    elif int(listStored) ==2:
+        print(aList.size())
+        position = findRideIndex(aList,0,aList.size()-1,userId)
+        return math.ceil(position)
+        
+    
 
-dList = createUserList()
+
+def findRideIndex(list,smallest,size,userId):
+    #def binarySearch(arr, l, r, x): #l = first value r = last val x = value we searching
+    if size >= smallest:
+        mid = smallest + (size-smallest)/2
+        print(mid)
+        print(size)
+        currentId = splitString(str(list.listDetail(mid)))
+        print(currentId[0])
+        if int(currentId[0]) == int(userId):
+            print("mid",mid)
+            return mid
+        
+        elif int(currentId[0]) > int(userId):
+            return findRideIndex(list,smallest,mid-1,userId)
+        
+        else:
+                
+            return findRideIndex(list,mid+1,size,userId)
+        
+        
+    
+
+
+
+#creating all the Linked List and functions we will use
+dList = createUserList() 
 rList = createUserList()
 aList = createUserList()
 sList = createUserList()
+uTable = HashTable()

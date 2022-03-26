@@ -1,4 +1,101 @@
+import math
+from multiprocessing import shared_memory
 
+
+class HashTable:
+  
+    # Create empty bucket list of given size
+    def __init__(self):
+        self.size = 1000
+        self.hash_table = self.create_buckets()
+  
+    def create_buckets(self):
+        return [[] for _ in range(self.size)]
+  
+    # Insert values into hash map
+    def setVal(self, key, val):
+        
+        # Get the index from the key
+        # using hash function
+        hashed_key = hash(key) % self.size
+          
+        # Get the bucket corresponding to index
+        bucket = self.hash_table[hashed_key]
+  
+        found_key = False
+        for index, record in enumerate(bucket):
+            record_key, record_val = record
+              
+            # check if the bucket has same key as
+            # the key to be inserted
+            if record_key == key:
+                found_key = True
+                break
+  
+        # If the bucket has same key as the key to be inserted,
+        # Update the key value
+        # Otherwise append the new key-value pair to the bucket
+        if found_key:
+            bucket[index] = (key, val)
+        else:
+            bucket.append((key, val))
+  
+    # Return searched value with specific key
+    def getVal(self, key):
+        
+        # Get the index from the key using
+        # hash function
+        hashed_key = hash(key) % self.size
+          
+        # Get the bucket corresponding to index
+        bucket = self.hash_table[hashed_key]
+  
+        found_key = False
+        for index, record in enumerate(bucket):
+            record_key, record_val = record
+              
+            # check if the bucket has same key as 
+            # the key being searched
+            if record_key == key:
+                found_key = True
+                break
+  
+        # If the bucket has same key as the key being searched,
+        # Return the value found
+        # Otherwise indicate there was no record found
+        if found_key:
+            return record_val
+        else:
+            return "No record found"
+  
+    # Remove a value with specific key
+    def delVal(self, key):
+        
+        # Get the index from the key using
+        # hash function
+        hashed_key = hash(key) % self.size
+          
+        # Get the bucket corresponding to index
+        bucket = self.hash_table[hashed_key]
+  
+        found_key = False
+        for index, record in enumerate(bucket):
+            record_key, record_val = record
+              
+            # check if the bucket has same key as
+            # the key to be deleted
+            if record_key == key:
+                found_key = True
+                break
+        if found_key:
+            bucket.pop(index)
+        return
+  
+    # To print the items of hash map
+    def __str__(self):
+        return "".join(str(item) for item in self.hash_table)
+  
+  
 
 class Driver:
   def __init__(self, userId, driverLocation,seatNo):
@@ -208,11 +305,13 @@ def findNearestRider(rList,sList,driver):
             if pToP>=pToD: 
                 newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],firstRider[3],nextRider[1],nextRider[3],driver[1],firstRider[2],firstRider[5],driver[0]) #for when its destination is closer to first rider so car goes from 
                 addUser(sList,newSR)
+                uTable.setVal(firstRider[0],"1") #sharedRide = 1, AcceptedRides = 2. We just need to store an ID for one user since its a shared ride
                 print("New Shared Ride",sList.size())
             else:
                 newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],nextRider[1],firstRider[3],nextRider[3],driver[1],firstRider[2],firstRider[5],driver[0]) #normal case where it picks up passenger along the way
                 
                 addUser(sList,newSR)
+                uTable.setVal(firstRider[0],"1")
                 print("New Shared Ride",sList.size())
                 
 
@@ -239,12 +338,14 @@ def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rid
                         print("No Shared Ride Found")
                         newRide = AcceptedRides(rider[0],rider[1],driver[1],rider[2],rider[3],rider[4],rider[6],rider[5],driver[0])
                         addUser(aList.newRide)
+                        uTable.setVal(rider[0],"2")
                         dList.deleteAt(x)
                         rList.deleteAt(0)
                 elif(int(rider[5]) == int(5) or int(rider[5]) == int(8)):
                     if int(rider[5]) == int(driver[2]):
                         newRide = AcceptedRides(rider[0],rider[1],driver[1],rider[2],rider[3],rider[4],rider[6],rider[5],driver[0])
                         addUser(aList,newRide)
+                        uTable.setVal(rider[0],"2")
                         dList.deleteAt(x)
                         rList.deleteAt(0)
                         break
@@ -253,11 +354,53 @@ def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rid
                 break
     else:
         print("Driver Not Found")
+    
     if dList.size()>0 and rList.size()>0:
-        findRides(rList,dList,aList,sList)
+        findRides(rList,dList,aList,sList)   #recursive until there are no more riders or drivers
         
         
+def findList(userId,sList,aList): #uses binary search
+    listStored = uTable.getVal(userId)
+    if int(listStored) == 1:
+        print(sList.size())
+        position = findRideIndex(sList,0,sList.size()-1,userId)
+        sList.deleteAt(math.ceil(position))
+        
+        
+    elif int(listStored) ==2:
+        print(aList.size())
+        position = findRideIndex(aList,0,aList.size()-1,userId)
+        aList.deleteAt(math.ceil(position))
+        
+    
+
+
+def findRideIndex(list,smallest,size,userId):
+    #def binarySearch(arr, l, r, x): #l = first value r = last val x = value we searching
+    if size >= smallest:
+        mid = smallest + (size-smallest)/2
+        print(mid)
+        print(size)
+        currentId = splitString(str(list.listDetail(mid)))
+        print(currentId[0])
+        if int(currentId[0]) == int(userId):
+            print("mid",mid)
+            return mid
+        
+        elif int(currentId[0]) > int(userId):
+            return findRideIndex(list,smallest,mid-1,userId)
+        
+        else:
                 
+            return findRideIndex(list,mid+1,size,userId)
+        
+    
+
+
+
+    
+
+
 
 def distanceCalculation(startLocation, endLocation):
     startLocation = startLocation.split(',')
@@ -273,23 +416,53 @@ DRW1911 = Driver("DRW1911",2819041,8)
 DRW1915 = Driver("DRW1915",2819041,8)
 DRW1922 = Driver("DRW1922",2819041,8)
 rList = createUserList()
-FES2103 = riderRequest("FES2103",2819102,"1331522",3928181,31023,8,'20')
-FES2244 = riderRequest("FES2244",2819102,"1331522",3928181,31023,8,'20')
-FES2211 = riderRequest("FES2211",2819102,"1331522",3928181,31023,1,'20')
-FES2152 = riderRequest("FES2152",2819102,"1331522",3928181,31023,1,'20')
-FES2112 = riderRequest("FES2112",2819102,"1331522",3928181,31023,1,'20')
-FES1812 = riderRequest("FES1812",2819102,"1331522",3928181,31023,1,'20')
-addUser(rList,FES2103)
-addUser(rList,FES2211)
-addUser(rList,FES2152)
-addUser(rList,FES2244)
-addUser(rList,FES2112)
+FES2103 = riderRequest("2103",2819102,"1331522",3928181,31023,8,'20')
+FES2244 = riderRequest("2244",2819102,"1331522",3928181,31023,8,'20')
+FES2211 = riderRequest("2211",2819102,"1331522",3928181,31023,8,'20')
+FES2152 = riderRequest("2152",2819102,"1331522",3928181,31023,8,'20')
+FES2112 = riderRequest("2112",2819102,"1331522",3928181,31023,8,'20')
+FES1812 = riderRequest("1812",2819102,"1331522",3928181,31023,8,'20')
 addUser(rList,FES1812)
+addUser(rList,FES2103)
+addUser(rList,FES2112)
+addUser(rList,FES2152)
+addUser(rList,FES2152)
+addUser(rList,FES2152)
+addUser(rList,FES2152)
+addUser(rList,FES2152)
+addUser(rList,FES2152)
+addUser(rList,FES2152)
+addUser(rList,FES2152)
+addUser(rList,FES2152)
+addUser(rList,FES2211)
+addUser(rList,FES2244)
+
+
+addUser(rList,FES2244)
+
+
+addUser(rList,FES2244)
+addUser(dList,DRW1915)
+addUser(dList,DRW1915)
+addUser(dList,DRW1915)
 addUser(dList,DRW1923)
-addUser(dList,DRW1911)
-addUser(dList,DRW1911)
+addUser(dList,DRW1915)
+addUser(dList,DRW1923)
+
+addUser(dList,DRW1915)
+addUser(dList,DRW1915)
+addUser(dList,DRW1923)
+addUser(dList,DRW1915)
+addUser(dList,DRW1923)
+
+addUser(dList,DRW1915)
+addUser(dList,DRW1915)
+addUser(dList,DRW1923)
+addUser(dList,DRW1915)
+addUser(dList,DRW1923)
 
 
+uTable = HashTable()
 
 aList = createUserList() #accepted rides List
 rmList = createUserList() #rider match
@@ -303,6 +476,14 @@ print("accepted",aList.listDetail(1))
 
 print("shared",sList.listDetail(0))
 print("shared",sList.listDetail(1))
+print(uTable)
+print(uTable.getVal("2211"))
+index = print(findList("2211",sList,aList))
+print(sList.listDetail(index))
+sList.deleteAt(index)
+print(sList.listDetail(index))
+
+
 #removal of data
 #adding of driver 
 #finding based on seat and type of car

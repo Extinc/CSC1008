@@ -49,7 +49,6 @@ class SinglyLinkedList:
         else:
             NewNode.next = self.head
             self.head = NewNode
-            
     def insertAt(self, object, index):     
 
         #1. allocate node to new element

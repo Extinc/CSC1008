@@ -1,15 +1,15 @@
 class HashTable:
   
     # Create empty bucket list of given size
-    def __init__(self, size):
-        self.size = size
+    def __init__(self):
+        self.size = 1000
         self.hash_table = self.create_buckets()
   
     def create_buckets(self):
         return [[] for _ in range(self.size)]
   
     # Insert values into hash map
-    def set_val(self, key, val):
+    def setVal(self, key, val):
         
         # Get the index from the key
         # using hash function
@@ -37,7 +37,7 @@ class HashTable:
             bucket.append((key, val))
   
     # Return searched value with specific key
-    def get_val(self, key):
+    def getVal(self, key):
         
         # Get the index from the key using
         # hash function
@@ -65,7 +65,7 @@ class HashTable:
             return "No record found"
   
     # Remove a value with specific key
-    def delete_val(self, key):
+    def delVal(self, key):
         
         # Get the index from the key using
         # hash function
@@ -94,19 +94,3 @@ class HashTable:
   
 hash_table = HashTable(50)
   
-# insert some values
-hash_table.set_val('gfg@example.com', 'some value')
-print(hash_table)
-print()
-  
-hash_table.set_val('portal@example.com', 'some other value')
-print(hash_table)
-print()
-  
-# search/access a record with key
-print(hash_table.get_val('portal@example.com'))
-print()
-  
-# delete or remove a value
-hash_table.delete_val('portal@example.com')
-print(hash_table)
