@@ -38,12 +38,6 @@ points_df = pd.DataFrame(list(PointInfo.objects.all().values('id', 'BUILDINGNAME
 
 print(points_df)
 counte = 0
-print(PointInfo.objects.all()[counte].lat)
-name = ['Kalum', 'Helena Mansell', 'Nayla Gonzalez', 'Genevieve Robin', 'Maegan Frederick', 'Bill Cabrera','Ocean Philip', 'Suman Mcclure', 'Leland Manning', 'Conan Salt']
-for i in range(6, 16):
-    test = Drivers.objects.create(driverID = i, name = name[counte], driverlat =PointInfo.objects.all()[counte].lat , driverlong = PointInfo.objects.all()[counte].long, seatNo = 5, status = "online")
-    test.save()
-    counte += 1
 
 """_summary_
     Below to to delete the array that is temp used to store the the data
