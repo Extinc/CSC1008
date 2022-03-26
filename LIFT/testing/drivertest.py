@@ -237,6 +237,40 @@ class SinglyLinkedList:
             else:
                 prev.next = temp.next
             del temp
+    def insertAt(self, object, index):     
+
+        #1. allocate node to new element
+        newNode = Node(object)
+
+        #2. check if the index is > 0 
+        if(index < 1):
+            print("\nindex should be >= 1.")
+        elif (index == 1):
+
+        #3. if the index is 1, make next of the
+        #   new node as head and new node as head
+            newNode.next = self.head
+            self.head = newNode
+        else:    
+
+            #4. Else, make a temp node and traverse to the 
+            #   node previous to the index
+            temp = self.head
+            for i in range(1, index-1):
+                if(temp != None):
+                    temp = temp.next   
+
+            #5. If the previous node is not null, make 
+            #   newNode next as temp next and temp next 
+            #   as newNode.
+            if(temp != None):
+                newNode.next = temp.next
+                temp.next = newNode  
+            else:
+
+                #6. When the previous node is null
+                print("\nThe previous node is null.")  
+        
 
     def deleteAtHead(self):
         temp = self.head
@@ -295,6 +329,7 @@ def splitString(userString):
 
 
 def findNearestRider(rList,sList,driver):
+
     firstRider = splitString(str(rList.listDetail(0)))
     print("driver deets",driver)
     for i in range(1,rList.size()-1):
@@ -344,7 +379,21 @@ def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rid
                 elif(int(rider[5]) == int(5) or int(rider[5]) == int(8)):
                     if int(rider[5]) == int(driver[2]):
                         newRide = AcceptedRides(rider[0],rider[1],driver[1],rider[2],rider[3],rider[4],rider[6],rider[5],driver[0])
-                        addUser(aList,newRide)
+                        print(aList.size())
+                        size = aList.size()-2
+                        if int(size) > 0:
+                            print("size is",aList.size())
+                            print("alist",aList.listDetail(size()-1))
+                            for ii in range(0,size):
+                                currentrider = splitString(str(aList.listDetail(int(ii))))
+                                print("current rider is",currentrider[0])
+                                print("rider is",rider[0])
+                                if int(rider[0]) > int(currentrider[0]):
+                                    print("ii",ii)
+                                    aList.insertAt(newRide,ii-1)
+                                    break
+                        else:
+                            aList.insertAtHead(newRide)
                         uTable.setVal(rider[0],"2")
                         dList.deleteAt(x)
                         rList.deleteAt(0)
@@ -473,15 +522,15 @@ sList = createUserList()
 findRides(rList,dList,aList,sList)
 print("accepted",aList.listDetail(0))
 print("accepted",aList.listDetail(1))
+print("accepted",aList.listDetail(2))
+print("accepted",aList.listDetail(3))
+print("accepted",aList.listDetail(4))
+print("accepted",aList.listDetail(5))
+
 
 print("shared",sList.listDetail(0))
 print("shared",sList.listDetail(1))
-print(uTable)
-print(uTable.getVal("2211"))
-index = print(findList("2211",sList,aList))
-print(sList.listDetail(index))
-sList.deleteAt(index)
-print(sList.listDetail(index))
+
 
 
 #removal of data
