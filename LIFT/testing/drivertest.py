@@ -364,13 +364,13 @@ def findList(userId,sList,aList): #uses binary search
     if int(listStored) == 1:
         print(sList.size())
         position = findRideIndex(sList,0,sList.size()-1,userId)
-        sList.deleteAt(math.ceil(position))
+        return math.ceil(position)
         
         
     elif int(listStored) ==2:
         print(aList.size())
         position = findRideIndex(aList,0,aList.size()-1,userId)
-        aList.deleteAt(math.ceil(position))
+        return math.ceil(position)
         
     
 
