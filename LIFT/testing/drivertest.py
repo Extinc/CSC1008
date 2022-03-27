@@ -359,23 +359,14 @@ def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rid
         findRides(rList,dList,aList,sList)   #recursive until there are no more riders or drivers
         
         
-def findList(userId,sList,aList): #uses binary search
+def findList(userId): #hashmap to delete
     listStored = uTable.getVal(userId)
-    if int(listStored) == 1:
-        print(sList.size())
-        position = findRideIndex(sList,0,sList.size()-1,userId)
-        return math.ceil(position)
-        
-        
-    elif int(listStored) ==2:
-        print(aList.size())
-        position = findRideIndex(aList,0,aList.size()-1,userId)
-        return math.ceil(position)
+    return listStored
         
     
 
 
-def findRideIndex(list,smallest,size,userId):
+def findRideIndex(list,smallest,size,userId): #uses binary search
     #def binarySearch(arr, l, r, x): #l = first value r = last val x = value we searching
     if size >= smallest:
         mid = smallest + (size-smallest)/2
@@ -384,7 +375,6 @@ def findRideIndex(list,smallest,size,userId):
         currentId = splitString(str(list.listDetail(mid)))
         print(currentId[0])
         if int(currentId[0]) == int(userId):
-            print("mid",mid)
             return mid
         
         elif int(currentId[0]) > int(userId):
@@ -393,9 +383,32 @@ def findRideIndex(list,smallest,size,userId):
         else:
                 
             return findRideIndex(list,mid+1,size,userId)
+    else:
+        return smallest 
         
     
 
+def endRide(userId,sList,aList):
+    listStored = findList(userId)
+
+    if int(listStored) == 1:
+        print(sList.size())
+        position = findRideIndex(sList,0,sList.size()-1,userId)
+        position = math.ceil(int(position))
+        sList.deleteAt(position)
+        uTable.delVal(userId)
+        print("Shared Ride Has Ended")
+        
+        
+        
+    elif int(listStored) ==2:
+        print(aList.size())
+        position = findRideIndex(aList,0,aList.size()-1,userId)
+        position = math.ceil(int(position))
+        aList.deleteAt(int(position))
+        uTable.delVal(userId)
+        print("Normal Ride Has Ended")
+        
 
 
     
@@ -478,10 +491,10 @@ print("shared",sList.listDetail(0))
 print("shared",sList.listDetail(1))
 print(uTable)
 print(uTable.getVal("2211"))
-index = print(findList("2211",sList,aList))
-print(sList.listDetail(index))
-sList.deleteAt(index)
-print(sList.listDetail(index))
+print(aList.listDetail(0))
+endRide("1812",sList,aList)
+print(aList.listDetail(0))
+
 
 
 #removal of data
