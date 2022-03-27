@@ -110,7 +110,7 @@ def getInfo(request):
     print("The price is: " + str(formatted_price))
     rList = BookingFunctions.createUserList()
     #User Object
-    temp = riderRequest(request.user.id,start,now.strftime("%Y %m %d %H %M %S"),end,totalDistance,typeOfRide,formatted_price)
+    temp = riderRequest(request.user.id,start,now.strftime("%Y-%m-%d-%H-%M-%S"),end,totalDistance,typeOfRide,formatted_price)
     BookingFunctions.addUser(rList,temp)
     print(rList.listDetail(0))
     print(temp)
