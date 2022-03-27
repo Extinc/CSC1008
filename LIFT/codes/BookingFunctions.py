@@ -160,7 +160,8 @@ aList = createUserList()
 sList = createUserList()
 uTable = HashTable()
 
+
 dList = models.Drivers.objects.all()
-for i in range(1,10):
-    print(dList[i])
-    addUser(dList,dList[i])
+for driver in dList:
+    print(dList)
+    addUser(dList,driver)
