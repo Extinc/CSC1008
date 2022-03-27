@@ -1,5 +1,6 @@
 import math
 from LIFT.codes.AcceptedRides import AcceptedRides
+from LIFT.codes.Driver import Driver
 from LIFT.codes.SharedRides import SharedRides
 from LIFT.datastructure.HashTable import HashTable
 from LIFT.datastructure.linkedList import SinglyLinkedList
@@ -244,6 +245,9 @@ uTable = HashTable()
 
 
 dList = models.Drivers.objects.all()
+i = 0
 for driver in dList:
-    print(dList)
-    addUser(dList,driver)
+    location = str(models.Drivers.objects.all()[int(i)].driverlat) +","+str(models.Drivers.objects.all()[int(i)].driverlong)
+    driver = Driver(models.Drivers.objects.all()[int(i)].driverID,location,models.Drivers.objects.all()[int(i)].seatNo)
+    i+=1
+    print(driver[0])
