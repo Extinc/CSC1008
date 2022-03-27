@@ -35,10 +35,9 @@ f.close()
 roadedge_df = pd.DataFrame(edge_data)
 roadnode_df = pd.DataFrame(node_data)
 points_df = pd.DataFrame(list(PointInfo.objects.all().values('id', 'BUILDINGNAME', 'BLOCK', 'ROAD', 'POSTALCODE', 'lat', 'long')))
-
-print(points_df)
 counte = 0
 
+# print(roadnode_df[roadnode_df['id'] == '244895741']['y'].values[0])
 """_summary_
     Below to to delete the array that is temp used to store the the data
 """

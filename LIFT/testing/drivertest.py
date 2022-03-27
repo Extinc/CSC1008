@@ -3,35 +3,35 @@ from multiprocessing import shared_memory
 
 
 class HashTable:
-  
+
     # Create empty bucket list of given size
     def __init__(self):
         self.size = 1000
         self.hash_table = self.create_buckets()
-  
+
     def create_buckets(self):
         return [[] for _ in range(self.size)]
-  
+
     # Insert values into hash map
     def setVal(self, key, val):
-        
+
         # Get the index from the key
         # using hash function
         hashed_key = hash(key) % self.size
-          
+
         # Get the bucket corresponding to index
         bucket = self.hash_table[hashed_key]
-  
+
         found_key = False
         for index, record in enumerate(bucket):
             record_key, record_val = record
-              
+
             # check if the bucket has same key as
             # the key to be inserted
             if record_key == key:
                 found_key = True
                 break
-  
+
         # If the bucket has same key as the key to be inserted,
         # Update the key value
         # Otherwise append the new key-value pair to the bucket
@@ -39,27 +39,27 @@ class HashTable:
             bucket[index] = (key, val)
         else:
             bucket.append((key, val))
-  
+
     # Return searched value with specific key
     def getVal(self, key):
-        
+
         # Get the index from the key using
         # hash function
         hashed_key = hash(key) % self.size
-          
+
         # Get the bucket corresponding to index
         bucket = self.hash_table[hashed_key]
-  
+
         found_key = False
         for index, record in enumerate(bucket):
             record_key, record_val = record
-              
-            # check if the bucket has same key as 
+
+            # check if the bucket has same key as
             # the key being searched
             if record_key == key:
                 found_key = True
                 break
-  
+
         # If the bucket has same key as the key being searched,
         # Return the value found
         # Otherwise indicate there was no record found
@@ -67,21 +67,21 @@ class HashTable:
             return record_val
         else:
             return "No record found"
-  
+
     # Remove a value with specific key
     def delVal(self, key):
-        
+
         # Get the index from the key using
         # hash function
         hashed_key = hash(key) % self.size
-          
+
         # Get the bucket corresponding to index
         bucket = self.hash_table[hashed_key]
-  
+
         found_key = False
         for index, record in enumerate(bucket):
             record_key, record_val = record
-              
+
             # check if the bucket has same key as
             # the key to be deleted
             if record_key == key:
@@ -90,11 +90,11 @@ class HashTable:
         if found_key:
             bucket.pop(index)
         return
-  
+
     # To print the items of hash map
     def __str__(self):
         return "".join(str(item) for item in self.hash_table)
-  
+
   
 
 class Driver:
@@ -383,7 +383,7 @@ def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rid
                         size = aList.size()-2
                         if int(size) > 0:
                             print("size is",aList.size())
-                            print("alist",aList.listDetail(size()-1))
+                            # print("alist",aList.listDetail(size()-1))
                             for ii in range(0,size):
                                 currentrider = splitString(str(aList.listDetail(int(ii))))
                                 print("current rider is",currentrider[0])
