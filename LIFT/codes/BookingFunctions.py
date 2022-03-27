@@ -157,22 +157,23 @@ def distanceCalculation(startLocation, endLocation):
     print("totaldistance is : " + str(totaldistance))
     return totaldistance
         
-def findList(userId): #hashmap to delete
-    listStored = uTable.getVal(userId)
-    return listStored
+
         
     
 
 
 def findRideIndex(list,smallest,size,userId): #uses binary search
     #def binarySearch(arr, l, r, x): #l = first value r = last val x = value we searching
-    if size >= smallest:
+    if size > smallest:
         mid = smallest + (size-smallest)/2
         print(mid)
         print(size)
         currentId = splitString(str(list.listDetail(mid)))
         print(currentId[0])
-        if int(currentId[0]) == int(userId):
+        if currentId[0] is None:
+             return 0
+        
+        elif int(currentId[0]) == int(userId):
             return mid
         
         elif int(currentId[0]) > int(userId):
@@ -182,9 +183,31 @@ def findRideIndex(list,smallest,size,userId): #uses binary search
                 
             return findRideIndex(list,mid+1,size,userId)
     else:
-        return smallest 
+        return 0
         
-    
+def findDriver(userId,sList,aList):
+    listStored = findList(userId)
+    print("id",userId)
+    if int(listStored) == 1:
+        print(sList.size())
+        position = findRideIndex(sList,0,sList.size()-1,userId)
+        position = math.ceil(int(position))
+        print("pos",position)
+        rideDetail = splitString(str(sList.listDetail(int(position))))
+        driverId = rideDetail[8]
+        print("driverId",driverId)
+        return driverId
+        
+        
+        
+    elif int(listStored) ==2:
+        print(aList.size())
+        position = findRideIndex(aList,0,aList.size()-1,userId)
+        position = math.ceil(int(position))
+        rideDetail = splitString(str(aList.listDetail(int(position))))
+        driverId = rideDetail[7]
+        print("driverId",driverId)
+        return driverId   
 
 def endRide(userId,sList,aList):
     listStored = findList(userId)
