@@ -37,7 +37,9 @@ roadnode_df = pd.DataFrame(node_data)
 points_df = pd.DataFrame(list(PointInfo.objects.all().values('id', 'BUILDINGNAME', 'BLOCK', 'ROAD', 'POSTALCODE', 'lat', 'long')))
 counte = 0
 
-# print(roadnode_df[roadnode_df['id'] == '244895741']['y'].values[0])
+dlist = Drivers.objects.all()
+for driver in dlist:
+    print(driver)
 """_summary_
     Below to to delete the array that is temp used to store the the data
 """

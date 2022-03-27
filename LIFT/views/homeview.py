@@ -10,7 +10,7 @@ import json
 
 from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY, ONEMAP_DEV_URL, ONEMAP_TOKEN
 from ..codes.Routes import roadedge_df, roadnode_df, points_df
-from ..datastructure.Graph import Graph, dijkstra
+from ..datastructure.Graph import Graph
 
 # Create your views here.
 from ..datastructure.Trie import Trie
