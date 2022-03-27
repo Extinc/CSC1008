@@ -9,10 +9,6 @@ from django.shortcuts import render
 import requests
 import json
 import datetime
-
-from django.utils import timezone
-from vincenty import vincenty
-
 from LIFT.testing import drivertest
 from LIFT.testing.drivertest import riderRequest
 from LIFT.testing.drivertest import AcceptedRides
