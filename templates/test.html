@@ -162,6 +162,16 @@
         class="readonly"
       />
       <p></p>
+      <label for="typeRide"><b>Type Of Ride</b></label>
+      <p></p>
+      <input
+        name="typeRide"
+        id="typeRide"
+        placeholder="Single"
+        readonly
+        class="readonly"
+      />
+      <p></p>
       <button type="submit" class="btn">End Ride</button>
       <button type="button" class="btn minimise" onclick="closeForm()">
         Minimise
@@ -469,7 +479,8 @@
 
         },
         success: function (result){
-            $("#driverId").val(result)
+            $("#driverId").val(result),
+            $("#typeRide").val("Shared")
         }
     })
     };
