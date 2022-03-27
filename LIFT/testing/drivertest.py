@@ -1,5 +1,10 @@
 import math
 from multiprocessing import shared_memory
+from urllib import request
+from django.http import HttpResponse, JsonResponse
+import requests
+
+from LIFT.models.models import Drivers
 
 
 class HashTable:
@@ -472,9 +477,7 @@ def endRide(userId,sList,aList):
         sList.deleteAt(position)
         uTable.delVal(userId)
         print("Shared Ride Has Ended")
-        
-        
-        
+                
     elif int(listStored) ==2:
         print(aList.size())
         position = findRideIndex(aList,0,aList.size()-1,userId)
@@ -483,18 +486,26 @@ def endRide(userId,sList,aList):
         uTable.delVal(userId)
         print("Normal Ride Has Ended")
 
-def findDriver(userId,sList,aList):
+
+
+
+def findDriver(request):
+    userId = request.POST['userId']
     listStored = findList(userId)
     print("id",userId)
+    print("list stored is",listStored)
     if int(listStored) == 1:
         print(sList.size())
         position = findRideIndex(sList,0,sList.size()-1,userId)
         position = math.ceil(int(position))
+        dName = Drivers.objects.get(driverID=userId)
+        print("dname",dName)
         print("pos",position)
         rideDetail = splitString(str(sList.listDetail(int(position))))
         driverId = rideDetail[8]
         print("driverId",driverId)
-        return driverId
+        return JsonResponse(driverId, safe=False)
+        #return driverId
         
         
         
@@ -505,7 +516,8 @@ def findDriver(userId,sList,aList):
         rideDetail = splitString(str(aList.listDetail(int(position))))
         driverId = rideDetail[7]
         print("driverId",driverId)
-        return driverId
+        return JsonResponse(driverId, safe=False)
+        #return driverId
         
         
         
@@ -543,6 +555,7 @@ addUser(rList,FES2103)
 
 addUser(rList,FES2211)
 addUser(rList,FES2244)
+
 
 
 addUser(dList,DRW1915)
@@ -584,7 +597,7 @@ print(uTable.getVal("2244"))
 for i in range(sList.size()-1):
     print(sList.listDetail(i))
 
-findDriver("2244",sList,aList)
+#findDriver("2244")
 endRide("2244",sList,aList)
 
 for i in range(sList.size()-1):

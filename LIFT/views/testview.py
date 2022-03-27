@@ -83,7 +83,7 @@ def getInfo(request):
     print(now.strftime("%Y %m %d %H %M %S"))
     
     #User ID
-    print("TEST " + str(request.user.id))
+    print("TEST " + str(request.user.id)) #use this to get user ID
     
     #Distance
     start = "1.4180309,103.8386927"
