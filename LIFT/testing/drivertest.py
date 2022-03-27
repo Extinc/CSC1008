@@ -503,8 +503,10 @@ def findDriver(request):
         print("pos",position)
         rideDetail = splitString(str(sList.listDetail(int(position))))
         driverId = rideDetail[8]
+        typeRide = str("Shared")
+        print(typeRide)
         print("driverId",driverId)
-        return JsonResponse(driverId, safe=False)
+        return JsonResponse(driverId,safe=False)
         #return driverId
         
         
@@ -516,7 +518,7 @@ def findDriver(request):
         rideDetail = splitString(str(aList.listDetail(int(position))))
         driverId = rideDetail[7]
         print("driverId",driverId)
-        return JsonResponse(driverId, safe=False)
+        return JsonResponse(driverId,safe=False)
         #return driverId
         
         
