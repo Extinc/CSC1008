@@ -91,6 +91,5 @@ class HashTable:
     def __str__(self):
         return "".join(str(item) for item in self.hash_table)
   
-  
-hash_table = HashTable(50)
+
   

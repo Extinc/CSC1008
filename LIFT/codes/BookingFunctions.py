@@ -21,6 +21,7 @@ def splitString(userString):
 
 
 def findNearestRider(rList,sList,driver):
+
     firstRider = splitString(str(rList.listDetail(0)))
     print("driver deets",driver)
     for i in range(1,rList.size()-1):
@@ -37,8 +38,8 @@ def findNearestRider(rList,sList,driver):
                 newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],nextRider[1],firstRider[3],nextRider[3],driver[1],firstRider[2],firstRider[5],driver[0]) #normal case where it picks up passenger along the way
                 
                 addUser(sList,newSR)
+                sortSList(sList)
                 uTable.setVal(firstRider[0],"1")
-                print("New Shared Ride",sList.size())
                 
 
             print("New Shared Ride",sList.listDetail(int(sList.size()-2)))
@@ -64,6 +65,7 @@ def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rid
                         print("No Shared Ride Found")
                         newRide = AcceptedRides(rider[0],rider[1],driver[1],rider[2],rider[3],rider[4],rider[6],rider[5],driver[0])
                         addUser(aList.newRide)
+                        sortAList(aList)
                         uTable.setVal(rider[0],"2")
                         dList.deleteAt(x)
                         rList.deleteAt(0)
@@ -71,6 +73,7 @@ def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rid
                     if int(rider[5]) == int(driver[2]):
                         newRide = AcceptedRides(rider[0],rider[1],driver[1],rider[2],rider[3],rider[4],rider[6],rider[5],driver[0])
                         addUser(aList,newRide)
+                        sortAList(aList)
                         uTable.setVal(rider[0],"2")
                         dList.deleteAt(x)
                         rList.deleteAt(0)
@@ -83,6 +86,47 @@ def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rid
     
     if dList.size()>0 and rList.size()>0:
         findRides(rList,dList,aList,sList)   #recursive until there are no more riders or drivers
+        
+        
+def findList(userId): #hashmap to delete
+    listStored = uTable.getVal(userId)
+    return listStored
+        
+def sortAList(list):
+    for m in range(list.size()-1,0,-1):
+            for n in range(m):
+                
+                aRide1 = splitString(str(aList.listDetail(int(n))))
+                aRide2 = splitString(str(aList.listDetail(int(n+1))))
+                print("1",aRide1[0])
+                print("2",aRide2[0])
+                if(aRide2[0] is not None):
+                    if aRide1[0] > aRide2[0]:
+                        temp = AcceptedRides(aRide1[0],aRide1[1],aRide1[2],aRide1[2],aRide1[3],aRide1[4],aRide1[5],aRide1[6],aRide1[7])
+
+                        aList.deleteAt(n)
+                        addUser(aList,temp)
+                
+
+            print("one set")   
+
+def sortSList(list):
+    for m in range(list.size()-1,0,-1):
+            for n in range(m):
+                
+                sRide1 = splitString(str(sList.listDetail(int(n))))
+                sRide2 = splitString(str(sList.listDetail(int(n+1))))
+                print("1",sRide1[0])
+                print("2",sRide2[0])
+                if(sRide2[0] is not None):
+                    if sRide1[0] > sRide2[0]:
+                        temp = AcceptedRides(sRide1[0],sRide1[1],sRide1[2],sRide1[2],sRide1[3],sRide1[4],sRide1[5],sRide1[6],sRide1[7],sRide1[8],sRide1[9])
+
+                        aList.deleteAt(n)
+                        addUser(aList,temp)
+                
+
+            print("one set")   
 
 def haversine(lon1, lat1, lon2, lat2):
     """

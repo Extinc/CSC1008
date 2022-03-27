@@ -110,6 +110,34 @@
             <input type="text"/>
         </div>
         <div id="map" style="width: 1500px; height: 750px"></div>
+        <button class="open-button" onclick="openForm()">View Ride Details</button>
+
+        <div class="form-popup" id="myDriver">
+        <form action="Call for the end ride function" class="form-container">
+             <!-- call end ride function using this form action -->
+
+            <label for="driverId"><b>Driver Id</b></label>
+            <p> </p>
+            <input
+                    name = "driverId"
+                    placeholder="D1828211"
+                    readonly
+                    class="readonly"
+            />
+            <p> </p>
+            <label for="dName"><b>Driver Name</b></label>
+            <p> </p>
+            <input
+                    name = "dName"
+                    placeholder="Koh Sye Loong"
+                    readonly
+                    class="readonly"
+            />
+            <p> </p>
+            <button type="submit" class="btn">End Ride</button>
+            <button type="button" class="btn minimise" onclick="closeForm()">Minimise</button>
+        </form>
+        </div>
 
         <script>
             const speedFactor = 30; // number of frames per longitude degree
@@ -400,6 +428,13 @@
                 if (!$clicked.parents().hasClass("chooseTime"))
                     $(".chooseTime dd ul").hide();
             });
+            function openForm() {
+            document.getElementById("myDriver").style.display = "block";
+            }
+
+            function closeForm() {
+            document.getElementById("myDriver").style.display = "none";
+            }
 
         </script>
 
