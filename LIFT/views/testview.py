@@ -1,6 +1,6 @@
 from decimal import Decimal
+from math import sqrt
 
-import distance as distance
 import pandas as pd
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -9,18 +9,18 @@ from django.shortcuts import render
 import requests
 import json
 import datetime
-
-from django.utils import timezone
-
 from LIFT.testing import drivertest
 from LIFT.testing.drivertest import riderRequest
 from LIFT.testing.drivertest import AcceptedRides
 from LIFT.codes import BookingFunctions
 
 from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY, ONEMAP_DEV_URL, ONEMAP_TOKEN
+from ..codes.Haversine import haversine
+from ..codes.Pathfinder import PathFinder
 from ..codes.Routes import roadedge_df, roadnode_df, points_df
-from ..datastructure.Graph import Graph, dijkstra
-from ..codes.BookingFunctions import dList, aList, rList, sList, haversine
+from ..datastructure.Graph import Graph
+# from ..codes.BookingFunctions import dList, aList, rList, sList,
+
 from ..models.models import PointInfo, PathCache
 
 
@@ -55,42 +55,9 @@ def plot_route(request):
         graph = Graph()
         endcoord = [1.4410467, 103.839182]
         startcoord = [1.4180309, 103.8386927]
-        end = roadnode_df.loc[(roadnode_df['x'] == endcoord[1]) & (roadnode_df['y'] == endcoord[0])]['id'].values[0]
-        start = roadnode_df.loc[(roadnode_df['x'] == startcoord[1]) & (roadnode_df['y'] == startcoord[0])]['id'].values[
-            0]
-
-        if PathCache.objects.filter(Q(source=start) | Q(destination=end)).count() > 0:
-            path_cache = PathCache.objects.get(source=start, destination=end)
-            graph.data = json.loads(path_cache.Data)
-        else:
-            next_node = []
-            nodecounter = 0
-            graph.addNode(start)
-
-            filtered = roadedge_df.loc[roadedge_df['source'] == start].values
-            for node in filtered:
-                graph.addEdge(start, node[1], float(node[2]))
-                next_node.append(node[1])
-
-            while end not in next_node:
-                filtered = roadedge_df.loc[roadedge_df['source'] == next_node[nodecounter]].values
-                for next in filtered:
-                    if next[1] not in next_node:
-                        graph.addEdge(next[0], next[1], float(next[2]))
-                        next_node.append(next[1])
-                nodecounter += 1
-            graph_cache = PathCache.objects.create(source=start,destination=end, DateTime = timezone.now(), Data = json.dumps(graph.data))
-            graph_cache.save()
-
-        shortest_path = dijkstra(graph.data, start, end)
-
-        geom = {'type': 'LineString', 'coordinates': []}
-
-        for i in range(len(shortest_path) - 1):
-            geom['coordinates'] = geom['coordinates'] + roadedge_df.loc[
-                (roadedge_df['source'] == shortest_path[i]) & (roadedge_df['dest'] == shortest_path[i + 1])][
-                'geometry'].values[0]
-            # print(geom['coordinates'])
+        pf = PathFinder()
+        pf.FindPath(startcoord[0],startcoord[1],endcoord[0], endcoord[1])
+        geom = pf.generate_geojson()
         return JsonResponse(geom, safe=False)
 
 

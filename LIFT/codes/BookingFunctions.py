@@ -6,6 +6,7 @@ from LIFT.datastructure.linkedList import SinglyLinkedList
 from LIFTMAIN.settings import ONEMAP_DEV_URL, ONEMAP_TOKEN
 from math import radians, cos, sin, asin, sqrt
 import requests
+from LIFT.models import models
 
 def createUserList():
     userList =  SinglyLinkedList()
@@ -173,3 +174,9 @@ rList = createUserList()
 aList = createUserList()
 sList = createUserList()
 uTable = HashTable()
+
+
+dList = models.Drivers.objects.all()
+for driver in dList:
+    print(dList)
+    addUser(dList,driver)

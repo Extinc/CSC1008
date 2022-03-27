@@ -19,7 +19,8 @@ class PointInfo(models.Model):
 class PathCache(models.Model):
     source = models.TextField(null=False)
     destination = models.TextField(null=False)
-    Data = models.TextField(null=True, primary_key=False)
+    graph = models.TextField(null=True, primary_key=False)
+    heuristic = models.TextField(null=True, primary_key=False)
     DateTime = models.DateTimeField()
 
 

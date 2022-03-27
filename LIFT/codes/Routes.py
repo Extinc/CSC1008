@@ -35,10 +35,11 @@ f.close()
 roadedge_df = pd.DataFrame(edge_data)
 roadnode_df = pd.DataFrame(node_data)
 points_df = pd.DataFrame(list(PointInfo.objects.all().values('id', 'BUILDINGNAME', 'BLOCK', 'ROAD', 'POSTALCODE', 'lat', 'long')))
-
-print(points_df)
 counte = 0
 
+dlist = Drivers.objects.all()
+for driver in dlist:
+    print(driver)
 """_summary_
     Below to to delete the array that is temp used to store the the data
 """
