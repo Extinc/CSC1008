@@ -26,17 +26,18 @@ def findNearestRider(rList,sList,driver):
     firstRider = splitString(str(rList.listDetail(0)))
     print("driver deets",driver)
     for i in range(1,rList.size()-1):
+        location = driver.driverlat +","+driver.driverlong
         nextRider = splitString(str(rList.listDetail(int(i))))
         pToP =distanceCalculation(firstRider[1],nextRider[1]) #compare pickup for rider 1 and next rider
         pToD = distanceCalculation(firstRider[3],nextRider[1]) #compare dropoff for rider 1 and pickup for rider2
         if(int(pToP) <5000 or int(pToD)<5000 and int(nextRider[5])==1): #check if in range
             if pToP>=pToD: 
-                newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],firstRider[3],nextRider[1],nextRider[3],driver[1],firstRider[2],firstRider[5],driver[0]) #for when its destination is closer to first rider so car goes from 
+                newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],firstRider[3],nextRider[1],nextRider[3],location,firstRider[2],firstRider[5],driver.driverId) #for when its destination is closer to first rider so car goes from 
                 addUser(sList,newSR)
                 uTable.setVal(firstRider[0],"1") #sharedRide = 1, AcceptedRides = 2. We just need to store an ID for one user since its a shared ride
                 print("New Shared Ride",sList.size())
             else:
-                newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],nextRider[1],firstRider[3],nextRider[3],driver[1],firstRider[2],firstRider[5],driver[0]) #normal case where it picks up passenger along the way
+                newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],nextRider[1],firstRider[3],nextRider[3],location,firstRider[2],firstRider[5],driver.driverId) #normal case where it picks up passenger along the way
                 
                 addUser(sList,newSR)
                 sortSList(sList)
@@ -51,41 +52,43 @@ def findNearestRider(rList,sList,driver):
 
 def findRides(rList,dList,aList,sList): #aList =Accepted Rides sList= Shared Rides rList = ridersList
     rider = splitString(str(rList.listDetail(int(0)))) #retrieve first rider details
-    if(dList.size()>0):
-        for x in range(0,dList.size()-1):
-            
-            driver = splitString(str(dList.listDetail(int(x))))
-            if distanceCalculation(driver[1],rider[1]) <5000:
-                if int(rider[5]) == 1:
-                    sharedCheck = findNearestRider(rList,sList,driver)
-                    if sharedCheck == True:
-                        dList.deleteAt(x)
-                        rList.deleteAt(0)
-                        break
-                    else:
-                        print("No Shared Ride Found")
-                        newRide = AcceptedRides(rider[0],rider[1],driver[1],rider[2],rider[3],rider[4],rider[6],rider[5],driver[0])
-                        addUser(aList.newRide)
-                        sortAList(aList)
-                        uTable.setVal(rider[0],"2")
-                        dList.deleteAt(x)
-                        rList.deleteAt(0)
-                elif(int(rider[5]) == int(5) or int(rider[5]) == int(8)):
-                    if int(rider[5]) == int(driver[2]):
-                        newRide = AcceptedRides(rider[0],rider[1],driver[1],rider[2],rider[3],rider[4],rider[6],rider[5],driver[0])
-                        addUser(aList,newRide)
-                        sortAList(aList)
-                        uTable.setVal(rider[0],"2")
-                        dList.deleteAt(x)
-                        rList.deleteAt(0)
-                        break
-                else:
-                    print("no same seat")
-                break
-    else:
-        print("Driver Not Found")
+    i= 0
     
-    if dList.size()>0 and rList.size()>0:
+    for driver in dList:
+        
+        location = dList[i].driverlat +","+dList[0].driverlong
+        if distanceCalculation(location,rider[1]) <5000:
+            driverDetails = dList[i]
+            if int(rider[5]) == 1:
+                sharedCheck = findNearestRider(rList,sList,driverDetails)
+                if sharedCheck == True:
+                    
+                    rList.deleteAt(0)
+                    break
+                else:
+                    print("No Shared Ride Found")
+                    newRide = AcceptedRides(rider[0],rider[1],location,rider[2],rider[3],rider[4],rider[6],rider[5],dList[i].driverId)
+                    addUser(aList.newRide)
+                    sortAList(aList)
+                    uTable.setVal(rider[0],"2")
+                    #needa delete but whatevs
+                    rList.deleteAt(0)
+            elif(int(rider[5]) == int(5) or int(rider[5]) == int(8)):
+                if int(rider[5]) == int(dList[i].seatNo):
+                    newRide = AcceptedRides(rider[0],rider[1],location,rider[2],rider[3],rider[4],rider[6],rider[5],dList[i].driverId)
+                    addUser(aList,newRide)
+                    sortAList(aList)
+                    uTable.setVal(rider[0],"2")
+                    #needa delete but whatevs
+                    rList.deleteAt(0)
+                    break
+            else:
+                print("no same seat")
+            break
+        i+=1
+    
+    
+    if rList.size()>0:
         findRides(rList,dList,aList,sList)   #recursive until there are no more riders or drivers
         
         
@@ -245,9 +248,7 @@ uTable = HashTable()
 
 
 dList = models.Drivers.objects.all()
-i = 0
-for driver in dList:
-    location = str(models.Drivers.objects.all()[int(i)].driverlat) +","+str(models.Drivers.objects.all()[int(i)].driverlong)
-    driver = Driver(models.Drivers.objects.all()[int(i)].driverID,location,models.Drivers.objects.all()[int(i)].seatNo)
-    i+=1
-    print(driver[0])
+
+    
+    
+
