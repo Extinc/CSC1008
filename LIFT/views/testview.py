@@ -112,6 +112,7 @@ def getInfo(request):
     #User Object
     temp = riderRequest(request.user.id,start,now.strftime("%Y-%m-%d-%H-%M-%S"),end,totalDistance,typeOfRide,formatted_price)
     BookingFunctions.addUser(rList,temp)
+    BookingFunctions.findRides(rList)
     print(rList.listDetail(0))
     print(temp)
     #BookingFunctions.findRides(rList,dList,aList,sList)
