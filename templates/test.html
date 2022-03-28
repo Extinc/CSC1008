@@ -489,7 +489,29 @@
         document.getElementById("myDriver").style.display = "none";
         }
 
-        function endRide(){
+    $(document).bind('click', function (e) {
+        var $clicked = $(e.target);
+        if (!$clicked.parents().hasClass("chooseTime"))
+            $(".chooseTime dd ul").hide();
+    });
+    function openForm() {
+    document.getElementById("myDriver").style.display = "block";
+    $.ajax({
+        type: "POST",
+        url: "/findDriver/",
+        data: {
+            csrfmiddlewaretoken: "{{csrf_token}}",
+            userId: "2244",
+
+        },
+        success: function (result){
+            $("#driverId").val(result),
+            $("#typeRide").val("Shared")
+        }
+      })
+    };
+
+    function endRide(){
           document.getElementById("myDriver").style.display = "block";
           $.ajax({
                 type: "POST",
@@ -500,9 +522,9 @@
                 },
                 success: function (result) {
                   alert("Ride ended")
-        }
-      })
-    };
+                }
+              })
+            };
   </script>
 
   {% endif %}
