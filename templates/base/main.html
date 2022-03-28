@@ -5,15 +5,28 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
+    <script src='{% static '/js/jquery-3.6.0.min.js' %}'></script>
     <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}"
           integrity="EOQQAD7Fyueb25xfLqClMgQm9UNNO9JeZu4IyyDJi/U=">
     <link rel="stylesheet" type="text/css" href="{% static '/bootstrap/css/bootstrap.min.css' %}"
           integrity="YvdLHPgkqJ8DVUxjjnGVlMMJtNimJ6dYkowFFvp4kKs=">
     <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static '/bootstrap/js/bootstrap.min.js' %}"></script>
-    <script src='https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js'></script>
-    <link href='https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css' rel='stylesheet'/>
-    <script src='{% static '/js/jquery-3.6.0.min.js' %}'></script>
+    <script src='{% static '/mapbox/mapbox-gl.js' %}'></script>
+    <link href='{% static '/mapbox/mapbox-gl.css' %}' rel='stylesheet'/>
+    <!-- Font Awesome -->
+    <link href="{% static 'fontawesome/css/all.css' %}" rel="stylesheet"/>
+    <!-- MDB -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.css"
+            rel="stylesheet"
+    />
+    <!-- MDB -->
+    <script
+            type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.js"
+    ></script>
+
 </head>
 
 {% block content %}

@@ -1,21 +1,13 @@
-from pickle import GET
-
-import location as location
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
 from django.db.models import Q
-import requests
-import json
+from django.http import JsonResponse
+from django.shortcuts import render
 
-from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY, ONEMAP_DEV_URL, ONEMAP_TOKEN
-from ..codes.Routes import roadedge_df, roadnode_df, points_df
-from ..datastructure.Graph import Graph
-
+from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY
+from ..codes.Routes import roadedge_df
 # Create your views here.
 from ..datastructure.Trie import Trie
 from ..models.models import PointInfo
-
 
 search_result = None
 search_data = None
