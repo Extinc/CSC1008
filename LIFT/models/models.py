@@ -32,3 +32,4 @@ class Drivers(models.Model):
     driverlong = models.FloatField(default=0)
     seatNo = models.IntegerField(default=0)
     status = models.TextField(null=False)
+    carplate = models.TextField(null=False, default='')
