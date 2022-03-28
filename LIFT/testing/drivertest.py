@@ -467,7 +467,8 @@ def findRideIndex(list,smallest,size,userId): #uses binary search
         
     
 
-def endRide(userId,sList,aList):
+def endRide(request):
+    userId = request.POST['userId']
     listStored = findList(userId)
 
     if int(listStored) == 1:
@@ -476,7 +477,8 @@ def endRide(userId,sList,aList):
         position = math.ceil(int(position))
         sList.deleteAt(position)
         uTable.delVal(userId)
-        print("Shared Ride Has Ended")
+        ended = "Shared Ride Has Ended"
+        return JsonResponse(ended,safe=False)
                 
     elif int(listStored) ==2:
         print(aList.size())
@@ -485,6 +487,8 @@ def endRide(userId,sList,aList):
         aList.deleteAt(int(position))
         uTable.delVal(userId)
         print("Normal Ride Has Ended")
+        ended = "Shared Ride Has Ended"
+        return JsonResponse(ended,safe=False)
 
 
 
@@ -600,7 +604,7 @@ for i in range(sList.size()-1):
     print(sList.listDetail(i))
 
 #findDriver("2244")
-endRide("2244",sList,aList)
+#endRide("2244",sList,aList)
 
 for i in range(sList.size()-1):
     print(sList.listDetail(i))

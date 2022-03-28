@@ -11,6 +11,7 @@ urlpatterns = [
     path('plot_route/', testview.plot_route),
     path('getInfo/', testview.getInfo),
     path('getPrice/', testview.getPrice),
+    path('endRide/',drivertest.endRide),
     path('findnearest/', testview.getNearest),
     # path('showPrice/',testview.showPrice),
     path('select_pickup/', testview.select_pickup),
