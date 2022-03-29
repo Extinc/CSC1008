@@ -88,8 +88,11 @@ def getInfo(request):
     #Distance
     start = "1.4180309,103.8386927"
     end = "1.4410467,103.839182"
+    
     print(end)
-    totalDistance = BookingFunctions.distanceCalculation(start, end)
+    startLoc =  BookingFunctions.splitByComma(start)
+    endLoc = BookingFunctions.splitByComma(end)
+    totalDistance = BookingFunctions.haversine(float(startLoc[0]),float(startLoc[1]), float(endLoc[0]),float(endLoc[1]))
     print("updated" , totalDistance)
     priceDistance = totalDistance
     
@@ -112,9 +115,9 @@ def getInfo(request):
     #User Object
     temp = riderRequest(request.user.id,start,now.strftime("%Y-%m-%d-%H-%M-%S"),end,totalDistance,typeOfRide,formatted_price)
     BookingFunctions.addUser(rList,temp)
+    print("rList size",rList.size())
     BookingFunctions.findRides(rList)
-    print(rList.listDetail(0))
-    print(temp)
+    
     #BookingFunctions.findRides(rList,dList,aList,sList)
     return JsonResponse(formatted_price, safe=False)
 
@@ -125,24 +128,25 @@ def getPrice(request):
     print(request.POST['ending'])
     start = "1.4180309,103.8386927"
     end = "1.4410467,103.839182"
-    print(end)
-    totalDistance = BookingFunctions.distanceCalculation(start, end)
+    startLoc =  BookingFunctions.splitByComma(start)
+    endLoc = BookingFunctions.splitByComma(end)
+    totalDistance = BookingFunctions.haversine(float(startLoc[0]),float(startLoc[1]), float(endLoc[0]),float(endLoc[1]))
     print("updated" , totalDistance)
     priceDistance = totalDistance
     
     #Price calculation
     price = 3  # standard price for less than 1km
     priceDistance = int(priceDistance)
-    if priceDistance < 10000:
+    if priceDistance < 10:
         while priceDistance > 0:
             price += 0.22
-            priceDistance -= 400
-    elif priceDistance > 10000:
-        priceDistance - 10000
-        price += 0.22 * 25
+            priceDistance -= 0.4
+    elif priceDistance > 10:
+        priceDistance - 10
+        price += 0.22 * 0.25
         while priceDistance > 0:
             price += 0.22
-            priceDistance -= 350
+            priceDistance -= 0.35
     formatted_price = "{:.2f}".format(price)
     print("The price is: " + str(formatted_price))
     return JsonResponse(formatted_price, safe=False)
