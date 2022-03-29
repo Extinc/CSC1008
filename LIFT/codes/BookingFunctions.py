@@ -65,7 +65,7 @@ def findRides(rList): #aList =Accepted Rides sList= Shared Rides rList = ridersL
     
     for driver in dList:
         
-        location = str(dList[i].driverlat) +","+str(dList[0].driverlong)
+        location = str(dList[i].driverlat) +","+str(dList[i].driverlong)
         if distanceCalculation(location,rider[1]) <5000:
             driverDetails = dList[i]
             if int(rider[5]) == 1:
