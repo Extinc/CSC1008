@@ -105,6 +105,9 @@ def findRides(rList): #aList =Accepted Rides sList= Shared Rides rList = ridersL
                     print(aList.listDetail(0))
                     sortAList(aList)
                     uTable.setVal(rider[0],"2")
+                    
+                    print("Rider Id")
+                    print(rider[0])
                     #needa delete but whatevs
                     rList.deleteAt(0)
                     print("accepted",aList.listDetail(0))
@@ -112,11 +115,13 @@ def findRides(rList): #aList =Accepted Rides sList= Shared Rides rList = ridersL
             elif(int(rider[5]) == int(8)): 
                 if int(rider[5]) == int(dList[i].seatNo):
                     newRide = AcceptedRides(rider[0],rider[1],location,rider[2],rider[3],rider[4],rider[6],rider[5],driverDetails.id)
-                    print("new Ride",newRide)
+                    
                     addUser(aList,newRide)
 
                     print(aList.listDetail(0))
                     sortAList(aList)
+                    print("Rider Id")
+                    print(rider[0])
                     uTable.setVal(rider[0],"2")
                     #needa delete but whatevs
                     rList.deleteAt(0)
@@ -135,6 +140,8 @@ def findRides(rList): #aList =Accepted Rides sList= Shared Rides rList = ridersL
         
 def findList(userId): #hashmap to delete
     listStored = uTable.getVal(userId)
+    print("List Stored")
+    print(str(listStored))
     return listStored
         
 def sortAList(list):
@@ -231,7 +238,7 @@ def findRideIndex(list,smallest,size,userId): #uses binary search
     else:
         return 0
         
-def findDriver(userId,sList,aList):
+def findDriver(userId):
     listStored = findList(userId)
     print("id",userId)
     if int(listStored) == 1:

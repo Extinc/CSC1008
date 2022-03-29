@@ -501,7 +501,7 @@
         url: "/findDriver/",
         data: {
             csrfmiddlewaretoken: "{{csrf_token}}",
-            userId: "2244",
+            userId: user.id,
 
         },
         success: function (result){
@@ -518,7 +518,7 @@
                 url: "/endRide/",
                 data: {
                     csrfmiddlewaretoken: "{{csrf_token}}",
-                    userId: "1812",
+                    userId: user.id,
                 },
                 success: function (result) {
                   alert("Ride ended")

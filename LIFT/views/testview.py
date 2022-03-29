@@ -9,10 +9,8 @@ from django.shortcuts import render
 import requests
 import json
 import datetime
-from LIFT.testing import drivertest
-from LIFT.testing.drivertest import riderRequest
-from LIFT.testing.drivertest import AcceptedRides
 from LIFT.codes import BookingFunctions
+from LIFT.codes.RiderRequest import riderRequest
 
 from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY, ONEMAP_DEV_URL, ONEMAP_TOKEN
 from ..codes.Haversine import haversine
