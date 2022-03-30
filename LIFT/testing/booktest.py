@@ -3,6 +3,8 @@ from multiprocessing import shared_memory
 from urllib import request
 import requests
 
+from LIFT.models.models import Drivers
+
 
 
 
