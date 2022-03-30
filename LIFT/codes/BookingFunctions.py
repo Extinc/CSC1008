@@ -3,6 +3,7 @@ import math
 from django.http import JsonResponse
 from LIFT.codes.AcceptedRides import AcceptedRides
 from LIFT.codes.Driver import Driver
+from LIFT.codes.RiderRequest import riderRequest
 from LIFT.codes.SharedRides import SharedRides
 from LIFT.datastructure.HashTable import HashTable
 from LIFT.datastructure.linkedList import SinglyLinkedList
@@ -29,7 +30,7 @@ def findNearestRider(rList,sList,driver):
 
     firstRider = splitString(str(rList.listDetail(0)))
     for i in range(1,rList.size()-1):
-        location = driver.driverlong+","+driver.driverlat 
+        location = str(dList[i].driverlat) +","+str(dList[i].driverlong)
         nextRider = splitString(str(rList.listDetail(int(i))))
         firstRiderLoc = splitByComma(str(firstRider[1]))
         nextRiderLoc= splitByComma(str(nextRider[1]))
@@ -39,12 +40,12 @@ def findNearestRider(rList,sList,driver):
         pToD = haversine(float(firstRiderDest[0]),float(firstRiderDest[1]),float(nextRiderLoc[0]),float(nextRiderLoc[1])) #compare dropoff for rider 1 and pickup for rider2
         if(int(pToP) <5 or int(pToD)<5 and int(nextRider[5])==1): #check if in range
             if pToP>=pToD: 
-                newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],firstRider[3],nextRider[1],nextRider[3],location,firstRider[2],firstRider[5],driver.driverId) #for when its destination is closer to first rider so car goes from 
+                newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],firstRider[3],nextRider[1],nextRider[3],location,firstRider[2],firstRider[5],driver.driverID) #for when its destination is closer to first rider so car goes from 
                 addUser(sList,newSR)
                 uTable.setVal(firstRider[0],"1") #sharedRide = 1, AcceptedRides = 2. We just need to store an ID for one user since its a shared ride
                 print("New Shared Ride",sList.size())
             else:
-                newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],nextRider[1],firstRider[3],nextRider[3],location,firstRider[2],firstRider[5],driver.driverId) #normal case where it picks up passenger along the way
+                newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],nextRider[1],firstRider[3],nextRider[3],location,firstRider[2],firstRider[5],driver.driverID) #normal case where it picks up passenger along the way
                 
                 addUser(sList,newSR)
                 sortSList(sList)
@@ -67,6 +68,7 @@ def findMainRider(list,userId): #uses binary search
             return rideDetail[0]
 
 def findRides(rList): #aList =Accepted Rides sList= Shared Rides rList = ridersList
+    addUser(rList,Rider2) #add dummy rider
     print("rider Detail",rList.listDetail(int(0)))
     rider = splitString(str(rList.listDetail(int(0)))) #retrieve first rider details
     i= 0
@@ -141,8 +143,8 @@ def findRides(rList): #aList =Accepted Rides sList= Shared Rides rList = ridersL
         
         
 def findList(userId): #hashmap to delete
-    print 
-    listStored = uTable.getVal(userId)
+    print(uTable)
+    listStored = uTable.getVal(str(userId))
     print("List Stored")
     print(str(listStored))
     return listStored
@@ -224,9 +226,10 @@ def findRideIndex(list,smallest,size,userId): #uses binary search
         mid = smallest + (size-smallest)/2
         print(mid)
         print(size)
+        print("userId in index",userId)
         currentId = splitString(str(list.listDetail(mid)))
         print(currentId[0])
-        if currentId[0] is None:
+        if currentId[0] is None or int(mid)>=0 and int(mid)<=1:
              return 0
         
         elif int(currentId[0]) == int(userId):
@@ -242,8 +245,8 @@ def findRideIndex(list,smallest,size,userId): #uses binary search
         return 0
         
 def findDriver(request):
-    userId = request.POST['userId']
-    listStored = findList(userId)
+    userId = request.user.id
+    listStored = findList(int(userId))
     print("id",userId)
     if int(listStored) == 1:
         print(sList.size())
@@ -257,7 +260,7 @@ def findDriver(request):
         carplate = models.Drivers.objects.get(driverID=driverId).carplate
         print("drivername carplate",driverName,carplate)
         rideType = "Shared"
-        value = [driverId,driverName,carplate]
+        value = [driverId,driverName,carplate,rideType]
         return JsonResponse(value,safe=False)
         
         
@@ -291,7 +294,7 @@ def findDriver(request):
         rideType = "Shared"
         print("drivername carplate",driverName,carplate)
 
-        value = [driverId,driverName,carplate]
+        value = [driverId,driverName,carplate,rideType]
         return JsonResponse(value,safe=False)
 
 def endRide(request):
@@ -300,6 +303,7 @@ def endRide(request):
 
     if int(listStored) == 1:
         print(sList.size())
+        print("main id",userId)
         position = findRideIndex(sList,0,sList.size()-1,userId)
         position = math.ceil(int(position))
         sList.deleteAt(position)
@@ -311,6 +315,7 @@ def endRide(request):
         
     elif int(listStored) ==2:
         print(aList.size())
+        print("main id",userId)
         position = findRideIndex(aList,0,aList.size()-1,userId)
         position = math.ceil(int(position))
         aList.deleteAt(int(position))
@@ -322,6 +327,7 @@ def endRide(request):
     elif int(listStored) == 3:
         print(sList.size())
         mainId = findMainRider(sList,userId)
+        print("main id",mainId)
         position = findRideIndex(sList,0,sList.size()-1,mainId)
         position = math.ceil(int(position))
         sList.deleteAt(position)
@@ -341,6 +347,7 @@ rList = createUserList()
 aList = createUserList()
 sList = createUserList()
 uTable = HashTable()
+Rider2 = riderRequest("2103","1.3349499314823845,103.87193456740948","1331522","1.4410467,103.839182",31023,1,'20')
 
 
 
