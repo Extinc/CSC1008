@@ -20,7 +20,7 @@ class PathFinder:
         start = roadnode_df.loc[(roadnode_df['x'] == startlong) & (roadnode_df['y'] == startlat)]['id'].values[
             0]
 
-        if PathCache.objects.filter(Q(source=start) | Q(destination=end)).count() > 0:
+        if PathCache.objects.filter(Q(source=start) & Q(destination=end)).count() > 0:
             path_cache = PathCache.objects.get(source=start, destination=end)
             self.graph.adj_list = json.loads(path_cache.graph)
             self.graph.heuristic = json.loads(path_cache.heuristic)
