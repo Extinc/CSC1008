@@ -3,6 +3,7 @@
 {% block content %}
 
     <body>
+
     {% if request.user.is_authenticated %}
 
         <form action="" method="POST" id="test">
@@ -10,7 +11,7 @@
 
 
             <div class="row">
-                <div class="card mx-auto $zindex-popover fixed-top col-md-5 col-sm-5 col-10" style="margin-top:1.4rem;">
+                <div class="card mx-auto fixed-top col-md-5 col-sm-5 col-10" style="margin-top:1.4rem;">
                     <div class="card-body container" style="padding-left: 0; padding-right: 0;">
                         <div class="row">
                             <div class="d-flex align-items-center justify-content-center col-sm-2 col-2">
@@ -23,22 +24,25 @@
                             </div>
                             <div class="col mr-auto">
                                 <div class="row ">
+                                    <div id="input-group">
 
-                                    <div class="input-group">
                                         <input
                                                 type="search"
-                                                class="form-control rounded"
+                                                class="form-control rounded autocomplete"
+                                                id="startlocation"
                                                 placeholder="Start"
                                                 aria-label="Search"
                                                 aria-describedby="search-addon"
                                         />
                                     </div>
+
                                 </div>
                                 <div class="row pt-3">
                                     <div class="input-group">
                                         <input
                                                 type="search"
                                                 class="form-control rounded"
+                                                id="endlocation"
                                                 placeholder="End"
                                                 aria-label="Search"
                                                 aria-describedby="search-addon"
@@ -82,17 +86,13 @@
                         </li>
                     </ul>
                     <hr>
-                    <div class="dropdown">
+                    <div class="drop down">
                         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                            id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src=".." alt="" width="32" height="32"
-                                 class="rounded-circle me-2">
+                            <i class="fa-solid fa-user rounded-circle me-2"></i>
                             <strong>ACCOUNT</strong>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                            <li><a class="dropdown-item" href="#">New project...</a></li>
-                            <li><a class="dropdown-item" href="#">Settings</a></li>
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -103,9 +103,111 @@
             </div>
 
             <div id="map" style="position:absolute; width: 100%; height: 100%; "></div>
+            <div class="row">
+
+                <div class="accordion position-fixed fixed-bottom mb-4 col-md-5 col-sm-5 col-10 mx-auto"
+                     id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
+                             aria-labelledby="headingOne">
+                            <div class="accordion-body">
+                                <strong>This is the first item's accordion body.</strong> It is shown by default,
+                                until the collapse plugin adds the appropriate classes that we use to style each
+                                element. These classes control the overall appearance, as well as the showing and
+                                hiding via CSS transitions. You can modify any of this with custom CSS or overriding
+                                our default variables. It's also worth noting that just about any HTML can go within
+                                the <code>.accordion-body</code>, though the transition does limit overflow.
+                            </div>
+                        </div>
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-mdb-toggle="collapse"
+                                    data-mdb-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                                    aria-controls="panelsStayOpen-collapseOne">
+                                Current Ride
+                            </button>
+                        </h2>
+
+                    </div>
+
+                </div>
+            </div>
+            <input type="hidden" name="" id="hiddenstart">
+            <input type="hidden" name="" id="hiddenend">
         </form>
 
         <script>
+            $("#startlocation").autocomplete({
+                minLength: 1,
+                source: function (request, response, url) {
+                    var searchParam = request.term;
+                    $.ajax({
+                        url: '/get_addr/?search=' + request.term,
+                        data: searchParam,
+                        dataType: "json",
+                        type: "GET",
+                        cache: true,
+                        success: function (data) {
+                            response($.map(data, function (item, index) {
+                                return {
+                                    label: item,
+                                    value: item,
+                                    nodeid: index
+                                };
+                            }));
+                        }
+                    });//ajax ends
+                },
+                select: function (a, b) {
+                    $("#hiddenstart").val(b.item.nodeid)
+                    {#console.log("SELECT " + );#}
+
+                    // Appends an array with 2 keys: Value and Label.
+                    // Both display the title and date as shown above.
+                }
+            }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                const htmlstring = `<li class="ui-menu-item"><div class="ui-menu-item-wrapper" tabindex="-1"></div></li>`;
+                const $li = $(htmlstring);
+                const id = $(ul).find('li').length + 1;
+                $li.find('div').attr("data-id", item.nodeid).attr("id", id).html(item.label);
+                return $li.appendTo(ul);
+            };
+
+            $("#endlocation").autocomplete({
+                minLength: 1,
+                source: function (request, response, url) {
+                    var searchParam = request.term;
+                    $.ajax({
+                        url: '/get_addr/?search=' + request.term,
+                        data: searchParam,
+                        dataType: "json",
+                        type: "GET",
+                        cache: true,
+                        success: function (data) {
+                            response($.map(data, function (item, index) {
+                                return {
+                                    label: item,
+                                    value: item,
+                                    nodeid: index
+                                };
+                            }));
+                        }
+                    });//ajax ends
+                },
+                select: function (a, b) {
+                    $("#hiddenend").val(b.item.nodeid)
+                    {#console.log("SELECT " + );#}
+
+                    // Appends an array with 2 keys: Value and Label.
+                    // Both display the title and date as shown above.
+                }
+            }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                const htmlstring = `<li class="ui-menu-item"><div class="ui-menu-item-wrapper" tabindex="-1"></div></li>`;
+                const $li = $(htmlstring);
+                const id = $(ul).find('li').length + 1;
+                $li.find('div').attr("data-id", item.nodeid).attr("id", id).html(item.label);
+                return $li.appendTo(ul);
+            };
+
             var latitude = 0;
             var longitude = 0;
             var map;
@@ -123,6 +225,7 @@
                     $.ajax({
                         type: "GET",
                         url: "/findnearest/",
+                        cache: true,
                         data: {
                             'lat': position.coords.latitude,
                             'long': position.coords.longitude
@@ -131,11 +234,19 @@
                             console.log(data);
                             for (var i = 0; i < data.length; i++) {
                                 var obj = data[i];
+                                if(obj.POSTALCODE === 'NIL'){
+                                    var marker = new mapboxgl.Marker()
+                                        .setLngLat([obj.long, obj.lat])
+                                        .setPopup(new mapboxgl.Popup().setHTML("<h id='nodebuilding'>" + obj.BUILDINGNAME + "</h><p id='nodeidhidden' class='d-none'>" + obj.id + "</p>"))
+                                        .addTo(map);
+                                }else{
+                                    var marker = new mapboxgl.Marker()
+                                        .setLngLat([obj.long, obj.lat])
+                                        .setPopup(new mapboxgl.Popup().setHTML("<h id='nodebuilding'>" + obj.BUILDINGNAME + "</h><p> "+ obj.POSTALCODE + "</p> <p  id='nodeidhidden'  class='d-none'>" + obj.id + "</p>"))
+                                        .addTo(map);
+                                }
 
-                                var marker = new mapboxgl.Marker()
-                                    .setLngLat([obj.long, obj.lat])
-                                    .setPopup(new mapboxgl.Popup().setHTML("<p>" + obj.id + "</p>"))
-                                    .addTo(map);
+
                             }
                         }
                     });
@@ -210,26 +321,19 @@
                 });
             }
 
-
-            $(document).ready(function () {
-                {#geolocate.trigger();#}
-                console.log(latitude)
+            $(document).on('click', '.mapboxgl-marker', function () {
+                var node_id = $("#nodeidhidden");
+                var node_text =$('#nodebuilding');
+                $("#hiddenstart").val(node_id.text());
+                $("#startlocation").val(node_text.text());
             });
 
-
-            $("#searchaddress").keyup(function () {
-                $.ajax({
-                    type: "GET",
-                    url: "/get_addr",
-                    data: {
-                        "search": $("#searchaddress").val()
-                    }, success: function (response) {
-
-                    }
-                })
-            });
         </script>
-
+        <style>
+            .ui-autocomplete {
+                z-index: 1030;
+            }
+        </style>
     {% endif %}
     </body>
 {% endblock content %}

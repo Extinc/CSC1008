@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import random
 
+from LIFT.codes.Haversine import haversine
 from LIFT.models.models import PointInfo, Drivers
 from LIFTMAIN.settings import DRIVE_EDGE_DATA, DRIVE_NODE_DATA
 
@@ -36,9 +37,14 @@ f.close()
 roadedge_df = pd.DataFrame(edge_data)
 roadnode_df = pd.DataFrame(node_data)
 points_df = pd.DataFrame(
-    list(PointInfo.objects.all().values('id', 'BUILDINGNAME', 'BLOCK', 'ROAD', 'POSTALCODE', 'lat', 'long')))
+    list(PointInfo.objects.exclude(BUILDINGNAME__isnull=True).exclude(BUILDINGNAME__exact='', POSTALCODE__exact='').values('id', 'BUILDINGNAME', 'BLOCK', 'ROAD', 'POSTALCODE', 'lat', 'long')))
 
-counte= 0
+def find_nearest(lat, long):
+    distance = points_df.apply(lambda row: pd.Series({"distance": haversine(long, lat, row['long'], row['lat'])}), result_type='expand', axis= 1)
+    df = pd.concat([points_df, distance], axis=1).sort_values(by='distance', ascending=True)
+    df = df[df['POSTALCODE'].str.len() > 0]
+    return df.head(5)
+
 
 # print(PointInfo.objects.all()[counte].lat)
 # lastname = []

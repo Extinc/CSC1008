@@ -389,7 +389,7 @@
 
                     //price: $('input[name="rideprice"]').val(),
                 },success: function (result){
-                  getDriverDetails()
+                    getDriverDetails()
                 }
             });
         }
@@ -474,6 +474,7 @@
                 $(".chooseTime dd ul").hide();
         });
         function openForm() {
+          getDriverDetails();
           document.getElementById("myDriver").style.display = "block";
           
           };

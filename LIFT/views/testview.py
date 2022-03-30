@@ -36,17 +36,6 @@ def testpage(request):
     else:
         return render(request, 'test.html', args)
 
-
-def getNearest(request):
-    result = find_nearest(float(request.GET['lat']), float(request.GET['long'])).to_json(orient='records')
-    return JsonResponse({'data': result})
-
-def find_nearest(lat, long):
-    distance = points_df.apply(lambda row: pd.Series({"distance": haversine(long, lat, row['long'], row['lat'])}), result_type='expand', axis= 1)
-    df = pd.concat([points_df, distance], axis=1).sort_values(by='distance', ascending=True)
-    df = df[df['POSTALCODE'].str.len() > 0]
-    return df.head(5)
-
 # Jquery post Request Handling
 def plot_route(request):
     if request.method == 'POST':
@@ -72,7 +61,7 @@ def getInfo(request):
         typeOfRide =8
     elif str(typeOfRide) == 'Shared Rides':
         typeOfRide =1
-    print(typeOfRide)
+    print("type of ride",typeOfRide)
 
     #Current time
     print(request.POST['pickUpTime'])
@@ -84,7 +73,7 @@ def getInfo(request):
     print("TEST " + str(request.user.id)) #use this to get user ID
     
     #Distance
-    start = "1.4180309,103.8386927"
+    start = "1.3349499314823845,103.87193456740948"
     end = "1.4410467,103.839182"
     
     print(end)
@@ -120,12 +109,15 @@ def getInfo(request):
     return JsonResponse(formatted_price, safe=False)
 
 
+
+
 def getPrice(request):
     #distanceCalculation("1.4180309,103.8386927","1.4410467,103.839182",request)
     print(request.POST['starting'])
     print(request.POST['ending'])
-    start = "1.4180309,103.8386927"
+    start = "1.3349499314823845,103.87193456740948"
     end = "1.4410467,103.839182"
+    
     startLoc =  BookingFunctions.splitByComma(start)
     endLoc = BookingFunctions.splitByComma(end)
     totalDistance = BookingFunctions.haversine(float(startLoc[0]),float(startLoc[1]), float(endLoc[0]),float(endLoc[1]))
