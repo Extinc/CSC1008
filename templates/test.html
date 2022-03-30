@@ -98,14 +98,13 @@
               ></a
             >
           </li>
-          <li>
+          <!-- <li>
             <a href="#" class="black"
               ><img src=".\static\images\scheduled.png" alt="" /><span
                 class="value"
                 >Scheduled Ride</span
-              ></a
-            >
-          </li>
+              ></a>
+          </li> -->
         </ul>
       </dd>
     </dl>
@@ -147,7 +146,6 @@
       <input
         name="driverId"
         id="driverId"
-        placeholder="D1828211"
         readonly
         class="readonly"
       />
@@ -155,9 +153,15 @@
       <label for="dName"><b>Driver Name</b></label>
       <p></p>
       <input
-        name="dName"
-        id="dName"
-        placeholder="Koh Sye Loong"
+        name="name"
+        id="name"
+        readonly
+        class="readonly"
+      />
+      <p></p>
+      <input
+        name="carplate"
+        id="carplate"
         readonly
         class="readonly"
       />
@@ -167,12 +171,11 @@
       <input
         name="typeRide"
         id="typeRide"
-        placeholder="Single"
         readonly
         class="readonly"
       />
       <p></p>
-      <button type="submit" class="btn" onclick="endRide()">End Ride</button>
+      <button type="submit" class="btn" onclick="confirmEnd()">End Ride</button>
       <button type="button" class="btn minimise" onclick="closeForm()">
         Minimise
       </button>
@@ -385,7 +388,9 @@
                     pickUpTime: getSelectedValue("pickupTime"),
 
                     //price: $('input[name="rideprice"]').val(),
-                },
+                },success: function (result){
+                  getDriverDetails()
+                }
             });
         }
 
@@ -469,47 +474,46 @@
                 $(".chooseTime dd ul").hide();
         });
         function openForm() {
-        document.getElementById("myDriver").style.display = "block";
-        $.ajax({
-            type: "POST",
-            url: "/findDriver/",
-            data: {
-                csrfmiddlewaretoken: "{{csrf_token}}",
-                userId: "1812",
-
-            },
-            success: function (result){
-                $("#driverId").val(result),
-                $("#typeRide").val("Shared")
-            }
-        })
-        };
+          document.getElementById("myDriver").style.display = "block";
+          
+          };
 
         function closeForm() {
         document.getElementById("myDriver").style.display = "none";
         }
 
-    $(document).bind('click', function (e) {
-        var $clicked = $(e.target);
-        if (!$clicked.parents().hasClass("chooseTime"))
-            $(".chooseTime dd ul").hide();
-    });
-    function openForm() {
-    document.getElementById("myDriver").style.display = "block";
-    $.ajax({
-        type: "POST",
-        url: "/findDriver/",
-        data: {
-            csrfmiddlewaretoken: "{{csrf_token}}",
-            userId: user.id,
+        function getDriverDetails(){
+          $.ajax({
+              type: "POST",
+              url: "/findDriver/",
+              data: {
+                  csrfmiddlewaretoken: "{{csrf_token}}",
+                  userId: "2",
 
-        },
-        success: function (result){
-            $("#driverId").val(result),
-            $("#typeRide").val("Shared")
+              },
+              success: function (result){
+                  $("#driverId").val(result[0]),
+                  $("#name").val(result[1])
+                  $("#carplate").val(result[2])
+                  $("#typeRide").val(result[3])
+              }
+          })
         }
-      })
-    };
+
+      $(document).bind('click', function (e) {
+          var $clicked = $(e.target);
+          if (!$clicked.parents().hasClass("chooseTime"))
+              $(".chooseTime dd ul").hide();
+      });
+    
+    function confirmEnd(){
+      
+      if(confirm("Click OK To End Ride")){
+        endRide();
+      }else{
+
+      }
+    }
 
     function endRide(){
           document.getElementById("myDriver").style.display = "block";
@@ -518,10 +522,14 @@
                 url: "/endRide/",
                 data: {
                     csrfmiddlewaretoken: "{{csrf_token}}",
-                    userId: user.id,
+                    userId: "2",
                 },
                 success: function (result) {
-                  alert("Ride ended")
+                  alert("Thank You For Riding With Us")
+                  $("#driverId").val(" "),
+                  $("#name").val(" ")
+                  $("#carplate").val(" ")
+                  $("#typeRide").val(" ")
                 }
               })
             };

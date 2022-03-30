@@ -1,4 +1,6 @@
 import math
+
+from django.http import JsonResponse
 from LIFT.codes.AcceptedRides import AcceptedRides
 from LIFT.codes.Driver import Driver
 from LIFT.codes.SharedRides import SharedRides
@@ -87,7 +89,7 @@ def findRides(rList): #aList =Accepted Rides sList= Shared Rides rList = ridersL
                     break
                 else:
                     print("No Shared Ride Found")
-                    newRide = AcceptedRides(rider[0],rider[1],location,rider[2],rider[3],rider[4],rider[6],rider[5],driverDetails.id)
+                    newRide = AcceptedRides(rider[0],rider[1],location,rider[2],rider[3],rider[4],rider[6],rider[5],driverDetails.driverID)
                     addUser(aList,newRide)
                     sortAList(aList)
                     uTable.setVal(rider[0],"2")
@@ -98,7 +100,7 @@ def findRides(rList): #aList =Accepted Rides sList= Shared Rides rList = ridersL
             elif(int(rider[5]) == int(5)):
                 print("5 or 8")
                 if int(rider[5]) <= int(dList[i].seatNo):
-                    newRide = AcceptedRides(rider[0],rider[1],location,rider[2],rider[3],rider[4],rider[6],rider[5],driverDetails.id)
+                    newRide = AcceptedRides(rider[0],rider[1],location,rider[2],rider[3],rider[4],rider[6],rider[5],driverDetails.driverID)
                     print("new Ride",newRide)
                     addUser(aList,newRide)
 
@@ -114,7 +116,7 @@ def findRides(rList): #aList =Accepted Rides sList= Shared Rides rList = ridersL
                     break
             elif(int(rider[5]) == int(8)): 
                 if int(rider[5]) == int(dList[i].seatNo):
-                    newRide = AcceptedRides(rider[0],rider[1],location,rider[2],rider[3],rider[4],rider[6],rider[5],driverDetails.id)
+                    newRide = AcceptedRides(rider[0],rider[1],location,rider[2],rider[3],rider[4],rider[6],rider[5],driverDetails.driverID)
                     
                     addUser(aList,newRide)
 
@@ -139,6 +141,7 @@ def findRides(rList): #aList =Accepted Rides sList= Shared Rides rList = ridersL
         
         
 def findList(userId): #hashmap to delete
+    print 
     listStored = uTable.getVal(userId)
     print("List Stored")
     print(str(listStored))
@@ -238,7 +241,8 @@ def findRideIndex(list,smallest,size,userId): #uses binary search
     else:
         return 0
         
-def findDriver(userId):
+def findDriver(request):
+    userId = request.POST['userId']
     listStored = findList(userId)
     print("id",userId)
     if int(listStored) == 1:
@@ -249,7 +253,12 @@ def findDriver(userId):
         rideDetail = splitString(str(sList.listDetail(int(position))))
         driverId = rideDetail[8]
         print("driverId",driverId)
-        return driverId
+        driverName = models.Drivers.objects.get(driverID=driverId).name
+        carplate = models.Drivers.objects.get(driverID=driverId).carplate
+        print("drivername carplate",driverName,carplate)
+        rideType = "Shared"
+        value = [driverId,driverName,carplate]
+        return JsonResponse(value,safe=False)
         
         
         
@@ -260,7 +269,12 @@ def findDriver(userId):
         rideDetail = splitString(str(aList.listDetail(int(position))))
         driverId = rideDetail[7]
         print("driverId",driverId)
-        return driverId   
+        driverName = models.Drivers.objects.get(driverID=driverId).name
+        carplate = models.Drivers.objects.get(driverID=driverId).carplate
+        print("drivername carplate",driverName,carplate)
+        rideType = "Normal"
+        value = [driverId,driverName,carplate,rideType]
+        return JsonResponse(value,safe=False)
     
 
     elif int(listStored) == 3:
@@ -272,9 +286,16 @@ def findDriver(userId):
         rideDetail = splitString(str(sList.listDetail(int(position))))
         driverId = rideDetail[8]
         print("driverId",driverId)
-        return driverId
+        driverName = models.Drivers.objects.get(driverID=driverId).name
+        carplate = models.Drivers.objects.get(driverID=driverId).carplate
+        rideType = "Shared"
+        print("drivername carplate",driverName,carplate)
 
-def endRide(userId,sList,aList):
+        value = [driverId,driverName,carplate]
+        return JsonResponse(value,safe=False)
+
+def endRide(request):
+    userId = request.POST['userId']
     listStored = findList(userId)
 
     if int(listStored) == 1:
@@ -283,7 +304,8 @@ def endRide(userId,sList,aList):
         position = math.ceil(int(position))
         sList.deleteAt(position)
         uTable.delVal(userId)
-        print("Shared Ride Has Ended")
+        ended = "Shared Ride Has Ended"
+        return JsonResponse(ended,safe=False)
         
         
         
@@ -293,7 +315,8 @@ def endRide(userId,sList,aList):
         position = math.ceil(int(position))
         aList.deleteAt(int(position))
         uTable.delVal(userId)
-        print("Normal Ride Has Ended")
+        ended = "Normal Ride Has Ended"
+        return JsonResponse(ended,safe=False)
     
         
     elif int(listStored) == 3:
@@ -304,7 +327,8 @@ def endRide(userId,sList,aList):
         sList.deleteAt(position)
         uTable.delVal(mainId)
         uTable.delVal(userId)
-        print("Shared Ride Has Ended")
+        ended = "Shared Ride Has Ended"
+        return JsonResponse(ended,safe=False)
         
 
 
