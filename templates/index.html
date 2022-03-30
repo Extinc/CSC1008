@@ -111,12 +111,40 @@
                         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
                              aria-labelledby="headingOne">
                             <div class="accordion-body">
-                                <strong>This is the first item's accordion body.</strong> It is shown by default,
-                                until the collapse plugin adds the appropriate classes that we use to style each
-                                element. These classes control the overall appearance, as well as the showing and
-                                hiding via CSS transitions. You can modify any of this with custom CSS or overriding
-                                our default variables. It's also worth noting that just about any HTML can go within
-                                the <code>.accordion-body</code>, though the transition does limit overflow.
+                                <label for="driverId"><b>Driver Id</b></label>
+                                <p></p>
+                                <input
+                                        name="driverId"
+                                        id="driverId"
+                                        readonly
+                                        class="readonly"
+                                />
+                                <p></p>
+                                <label for="dName"><b>Driver Name</b></label>
+                                <p></p>
+                                <input
+                                        name="name"
+                                        id="name"
+                                        readonly
+                                        class="readonly"
+                                />
+                                <p></p>
+                                <input
+                                        name="carplate"
+                                        id="carplate"
+                                        readonly
+                                        class="readonly"
+                                />
+                                <p></p>
+                                <label for="typeRide"><b>Type Of Ride</b></label>
+                                <p></p>
+                                <input
+                                        name="typeRide"
+                                        id="typeRide"
+                                        readonly
+                                        class="readonly"
+                                />
+                                <button type="submit" class="btn" onclick="confirmEnd()">End Ride</button>
                             </div>
                         </div>
                         <h2 class="accordion-header" id="headingOne">
@@ -141,7 +169,6 @@
             var longitude = 0;
             var map;
             mapboxgl.accessToken = "{{ mapbox_key }}";
-
 
 
         </script>
