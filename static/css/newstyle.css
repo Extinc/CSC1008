@@ -1,0 +1,19 @@
+.lift_navbar_btn1{
+
+    background-color: transparent;
+    border: none;
+}
+
+.lift_navbar_icon{
+    font-size:1.5rem;
+    color: #b5b5b6;
+}
+
+.lift_navbar_icon2{
+    font-size:1.5rem;
+    color: #000000;
+}
+
+.ui-autocomplete{
+    z-index:1030 !important;
+}

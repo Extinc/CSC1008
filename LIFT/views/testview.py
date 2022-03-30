@@ -36,17 +36,6 @@ def testpage(request):
     else:
         return render(request, 'test.html', args)
 
-
-def getNearest(request):
-    result = find_nearest(float(request.GET['lat']), float(request.GET['long'])).to_json(orient='records')
-    return JsonResponse({'data': result})
-
-def find_nearest(lat, long):
-    distance = points_df.apply(lambda row: pd.Series({"distance": haversine(long, lat, row['long'], row['lat'])}), result_type='expand', axis= 1)
-    df = pd.concat([points_df, distance], axis=1).sort_values(by='distance', ascending=True)
-    df = df[df['POSTALCODE'].str.len() > 0]
-    return df.head(5)
-
 # Jquery post Request Handling
 def plot_route(request):
     if request.method == 'POST':
