@@ -1,10 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 
 from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY
-from ..codes.Routes import roadedge_df
+from ..codes.Pathfinder import PathFinder
+from ..codes.Routes import roadedge_df, find_nearest
 # Create your views here.
 from ..models.models import PointInfo
 from django.core import serializers
@@ -51,5 +52,19 @@ def get_address(request):
         return JsonResponse(searchload, safe=False)
 
 def getNearest(request):
-    result = find_nearest(float(request.GET['lat']), float(request.GET['long'])).to_json(orient='records')
-    return JsonResponse({'data': result})
+    if request.method == "GET":
+        result = find_nearest(float(request.GET['lat']), float(request.GET['long'])).to_json(orient='records')
+        return JsonResponse({'data': result})
+
+
+def booking_search(request):
+    if request.method == "POST":
+        startid = request.POST['starting']
+        endid = request.POST['ending']
+        pf = PathFinder()
+        start = PointInfo.objects.get(id=startid)
+        end = PointInfo.objects.get(id=endid)
+
+        pf.find_path(start.lat, start.long, end.lat, end.long)
+        geom = pf.generate_geojson('LineString')
+        return JsonResponse(geom, safe=False)
