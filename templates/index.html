@@ -79,7 +79,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="nav-link text-white" style="background: transparent ">
+                            <a href="/test" class="nav-link text-white" style="background: transparent ">
                                 <i class="fa-solid fa-flask-vial bi me-2"></i>
                                 TEST
                             </a>
@@ -145,18 +145,18 @@
                                         readonly
                                         class="readonly"
                                 />
-                                <label for="rideprice"> Price of ride is</label>
-                                <input
-                                        type="text"
-                                        id="price"
-                                        name="rideprice"
-                                        required
-                                        minlength="4"
-                                        maxlength="8"
-                                        size="10"
-                                        readonly
-                                        class="readonly"
-                                />
+{#                                <label for="rideprice"> Price of ride is</label>#}
+{#                                <input#}
+{#                                        type="text"#}
+{#                                        id="price"#}
+{#                                        name="rideprice"#}
+{#                                        required#}
+{#                                        minlength="4"#}
+{#                                        maxlength="8"#}
+{#                                        size="10"#}
+{#                                        readonly#}
+{#                                        class="readonly"#}
+{#                                />#}
                                 <button type="submit" class="btn" onclick="confirmEnd()">End Ride</button>
                             </div>
                         </div>
@@ -164,7 +164,24 @@
                             <button class="accordion-button" type="button" data-mdb-toggle="collapse"
                                     data-mdb-target="#panelsStayOpen-collapseOne" aria-expanded="true"
                                     aria-controls="panelsStayOpen-collapseOne">
-                                Current Ride
+                                <div class="row" style="width:95%">
+
+                                    <div class="col-md-9">
+                                        Current Ride
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="disabled"
+                                               style="border:none; width: 100%"
+                                               id="price"
+                                               name="rideprice"
+                                               required
+                                               minlength="4"
+                                               maxlength="8"
+                                               size="10"
+                                               placeholder="RIDE PRICE" readonly/>
+                                    </div>
+                                </div>
                             </button>
                         </h2>
 
@@ -188,6 +205,10 @@
         <style>
             .ui-autocomplete {
                 z-index: 1030;
+            }
+
+            .accordion-button:not(.collapsed) {
+                background-color: white !important;
             }
         </style>
     {% endif %}
