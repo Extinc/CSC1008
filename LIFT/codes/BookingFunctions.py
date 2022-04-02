@@ -263,8 +263,7 @@ def findDriver(request):
         value = [driverId,driverName,carplate,rideType]
         return JsonResponse(value,safe=False)
         
-        
-        
+
     elif int(listStored) ==2:
         print(aList.size())
         position = findRideIndex(aList,0,aList.size()-1,userId)

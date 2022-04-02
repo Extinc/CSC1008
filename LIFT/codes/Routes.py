@@ -4,7 +4,8 @@ import pandas as pd
 import random
 
 from LIFT.codes.Haversine import haversine
-from LIFT.models.models import PointInfo, Drivers
+from django.contrib.auth.models import User, Group
+from LIFT.models.models import PointInfo, Drivers, UserActivity
 from LIFTMAIN.settings import DRIVE_EDGE_DATA, DRIVE_NODE_DATA
 
 edge_data = []
@@ -47,25 +48,25 @@ def find_nearest(lat, long):
 
 
 # print(PointInfo.objects.all()[counte].lat)
-# lastname = []
-# with open('/Users/voidky/Documents/SIT_MODULE/CSC1008/DSAProjApp/LIFT/codes/names.txt') as f:
-#     lines = f.readlines()
-#     for data in lines:
-#         lastname.append(data.rstrip('\n'))
-# middlename = []
-# with open('/Users/voidky/Documents/SIT_MODULE/CSC1008/DSAProjApp/LIFT/codes/middlename.txt') as f:
-#     lines = f.readlines()
-#     for data in lines:
-#         middlename.append(data.rstrip('\n'))
-#
-# letter1 = []
-# letter2 = []
-# with open('/Users/voidky/Documents/SIT_MODULE/CSC1008/DSAProjApp/LIFT/codes/letter.txt') as f:
-#     lines = f.readlines()
-#     for data in lines:
-#         letter1.append(data.rstrip('\n'))
-#         letter2.append(data.rstrip('\n'))
-#
+lastname = []
+with open('/Users/voidky/Documents/SIT_MODULE/CSC1008/DSAProjApp/LIFT/codes/names.txt') as f:
+    lines = f.readlines()
+    for data in lines:
+        lastname.append(data.rstrip('\n'))
+middlename = []
+with open('/Users/voidky/Documents/SIT_MODULE/CSC1008/DSAProjApp/LIFT/codes/middlename.txt') as f:
+    lines = f.readlines()
+    for data in lines:
+        middlename.append(data.rstrip('\n'))
+
+letter1 = []
+letter2 = []
+with open('/Users/voidky/Documents/SIT_MODULE/CSC1008/DSAProjApp/LIFT/codes/letter.txt') as f:
+    lines = f.readlines()
+    for data in lines:
+        letter1.append(data.rstrip('\n'))
+        letter2.append(data.rstrip('\n'))
+
 # namecounter = 0
 # # for j in range(len(name)):
 #   # print(random.choice(name))
@@ -80,6 +81,22 @@ def find_nearest(lat, long):
 #                                   driverlong=PointInfo.objects.all()[i].long, seatNo=random.choice(seatchoi), status="online", carplate= platenumber)
 #     test.save()
 #     counter += 1
+# usernamecount = 0
+# for i in range(PointInfo.objects.all().count()):
+#     customergrp = Group.objects.get(name='customer')
+#     username = "testuser" + str(usernamecount)
+#     email = username + "@email.com"
+#     password = "test1234"
+#     if not User.objects.filter(username=username):
+#         user = User.objects.create_user(username=username, email=email, password=password)
+#         user.first_name = random.choice(middlename)
+#         user.last_name = random.choice(lastname)
+#         user.save()
+#         user.groups.add(customergrp)
+#         obj = User.objects.get(username=username)
+#         act = UserActivity.objects.create(user = obj, lat =PointInfo.objects.all()[i].lat, long=PointInfo.objects.all()[i].long)
+#         act.save()
+#     usernamecount += 1
 """_summary_
     Below to to delete the array that is temp used to store the the data
 """
