@@ -1,5 +1,16 @@
 # Create your models here.
+from django.contrib.auth.models import User
 from django.db import models
+
+
+class UserActivity(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    lat = models.FloatField(default=0)
+    long = models.FloatField(default=0)
 
 
 class PointInfo(models.Model):

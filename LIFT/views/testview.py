@@ -1,25 +1,21 @@
-from decimal import Decimal
-from math import sqrt
-
-import pandas as pd
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
-import requests
-import json
 import datetime
+import json
+
+import requests
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.shortcuts import render
+
 from LIFT.codes import BookingFunctions
 from LIFT.codes.RiderRequest import riderRequest
-
-from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY, ONEMAP_DEV_URL, ONEMAP_TOKEN
-from ..codes.Haversine import haversine
+from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY
 from ..codes.Pathfinder import PathFinder
-from ..codes.Routes import roadedge_df, roadnode_df, points_df
+from ..codes.Routes import roadedge_df
 from ..datastructure.Graph import Graph
-# from ..codes.BookingFunctions import dList, aList, rList, sList,
+from ..models.models import PointInfo
 
-from ..models.models import PointInfo, PathCache
+
+# from ..codes.BookingFunctions import dList, aList, rList, sList,
 
 
 @login_required(login_url='/login')
@@ -36,6 +32,7 @@ def testpage(request):
     else:
         return render(request, 'test.html', args)
 
+
 # Jquery post Request Handling
 def plot_route(request):
     if request.method == 'POST':
@@ -43,103 +40,13 @@ def plot_route(request):
         endcoord = [1.4410467, 103.839182]
         startcoord = [1.4180309, 103.8386927]
         pf = PathFinder()
-        pf.FindPath(startcoord[0],startcoord[1],endcoord[0], endcoord[1])
+        pf.FindPath(startcoord[0], startcoord[1], endcoord[0], endcoord[1])
         geom = pf.generate_geojson()
         return JsonResponse(geom, safe=False)
 
 
-def getInfo(request):
-    #distanceCalculation("1.4180309,103.8386927","1.4410467,103.839182",request)
-    print(request.POST['starting'])
-    print(request.POST['ending'])
-
-    #Selecting type of car/ride
-    typeOfRide = request.POST['typeOfRide']
-    if str(typeOfRide) == '5 Seater':
-        typeOfRide =5
-    elif str(typeOfRide) == '8 Seater':
-        typeOfRide =8
-    elif str(typeOfRide) == 'Shared Rides':
-        typeOfRide =1
-    print("type of ride",typeOfRide)
-
-    #Current time
-    print(request.POST['pickUpTime'])
-    if str(request.POST['pickUpTime']) == 'Now':
-       now = datetime.datetime.now()
-    print(now.strftime("%Y %m %d %H %M %S"))
-    
-    #User ID
-    print("TEST " + str(request.user.id)) #use this to get user ID
-    
-    #Distance
-    start = "1.3349499314823845,103.87193456740948"
-    end = "1.4410467,103.839182"
-    
-    print(end)
-    startLoc =  BookingFunctions.splitByComma(start)
-    endLoc = BookingFunctions.splitByComma(end)
-    totalDistance = BookingFunctions.haversine(float(startLoc[0]),float(startLoc[1]), float(endLoc[0]),float(endLoc[1]))
-    print("updated" , totalDistance)
-    priceDistance = totalDistance
-    
-    #Price calculation
-    price = 3  # standard price for less than 1km
-    priceDistance = int(priceDistance)
-    if priceDistance < 10000:
-        while priceDistance > 0:
-            price += 0.22
-            priceDistance -= 400
-    elif priceDistance > 10000:
-        priceDistance - 10000
-        price += 0.22 * 25
-        while priceDistance > 0:
-            price += 0.22
-            priceDistance -= 350
-    formatted_price = "{:.2f}".format(price)
-    print("The price is: " + str(formatted_price))
-    rList = BookingFunctions.createUserList()
-    #User Object
-    temp = riderRequest(request.user.id,start,now.strftime("%Y-%m-%d-%H-%M-%S"),end,totalDistance,typeOfRide,formatted_price)
-    BookingFunctions.addUser(rList,temp)
-    print("rList size",rList.size())
-    BookingFunctions.findRides(rList)
-    
-    #BookingFunctions.findRides(rList,dList,aList,sList)
-    return JsonResponse(formatted_price, safe=False)
 
 
-
-
-def getPrice(request):
-    #distanceCalculation("1.4180309,103.8386927","1.4410467,103.839182",request)
-    print(request.POST['starting'])
-    print(request.POST['ending'])
-    start = "1.3349499314823845,103.87193456740948"
-    end = "1.4410467,103.839182"
-    
-    startLoc =  BookingFunctions.splitByComma(start)
-    endLoc = BookingFunctions.splitByComma(end)
-    totalDistance = BookingFunctions.haversine(float(startLoc[0]),float(startLoc[1]), float(endLoc[0]),float(endLoc[1]))
-    print("updated" , totalDistance)
-    priceDistance = totalDistance
-    
-    #Price calculation
-    price = 3  # standard price for less than 1km
-    priceDistance = int(priceDistance)
-    if priceDistance < 10:
-        while priceDistance > 0:
-            price += 0.22
-            priceDistance -= 0.4
-    elif priceDistance > 10:
-        priceDistance - 10
-        price += 0.22 * 0.25
-        while priceDistance > 0:
-            price += 0.22
-            priceDistance -= 0.35
-    formatted_price = "{:.2f}".format(price)
-    print("The price is: " + str(formatted_price))
-    return JsonResponse(formatted_price, safe=False)
 
 # get lon n lat of user using ip addr
 def select_pickup(request):
@@ -151,7 +58,6 @@ def select_pickup(request):
     print("lat: " + str(location_data["lat"]))
     print("lon: " + str(location_data["lon"]))
     return render(request, 'index.html', {'location_data': location_data})
-
 
 # def distanceCalculation(startLocation, endLocation):
 #     urls = ONEMAP_DEV_URL+ "/privateapi/routingsvc/route"
