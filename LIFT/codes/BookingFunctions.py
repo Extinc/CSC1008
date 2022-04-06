@@ -31,11 +31,11 @@ def splitByComma(userString):
 
 
 def findNearestRider(passengerList, sharedList, driver):
-    firstRider = splitString(str(passengerList.listDetail(0)))
-    # print("TEST EEFCODE 1 :  ",passengerList.listDetail(0))
+    firstRider = splitString(str(passengerList.showDetail(0)))
+    # print("TEST EEFCODE 1 :  ",passengerList.showDetail(0))
     for i in range(1, passengerList.size() - 1):
         location = str(driverList[i].driverlat) + "," + str(driverList[i].driverlong)
-        nextRider = splitString(str(passengerList.listDetail(int(i))))
+        nextRider = splitString(str(passengerList.showDetail(int(i))))
         firstRiderLoc = splitByComma(str(firstRider[1]))
         nextRiderLoc = splitByComma(str(nextRider[1]))
         firstRiderDest = splitByComma(str(firstRider[3]))
@@ -68,7 +68,7 @@ def findNearestRider(passengerList, sharedList, driver):
                 uTable.setVal(firstRider[0], "1")
                 uTable.setVal(nextRider[0], "3")
 
-            print("New Shared Ride", sharedList.listDetail(int(sharedList.size() - 2)))
+            print("New Shared Ride", sharedList.showDetail(int(sharedList.size() - 2)))
             passengerList.deleteAt(i)
             return True
 
@@ -78,15 +78,15 @@ def findNearestRider(passengerList, sharedList, driver):
 def findMainRider(list, userId):  # uses binary search
     # def binarySearch(arr, l, r, x): #l = first value r = last val x = value we searching
     for i in range(list.size()):
-        rideDetail = splitString(str(list.listDetail(int(i))))
+        rideDetail = splitString(str(list.showDetail(int(i))))
         if rideDetail[1] == userId:
             return rideDetail[0]
 
 
 def findRides(passengerList):  # standardRideList =Accepted Rides sharedList= Shared Rides passengerList = ridersharedList
     addUser(passengerList, Rider2)  # add dummy rider
-    print("rider Detail", passengerList.listDetail(int(0)))
-    rider = splitString(str(passengerList.listDetail(int(0))))  # retrieve first rider details
+    print("rider Detail", passengerList.showDetail(int(0)))
+    rider = splitString(str(passengerList.showDetail(int(0))))  # retrieve first rider details
     i = 0
 
     for driver in driverList:
@@ -117,7 +117,7 @@ def findRides(passengerList):  # standardRideList =Accepted Rides sharedList= Sh
                     uTable.setVal(rider[0], "2")
                     # needa delete but whatevs
                     passengerList.deleteAt(0)
-                    print("standardRideList details,", standardRideList.listDetail(int(0)))
+                    print("standardRideList details,", standardRideList.showDetail(int(0)))
                     break
             elif (int(rider[5]) == int(5)):
                 #add to accepted rides
@@ -128,7 +128,7 @@ def findRides(passengerList):  # standardRideList =Accepted Rides sharedList= Sh
                     print("new Ride", newRide)
                     addUser(standardRideList, newRide)
 
-                    print(standardRideList.listDetail(0))
+                    print(standardRideList.showDetail(0))
                     sortstandardRideList(standardRideList)
                     uTable.setVal(rider[0], "2")
 
@@ -136,7 +136,7 @@ def findRides(passengerList):  # standardRideList =Accepted Rides sharedList= Sh
                     print(rider[0])
                     # needa delete but whatevs
                     passengerList.deleteAt(0)
-                    print("accepted", standardRideList.listDetail(0))
+                    print("accepted", standardRideList.showDetail(0))
                     break
             elif (int(rider[5]) == int(8)):
                  #add to accepted rides
@@ -146,14 +146,14 @@ def findRides(passengerList):  # standardRideList =Accepted Rides sharedList= Sh
 
                     addUser(standardRideList, newRide)
 
-                    print(standardRideList.listDetail(0))
+                    print(standardRideList.showDetail(0))
                     sortstandardRideList(standardRideList)
                     print("Rider Id")
                     print(rider[0])
                     uTable.setVal(rider[0], "2")
                     # needa delete but whatevs
                     passengerList.deleteAt(0)
-                    print("accepted", standardRideList.listDetail(0))
+                    print("accepted", standardRideList.showDetail(0))
                     break
             else:
                 print(driverList[i].seatNo)
@@ -176,8 +176,8 @@ def sortstandardRideList(list):
     for m in range(list.size() - 1, 0, -1):
         for n in range(m):
 
-            aRide1 = splitString(str(standardRideList.listDetail(int(n))))
-            aRide2 = splitString(str(standardRideList.listDetail(int(n + 1))))
+            aRide1 = splitString(str(standardRideList.showDetail(int(n))))
+            aRide2 = splitString(str(standardRideList.showDetail(int(n + 1))))
             print("1", aRide1[0])
             print("2", aRide2[0])
             if (aRide2[0] is not None):
@@ -197,8 +197,8 @@ def sortsharedList(list):
     for m in range(list.size() - 1, 0, -1):
         for n in range(m):
             #
-            sRide1 = splitString(str(sharedList.listDetail(int(n))))
-            sRide2 = splitString(str(sharedList.listDetail(int(n + 1))))
+            sRide1 = splitString(str(sharedList.showDetail(int(n))))
+            sRide2 = splitString(str(sharedList.showDetail(int(n + 1))))
             print("1", sRide1[0])
             print("2", sRide2[0])
             if (sRide2[0] is not None):
@@ -240,7 +240,7 @@ def findRideIndex(list, smallest, size, userId):  # uses binary search
         print(mid)
         print(size)
         print("userId in index", userId)
-        currentId = splitString(str(list.listDetail(mid)))
+        currentId = splitString(str(list.showDetail(mid)))
         print(currentId[0])
         if currentId[0] is None or int(mid) >= 0 and int(mid) <= 1:
             return 0

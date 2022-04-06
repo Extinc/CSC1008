@@ -115,7 +115,7 @@ def findDriver(request):
         position = findRideIndex(sharedList, 0, sharedList.size() - 1, userId)
         position = math.ceil(int(position))
         # print("pos", position)
-        rideDetail = splitString(str(sharedList.listDetail(int(position))))
+        rideDetail = splitString(str(sharedList.showDetail(int(position))))
         driverId = rideDetail[8]
         # print("driverId", driverId)
         driverName = models.Drivers.objects.get(driverID=driverId).name
@@ -130,7 +130,7 @@ def findDriver(request):
         print(standardRideList.size())
         position = findRideIndex(standardRideList, 0, standardRideList.size() - 1, userId)
         position = math.ceil(int(position))
-        rideDetail = splitString(str(standardRideList.listDetail(int(position))))
+        rideDetail = splitString(str(standardRideList.showDetail(int(position))))
         driverId = rideDetail[7]
         # print("driverId", driverId)
         driverName = models.Drivers.objects.get(driverID=driverId).name
@@ -147,7 +147,7 @@ def findDriver(request):
         # print("main Id", mainId)
         position = findRideIndex(sharedList, 0, sharedList.size() - 1, mainId)
         position = math.ceil(int(position))
-        rideDetail = splitString(str(sharedList.listDetail(int(position))))
+        rideDetail = splitString(str(sharedList.showDetail(int(position))))
         driverId = rideDetail[8]
         # print("driverId", driverId)
         driverName = models.Drivers.objects.get(driverID=driverId).name
