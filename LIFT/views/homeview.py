@@ -14,6 +14,7 @@ def index(request):
         fname = request.user.first_name
         lname = request.user.last_name
         args['fname'] = fname + " " + lname
+
         return render(request, 'index.html', args)
     else:
         return render(request, 'index.html', args)

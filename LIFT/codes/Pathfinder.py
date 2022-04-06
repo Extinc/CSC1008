@@ -68,9 +68,11 @@ class PathFinder:
 
             # store the graph in the database
             # if exist update if do not exist create in database
-            obj, created = PathCache.objects.update_or_create(source=start, destination=end, DateTime=timezone.now(),
-                                                             graph=json.dumps(self.graph.adj_list),
-                                                             heuristic=json.dumps(self.graph.heuristic))
+            obj, created = PathCache.objects.update_or_create(source=start, destination=end,
+                                                              defaults={'source': start, 'destination': end,
+                                                                        'DateTime': timezone.now(),
+                                                                        'graph': json.dumps(self.graph.adj_list),
+                                                                        'heuristic': json.dumps(self.graph.heuristic)})
 
         self.shortest_path = self.graph.pathfind_astar(start, end)
 
