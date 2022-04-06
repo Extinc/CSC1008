@@ -21,11 +21,11 @@ def createList():
 def addUser(list, object):
     list.insertAtEnd(object)
 
-
+#Split string by space
 def splitString(userString):
     return str(userString).split(' ')
 
-
+#Split string by comma
 def splitByComma(userString):
     return str(userString).split(',')
 
@@ -37,11 +37,13 @@ def findNearestRider(passengerList, sharedList, driver):
         location = str(driverList[i].driverlat) + "," + str(driverList[i].driverlong)
         nextRider = splitString(str(passengerList.showDetail(int(i))))
         firstRiderLoc = splitByComma(str(firstRider[1]))
+        #getting second rider location
         nextRiderLoc = splitByComma(str(nextRider[1]))
         firstRiderDest = splitByComma(str(firstRider[3]))
         # print("TEST EEFCODE 1 :  ",float(nextRiderLoc[0]))
         print("TEST EEFCODE 1 first rider dest :  ", firstRiderDest)
         print("TEST EEFCODE 1 next rider dest :  ", nextRiderLoc)
+        #use haversine function to get distance
         pToP = haversine(float(firstRiderLoc[1]), float(firstRiderLoc[0]), float(nextRiderLoc[1]),
                          float(nextRiderLoc[0]))  # compare pickup for rider 1 and next rider
         #
@@ -66,6 +68,7 @@ def findNearestRider(passengerList, sharedList, driver):
 
                 #adds first rider and secondary rider into the hashmap
                 uTable.setVal(firstRider[0], "1")
+                #shared rides but cannot find another rider, so '3'
                 uTable.setVal(nextRider[0], "3")
 
             print("New Shared Ride", sharedList.showDetail(int(sharedList.size() - 2)))
@@ -110,6 +113,7 @@ def findRides(passengerList):  # standardRideList =Accepted Rides sharedList= Sh
                 else:
                     #if shared rides is chosen but no shared rides are found, add to accepted
                     print("No Shared Ride Found")
+                    #Putting him in a new ride
                     newRide = AcceptedRides(rider[0], rider[1], location, rider[2], rider[3], rider[4], rider[6],
                                             rider[5], driverDetails.driverID)
                     addUser(standardRideList, newRide)
@@ -131,13 +135,13 @@ def findRides(passengerList):  # standardRideList =Accepted Rides sharedList= Sh
                     print(standardRideList.showDetail(0))
                     sortstandardRideList(standardRideList)
                     uTable.setVal(rider[0], "2")
-
                     print("Rider Id")
                     print(rider[0])
                     # needa delete but whatevs
                     passengerList.deleteAt(0)
                     print("accepted", standardRideList.showDetail(0))
                     break
+                #if no. of seats = 8
             elif (int(rider[5]) == int(8)):
                  #add to accepted rides
                 if int(rider[5]) == int(driverList[i].seatNo):
@@ -150,6 +154,7 @@ def findRides(passengerList):  # standardRideList =Accepted Rides sharedList= Sh
                     sortstandardRideList(standardRideList)
                     print("Rider Id")
                     print(rider[0])
+                    #setting hashtable to accepted
                     uTable.setVal(rider[0], "2")
                     # needa delete but whatevs
                     passengerList.deleteAt(0)
