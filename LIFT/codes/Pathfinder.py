@@ -3,11 +3,11 @@ import json
 from django.db.models import Q
 from django.utils import timezone
 
+from LIFT.codes.BookingFunctions import haversine
 # from LIFT.codes.Haversine import haversine
 from LIFT.codes.Routes import roadnode_df, roadedge_df
 from LIFT.datastructure.Graph import Graph
 from LIFT.models.models import PathCache
-from LIFT.codes.BookingFunctions import haversine
 
 
 class PathFinder:
@@ -15,19 +15,26 @@ class PathFinder:
         self.graph = Graph()
         self.shortest_path = None
 
+    # This function is used to build graph
     def find_path(self, startlat, startlong, endlat, endlong):
         self.graph = Graph()
         end = roadnode_df.loc[(roadnode_df['x'] == endlong) & (roadnode_df['y'] == endlat)]['id'].values[0]
         start = roadnode_df.loc[(roadnode_df['x'] == startlong) & (roadnode_df['y'] == startlat)]['id'].values[
             0]
 
+        # If start and end location exist within the database get the stored graph
         if PathCache.objects.filter(Q(source=start) & Q(destination=end)).count() > 0:
+            # Load the graph directly from database when it is stored already
+            # This is to speed up processing to reduce the need of building the graph everytime.
             path_cache = PathCache.objects.get(source=start, destination=end)
             self.graph.adj_list = json.loads(path_cache.graph)
             self.graph.heuristic = json.loads(path_cache.heuristic)
         else:
+            # Below is to build the graph
             next_node = []
             nodecounter = 0
+
+            # Using haversine to calculate the distance for heuristic
             heuristic = haversine(startlong, startlat, endlong, endlat) * 1000
             self.graph.addNode(start)
             self.graph.addHeuristic(start, heuristic)
@@ -58,13 +65,16 @@ class PathFinder:
                         self.graph.addHeuristic(node[1], heuristic)
                         next_node.append(node[1])
                 nodecounter += 1
-            graph_cache = PathCache.objects.create(source=start, destination=end, DateTime=timezone.now(),
-                                                   graph=json.dumps(self.graph.adj_list),
-                                                   heuristic=json.dumps(self.graph.heuristic))
-            graph_cache.save()
+
+            # store the graph in the database
+            # if exist update if do not exist create in database
+            obj, created = PathCache.objects.update_or_create(source=start, destination=end, DateTime=timezone.now(),
+                                                             graph=json.dumps(self.graph.adj_list),
+                                                             heuristic=json.dumps(self.graph.heuristic))
 
         self.shortest_path = self.graph.pathfind_astar(start, end)
 
+    # Function to generate the geojson data for plotting the route
     def generate_geojson(self, type):
         geom = {'type': type, 'coordinates': []}
         for i in range(len(self.shortest_path) - 1):

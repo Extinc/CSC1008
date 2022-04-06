@@ -1,17 +1,21 @@
 class Graph:
     def __init__(self):
-        self.adj_list = {}
-        self.heuristic = {}
+        self.adj_list = {}  # This is used to store the adajacency list
+        self.heuristic = {}  # This is to store heuristic data for the nodes
 
+    # Function to get the neighbors of the node
     def get_neighbors(self, node):
         return self.adj_list[node]
 
+    # Function to add node to the graph
     def addNode(self, node):
         self.adj_list[node] = []
 
+    # FUnction to add heuristic data to the graph on creating the graph
     def addHeuristic(self, node, heu):
         self.heuristic[node] = heu
 
+    # Funtion to add the edges to the graph
     def addEdge(self, src, dest, distance=0, heu=0):
         if src not in self.adj_list:
             self.addNode(src)
@@ -20,10 +24,11 @@ class Graph:
         if (dest, distance) not in self.adj_list[src]:
             self.adj_list[src].append((dest, distance))
 
-    # This is heuristic function which is having equal values for all nodes
+    # This is to get the heuristic
     def h(self, n):
         return self.heuristic[n]
 
+    # A star path finding Algorithm to find the shortest_path within the graph
     def pathfind_astar(self, start, destination):
         # In this open_lst is a lisy of nodes which have been visited, but who's
         # neighbours haven't all been always inspected, It starts off with the start
@@ -38,7 +43,7 @@ class Graph:
         present_dist = {}
         present_dist[start] = 0
 
-        # par contains an adjac mapping of all nodes
+        # adjacent_map contains an adjacent maps of all nodes
         adjacent_map = {}
         adjacent_map[start] = start
 
@@ -47,10 +52,10 @@ class Graph:
 
             # it will find a node with the lowest value of f() -
             for v in open_lst:
-                if n == None or present_dist[v] + self.h(v) < present_dist[n] + self.h(n):
+                if n is None or present_dist[v] + self.h(v) < present_dist[n] + self.h(n):
                     n = v
 
-            if n == None:
+            if n is None:
                 print('Path does not exist!')
                 return None
 
@@ -70,10 +75,10 @@ class Graph:
                 print('Path found: {}'.format(reconst_path))
                 return reconst_path
 
-            # for all the neighbors of the current node do
+            # for all the neighbors of the current node do the following
             for (m, distance) in self.get_neighbors(n):
-                # if the current node is not presentin both open_lst and closed_lst
-                # add it to open_lst and note n as it's par
+                # if the current node is not present in both open_lst and closed_lst
+                # add it to open_lst and note n as it's adjacent map
                 if m not in open_lst and m not in closed_lst:
                     open_lst.add(m)
                     adjacent_map[m] = n
@@ -92,7 +97,7 @@ class Graph:
                             open_lst.add(m)
 
             # remove n from the open_lst, and add it to closed_lst
-            # because all of his neighbors were inspected
+            # because all of the open_lst neighbors has been visited
             open_lst.remove(n)
             closed_lst.add(n)
 
