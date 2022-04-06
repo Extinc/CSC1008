@@ -174,7 +174,7 @@ def get_address(request):
                     # payload.append(search.BUILDINGNAME)
                 if search.BLOCK != "":
                     if search.id not in searchload:
-                        searchload[search.id] = search.BLOCK
+                        searchload[search.id] = "BLOCK " + str(search.BLOCK)
                     # payload.append(search.BLOCK)
                 if search.POSTALCODE != "":
                     if search.id not in searchload:
