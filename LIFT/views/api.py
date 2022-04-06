@@ -28,11 +28,11 @@ def getPrice(request):
     # Price calculation
     price = 3  # standard price for less than 1km
     priceDistance = int(priceDistance)
-    if priceDistance < 10:
+    if priceDistance < 3:
         while priceDistance > 0:
             price += 0.22
             priceDistance -= 0.4
-    elif priceDistance > 10:
+    elif priceDistance > 3:
         priceDistance - 10
         price += 0.22 * 0.25
         while priceDistance > 0:

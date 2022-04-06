@@ -95,7 +95,7 @@ def findRides(rList):  # aList =Accepted Rides sList= Shared Rides rList = rider
         # print(rider[1])
         # print("location",location)
         if haversine(float(str(dList[i].driverlat)), float(str(dList[i].driverlong)), float(riderLoc[0]),
-                     float(riderLoc[1])) < 5:
+                     float(riderLoc[1])) < 2:
             driverDetails = dList[i]
             print("distance within 5km")
             if int(rider[5]) == 1:
