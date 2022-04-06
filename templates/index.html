@@ -295,11 +295,12 @@
                 var startloc = $("#hiddenstart").val();
                 var endloc = $("#hiddenend").val();
                 var fare = $("#farecontent").attr("data-lift-fare")
-                console.log("Fareeee" +  $("#typeofride").attr("data-lift-ridetype"));
+                console.log("Fareeee" + $("#typeofride").attr("data-lift-ridetype"));
                 $.ajax({
                     type: "POST",
                     url: "/getInfo/",
                     data: {
+                        reply:false,
                         csrfmiddlewaretoken: "{{csrf_token}}",
                         starting: startloc,
                         ending: endloc,
@@ -308,9 +309,10 @@
 
                         //price: $('input[name="rideprice"]').val(),
                     }, success: function (result) {
-                        getDriverDetails()
+                        getDriverDetails();
                         $('#faremodal').modal('hide');
-                        $("#price").val(fare)
+                        $("#price").val(fare);
+
                     }
                 });
 
@@ -322,18 +324,83 @@
                     type: "POST",
                     url: "/findDriver/",
                     data: {
+                        reply:false,
                         csrfmiddlewaretoken: "{{csrf_token}}",
                         userId: "2",
                     },
                     success: function (result) {
-                        $("#driverId").val(result[0]),
-                            $("#name").val(result[1])
-                        $("#carplate").val(result[2])
-                        $("#typeRide").val(result[3])
+                        $("#driverId").val(result[0]);
+                        $("#name").val(result[1]);
+                        $("#carplate").val(result[2]);
+                        $("#typeRide").val(result[3]);
+                        getRoute();
                     }
                 })
             }
 
+
+            function getRoute() {
+                var startloc = $("#hiddenstart").val();
+                var endloc = $("#hiddenend").val();
+                $.ajax({
+                    reply: false,
+                    type: "POST",
+                    url: "/bookingsearch/",
+                    data: {
+                        csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+                        starting: startloc,
+                        ending: endloc,
+                        //price: $('input[name="rideprice"]').val(),
+                    },
+                    success: function (data) {
+                        var geojson = {
+                            'type': 'FeatureCollection',
+                            'features': [
+                                {
+                                    'type': 'Feature',
+                                    'geometry': {
+                                        'type': 'LineString',
+                                        'coordinates': [data['coordinates'][0]]
+                                    }
+                                }
+                            ]
+                        };
+                        map.addSource("route", {
+                            'type': "geojson",
+                            'data': geojson
+                        });
+
+                        map.addLayer({
+                            id: "line-animation",
+                            type: "line",
+                            source: "route",
+                            layout: {
+                                "line-join": "round",
+                                "line-cap": "round",
+                            },
+                            paint: {
+                                "line-color": "#ee2323",
+                                "line-width": 8,
+                            },
+                        });
+
+                        animateLine();
+
+                        function animateLine() {
+                            // append new coordinates to the lineString
+                            if (route_counter !== data['coordinates'].length) {
+                                geojson.features[0].geometry.coordinates.push(data['coordinates'][route_counter]);
+                                // then update the map
+                                route_counter++;
+                                map.getSource('route').setData(geojson);
+                                // Request the next frame of the animation.
+                                animation = requestAnimationFrame(animateLine);
+                            }
+
+                        }
+                    },
+                });
+            }
         </script>
         <style>
             .ui-autocomplete {
