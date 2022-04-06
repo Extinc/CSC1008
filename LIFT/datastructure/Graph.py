@@ -33,21 +33,21 @@ class Graph:
         open_lst = set([start])
         closed_lst = set([])
 
-        # poo has present distances from start to all other nodes
+        # distance has present distances from start to all other nodes
         # the default value is +infinity
-        poo = {}
-        poo[start] = 0
+        distance = {}
+        distance[start] = 0
 
         # par contains an adjac mapping of all nodes
-        par = {}
-        par[start] = start
+        adjacent_map = {}
+        adjacent_map[start] = start
 
         while len(open_lst) > 0:
             n = None
 
             # it will find a node with the lowest value of f() -
             for v in open_lst:
-                if n == None or poo[v] + self.h(v) < poo[n] + self.h(n):
+                if n == None or distance[v] + self.h(v) < distance[n] + self.h(n):
                     n = v
 
             if n == None:
@@ -59,9 +59,9 @@ class Graph:
             if n == destination:
                 reconst_path = []
 
-                while par[n] != n:
+                while adjacent_map[n] != n:
                     reconst_path.append(n)
-                    n = par[n]
+                    n = adjacent_map[n]
 
                 reconst_path.append(start)
 
@@ -76,16 +76,16 @@ class Graph:
                 # add it to open_lst and note n as it's par
                 if m not in open_lst and m not in closed_lst:
                     open_lst.add(m)
-                    par[m] = n
-                    poo[m] = poo[n] + distance
+                    adjacent_map[m] = n
+                    distance[m] = distance[n] + distance
 
                 # otherwise, check if it's quicker to first visit n, then m
                 # and if it is, update par data and poo data
                 # and if the node was in the closed_lst, move it to open_lst
                 else:
-                    if poo[m] > poo[n] + distance:
-                        poo[m] = poo[n] + distance
-                        par[m] = n
+                    if distance[m] > distance[n] + distance:
+                        distance[m] = distance[n] + distance
+                        adjacent_map[m] = n
 
                         if m in closed_lst:
                             closed_lst.remove(m)
