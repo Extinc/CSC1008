@@ -35,8 +35,8 @@ class Graph:
 
         # distance has present distances from start to all other nodes
         # the default value is +infinity
-        distance = {}
-        distance[start] = 0
+        present_dist = {}
+        present_dist[start] = 0
 
         # par contains an adjac mapping of all nodes
         adjacent_map = {}
@@ -47,7 +47,7 @@ class Graph:
 
             # it will find a node with the lowest value of f() -
             for v in open_lst:
-                if n == None or distance[v] + self.h(v) < distance[n] + self.h(n):
+                if n == None or present_dist[v] + self.h(v) < present_dist[n] + self.h(n):
                     n = v
 
             if n == None:
@@ -77,14 +77,14 @@ class Graph:
                 if m not in open_lst and m not in closed_lst:
                     open_lst.add(m)
                     adjacent_map[m] = n
-                    distance[m] = distance[n] + distance
+                    present_dist[m] = present_dist[n] + distance
 
                 # otherwise, check if it's quicker to first visit n, then m
                 # and if it is, update par data and poo data
                 # and if the node was in the closed_lst, move it to open_lst
                 else:
-                    if distance[m] > distance[n] + distance:
-                        distance[m] = distance[n] + distance
+                    if present_dist[m] > present_dist[n] + distance:
+                        present_dist[m] = present_dist[n] + distance
                         adjacent_map[m] = n
 
                         if m in closed_lst:

@@ -1,11 +1,14 @@
 import datetime
 import math
 
+from django.db.models import Count, Q
 from django.http import JsonResponse
 
 from LIFT.codes import BookingFunctions
 from LIFT.codes.BookingFunctions import *
+from LIFT.codes.Pathfinder import PathFinder
 from LIFT.codes.RiderRequest import riderRequest
+from LIFT.codes.Routes import find_nearest
 from LIFT.models import models
 from LIFT.models.models import PointInfo
 
@@ -153,3 +156,44 @@ def findDriver(request):
 
         value = [driverId, driverName, carplate, rideType]
         return JsonResponse(value, safe=False)
+
+def get_address(request):
+    if request.method == "GET":
+        # search = request.GET.get('search')
+        searchval = request.GET['search']
+        payload = []
+        global search_result
+        search_result = PointInfo.objects.exclude(BUILDINGNAME__isnull=True).exclude(BUILDINGNAME__exact='').annotate(
+            BUILDINGNAME_count=Count('BUILDINGNAME')).filter(
+            Q(BUILDINGNAME__startswith=searchval) | Q(ROAD__startswith=searchval) | Q(POSTALCODE__startswith=searchval))
+        searchload = {}
+        for search in search_result:
+            if search.BUILDINGNAME not in searchload.values():
+                if search.BUILDINGNAME != "" and search.BUILDINGNAME != "null":
+                    searchload[search.id] = search.BUILDINGNAME
+                if search.BLOCK != "":
+                    if search.id not in searchload:
+                        searchload[search.id] = "BLOCK " + str(search.BLOCK)
+                if search.POSTALCODE != "":
+                    if search.id not in searchload:
+                        searchload[search.id] = search.POSTALCODE
+        return JsonResponse(searchload, safe=False)
+
+
+def getNearest(request):
+    if request.method == "GET":
+        result = find_nearest(float(request.GET['lat']), float(request.GET['long'])).to_json(orient='records')
+        return JsonResponse({'data': result})
+
+def booking_search(request):
+    if request.method == "POST":
+        startid = request.POST['starting']
+        endid = request.POST['ending']
+        pf = PathFinder()
+        start = PointInfo.objects.get(id=startid)
+        end = PointInfo.objects.get(id=endid)
+
+        pf.find_path(start.lat, start.long, end.lat, end.long)
+        geom = pf.generate_geojson('LineString')
+        return JsonResponse(geom, safe=False)
+
