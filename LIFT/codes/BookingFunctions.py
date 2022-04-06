@@ -273,9 +273,6 @@ def endRide(request):
         uTable.delVal(userId)
         ended = "Shared Ride Has Ended"
         return JsonResponse(ended, safe=False)
-
-
-
     elif int(listStored) == 2:
         print(aList.size())
         print("main id", userId)
@@ -285,8 +282,6 @@ def endRide(request):
         uTable.delVal(userId)
         ended = "Normal Ride Has Ended"
         return JsonResponse(ended, safe=False)
-
-
     elif int(listStored) == 3:
         print(sList.size())
         mainId = findMainRider(sList, userId)

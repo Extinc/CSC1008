@@ -253,7 +253,6 @@
 
                     map = new mapboxgl.Map({
                         container: "map",
-                        pitch: 45,
                         center: [position.coords.longitude, position.coords.latitude],
                         zoom: 17, // starting zoom
                         style: "mapbox://styles/mapbox/navigation-day-v1",
@@ -332,25 +331,37 @@
             });
 
             $("#searchbtn").click(function () {
-                var startloc = $("#hiddenstart").val();
-                var endloc = $("#hiddenend").val();
-                $.ajax({
-                    type: "POST",
-                    url: "/getPrice/",
-                    data: {
-                        csrfmiddlewaretoken: "{{csrf_token}}",
-                        starting: startloc,
-                        ending: endloc,
-                        //price: $('input[name="rideprice"]').val(),
-                    },
-                    success: function (result) {
-                        //   $("#result").html("<h2>Received!</h2>");
-                        {#$("#price").val(result);#}
-                        $("#farecontent").text("Price of Fare " + result + "\n Click confirm to confirm ride");
-                        $("#farecontent").attr("data-lift-fare", result)
-                        $('#faremodal').modal('show');
-                    },
-                });
+                if ($("#tripdis").is(":visible")) {
+                    alert("Please end your trip before starting another.")
+                } else {
+                    if (map.getLayer('line-animation')) {
+                        map.removeLayer('line-animation');
+                    }
+                    if (map.getSource('route')) {
+                        map.removeSource('route');
+                    }
+
+                    var startloc = $("#hiddenstart").val();
+                    var endloc = $("#hiddenend").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "/getPrice/",
+                        data: {
+                            csrfmiddlewaretoken: "{{csrf_token}}",
+                            starting: startloc,
+                            ending: endloc,
+                            //price: $('input[name="rideprice"]').val(),
+                        },
+                        success: function (result) {
+                            //   $("#result").html("<h2>Received!</h2>");
+                            {#$("#price").val(result);#}
+                            $("#farecontent").text("Price of Fare " + result + "\n Click confirm to confirm ride");
+                            $("#farecontent").attr("data-lift-fare", result)
+                            $('#faremodal').modal('show');
+                        },
+                    });
+                }
+
 
             });
             $("#farecancel").click(function () {
@@ -466,6 +477,33 @@
                         }
                     },
                 });
+            }
+
+            function confirmEnd() {
+
+                if (confirm("Click OK To End Ride")) {
+                    endRide();
+                } else {
+
+                }
+            }
+
+            function endRide() {
+                $.ajax({
+                    type: "POST",
+                    url: "/endRide/",
+                    data: {
+                        csrfmiddlewaretoken: "{{csrf_token}}",
+                        userId: "2",
+                    },
+                    success: function (result) {
+                        alert("Thank You For Riding With Us")
+                        $("#driverId").val(" ");
+                        $("#name").val(" ");
+                        $("#carplate").val(" ");
+                        $("#typeRide").val(" ");
+                    }
+                })
             }
         </script>
         <style>

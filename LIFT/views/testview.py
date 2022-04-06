@@ -33,19 +33,6 @@ def testpage(request):
         return render(request, 'test.html', args)
 
 
-# Jquery post Request Handling
-def plot_route(request):
-    if request.method == 'POST':
-        graph = Graph()
-        endcoord = [1.4410467, 103.839182]
-        startcoord = [1.4180309, 103.8386927]
-        pf = PathFinder()
-        pf.find_path(startcoord[0], startcoord[1], endcoord[0], endcoord[1])
-        geom = pf.generate_geojson('LineString')
-        return JsonResponse(geom, safe=False)
-
-
-
 
 
 # get lon n lat of user using ip addr
