@@ -137,7 +137,7 @@ class SinglyLinkedList:
             temp = temp.next
         output += "]"
 
-    def listDetail(self,index): #pop
+    def showDetail(self,index): #pop
         temp = self.head
         prev = None
         counter = 0
