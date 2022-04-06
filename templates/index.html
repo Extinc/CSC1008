@@ -95,9 +95,9 @@
             <div class="row">
 
                 <div class="accordion position-fixed fixed-bottom mb-4 col-lg-3 col-md-5 col-sm-5 col-10 mx-auto"
-                     id="tripdis" style="display: none;">
+                     id="tripdis" style="display:none">
                     <div class="accordion-item">
-                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
+                        <div id="driverinfo_panel" class="accordion-collapse collapse show"
                              aria-labelledby="headingOne">
                             <div class="accordion-body">
                                 <div class="row">
@@ -141,37 +141,37 @@
                                 </div>
                                 <div class="row mt-3">
                                     <p><b>Additional Info</b></p>
-                                    <p id="addinfoRide" class="trip_display" ></p>
+                                    <p id="addinfoRide" class="trip_display"></p>
                                 </div>
                                 <div class="row d-flex align-items-center justify-content-center mt-3">
                                     <button type="submit" class="btn" onclick="confirmEnd()">End Ride</button>
                                 </div>
                             </div>
-                            <h2 class="accordion-header" id="headingOne">
-                                <button class="accordion-button" type="button" data-mdb-toggle="collapse"
-                                        data-mdb-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                                        aria-controls="panelsStayOpen-collapseOne">
-                                    <div class="row" style="width:95%">
 
-                                        <div class="col-md-9 col-lg-8">
-                                            Current Ride
-                                        </div>
-
-                                        <div class="col-md-3 col-lg-4">
-                                            <input class="disabled"
-                                                   style="border:none; width: 100%; text-align: right;"
-                                                   id="price"
-                                                   name="rideprice"
-                                                   required
-                                                   size="10"
-                                                   placeholder="RIDE PRICE" readonly/>
-                                        </div>
-                                    </div>
-                                </button>
-                            </h2>
 
                         </div>
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-mdb-toggle="collapse"
+                                    data-mdb-target="#driverinfo_panel" aria-expanded="false"
+                                    aria-controls="driverinfo_panel">
+                                <div class="row" style="width:95%">
 
+                                    <div class="col-md-9 col-lg-8">
+                                        Current Ride
+                                    </div>
+
+                                    <div class="col-md-3 col-lg-4">
+                                        <input class="disabled"
+                                               style="border:none; width: 100%; text-align: right;"
+                                               id="price"
+                                               name="rideprice"
+                                               required
+                                               size="10"
+                                               placeholder="RIDE PRICE" readonly/>
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
                     </div>
                 </div>
 
@@ -201,13 +201,14 @@
 
                 <input type="hidden" name="" id="hiddenstart">
                 <input type="hidden" name="" id="hiddenend">
+            </div>
         </form>
 
         <script>
             const speedFactor = 30; // number of frames per longitude degree
             let animation; // to store and cancel the animation
             var route_counter = 1;
-
+            let markers = [];
 
             var latitude = 0;
             var longitude = 0;
@@ -239,14 +240,14 @@
                                         .setLngLat([obj.long, obj.lat])
                                         .setPopup(new mapboxgl.Popup().setHTML("<h id='nodebuilding'>" + obj.BUILDINGNAME + "</h><p id='nodeidhidden' class='d-none'>" + obj.id + "</p>"))
                                         .addTo(map);
+                                    markers.push(marker);
                                 } else {
                                     var marker = new mapboxgl.Marker()
                                         .setLngLat([obj.long, obj.lat])
                                         .setPopup(new mapboxgl.Popup().setHTML("<h id='nodebuilding'>" + obj.BUILDINGNAME + "</h><p> " + obj.POSTALCODE + "</p> <p  id='nodeidhidden'  class='d-none'>" + obj.id + "</p>"))
                                         .addTo(map);
+                                    markers.push(marker);
                                 }
-
-
                             }
                         }
                     });
@@ -316,7 +317,7 @@
                                 //   $("#result").html("<h2>Received!</h2>");
                                 {#$("#price").val(result);#}
                                 $("#farecontent").text("Price of Fare " + result + "\n Click confirm to confirm ride");
-                                $("#farecontent").attr("data-lift-fare", result)
+                                $("#farecontent").attr("data-lift-fare", result);
                                 $('#faremodal').modal('show');
                             },
                         });
@@ -383,6 +384,7 @@
 
 
             function getRoute() {
+                deleteMarkers();
                 var startloc = $("#hiddenstart").val();
                 var endloc = $("#hiddenend").val();
                 $.ajax({
@@ -408,6 +410,15 @@
                                 }
                             ]
                         };
+                        var marker = new mapboxgl.Marker()
+                            .setLngLat(data['coordinates'][0])
+                            .addTo(map);
+                        markers.push(marker)
+                        var marker_end = new mapboxgl.Marker()
+                            .setLngLat(data['coordinates'][data['coordinates'].length - 1])
+                            .addTo(map);
+                        markers.push(marker_end)
+                        console.log(data);
                         map.addSource("route", {
                             'type': "geojson",
                             'data': geojson
@@ -471,6 +482,19 @@
                     }
                 })
             }
+
+            function setMapOnAll(map) {
+                for (let i = 0; i < markers.length; i++) {
+                    markers[i].remove();
+                }
+            }
+
+            function deleteMarkers() {
+                setMapOnAll(null);
+                markers = [];
+            }
+
+
         </script>
         <style>
             .ui-autocomplete {

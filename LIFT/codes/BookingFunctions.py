@@ -265,7 +265,8 @@ def findRideIndex(list, smallest, size, userId):  # uses binary search
 
 
 def endRide(request):
-    userId = request.POST['userId']
+    userId = request.user.id
+
     listStored = findList(userId)
 
         #for Shared Rides

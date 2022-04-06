@@ -14,7 +14,6 @@ urlpatterns = [
     path('findDriver/', api.findDriver),
     path('get_addr/', api.get_address),
     path('endRide/', BookingFunctions.endRide),
-    # path('login', loginview.signin, name="Login"),
     path('register', loginview.register, name="Register"),
     path('signout', loginview.signout, name="Logout"),
 ]
