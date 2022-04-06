@@ -90,47 +90,7 @@
 
                 </div>
             </div>
-            <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
-                 id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-
-                <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark w-100 h-100">
-                    <div class="d-flex align-items-center justify-content-center">
-                        <a href="/index">
-                            <img src="{% static '/logo1.svg' %}" alt="logo1" style="height:100%">
-                        </a>
-                    </div>
-                    <hr>
-                    <ul class="nav nav-pills flex-column mb-auto">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link active" aria-current="page">
-                                <i class="fa-regular fa-house bi me-2"></i>
-                                Home
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/test" class="nav-link text-white" style="background: transparent ">
-                                <i class="fa-solid fa-flask-vial bi me-2"></i>
-                                TEST
-                            </a>
-                        </li>
-                    </ul>
-                    <hr>
-                    <div class="drop down">
-                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                           id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-user rounded-circle me-2"></i>
-                            <strong>{{ fname }}</strong>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="/signout">Sign out</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
+            {% include 'base/navbar.html' %}
             <div id="map" style="position:absolute; width: 100%; height: 100%; "></div>
             <div class="row">
 
@@ -214,7 +174,7 @@
                 </div>
             </div>
 
-            <!-- Modal -->
+            <!-- Modal : Price Fare-->
             <div class="modal fade" id="faremodal" tabindex="-1" role="dialog"
                  aria-labelledby="faremodalTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
