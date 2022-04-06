@@ -12,36 +12,41 @@ from math import radians, cos, sin, asin, sqrt
 import requests
 from LIFT.models import models
 
-
+#Creating userList using SinglyLinkedList
 def createUserList():
     userList = SinglyLinkedList()
     return userList
 
-
+#Adding each user at the end of the list
 def addUser(userList, object):
     userList.insertAtEnd(object)
 
-
+#Split string by space
 def splitString(userString):
     return str(userString).split(' ')
 
-
+#Split string by comma
 def splitByComma(userString):
     return str(userString).split(',')
 
-
+#Function to find nearest rider
+#rlist = rider list
+#sList = shared ride list
 def findNearestRider(rList, sList, driver):
     firstRider = splitString(str(rList.listDetail(0)))
     # print("TEST EEFCODE 1 :  ",rList.listDetail(0))
     for i in range(1, rList.size() - 1):
         location = str(dList[i].driverlat) + "," + str(dList[i].driverlong)
         nextRider = splitString(str(rList.listDetail(int(i))))
+        #getting first rider location
         firstRiderLoc = splitByComma(str(firstRider[1]))
+        #getting second rider location
         nextRiderLoc = splitByComma(str(nextRider[1]))
         firstRiderDest = splitByComma(str(firstRider[3]))
         # print("TEST EEFCODE 1 :  ",float(nextRiderLoc[0]))
         print("TEST EEFCODE 1 first rider dest :  ", firstRiderDest)
         print("TEST EEFCODE 1 next rider dest :  ", nextRiderLoc)
+        #use haversine function to get distance
         pToP = haversine(float(firstRiderLoc[1]), float(firstRiderLoc[0]), float(nextRiderLoc[1]),
                          float(nextRiderLoc[0]))  # compare pickup for rider 1 and next rider
         #
@@ -52,7 +57,9 @@ def findNearestRider(rList, sList, driver):
                 newSR = SharedRides(firstRider[0], nextRider[0], firstRider[1], firstRider[3], nextRider[1],
                                     nextRider[3], location, firstRider[2], firstRider[5],
                                     driver.driverID)  # for when its destination is closer to first rider so car goes from
+                #add new shared ride to sList                    
                 addUser(sList, newSR)
+                #update hashtable
                 uTable.setVal(firstRider[0],
                               "1")  # sharedRide = 1, AcceptedRides = 2. We just need to store an ID for one user since its a shared ride
                 print("New Shared Ride", sList.size())
@@ -60,13 +67,17 @@ def findNearestRider(rList, sList, driver):
                 newSR = SharedRides(firstRider[0], nextRider[0], firstRider[1], nextRider[1], firstRider[3],
                                     nextRider[3], location, firstRider[2], firstRider[5],
                                     driver.driverID)  # normal case where it picks up passenger along the way
-
+                #add new shared ride to sList
                 addUser(sList, newSR)
+                #sort sharedList
                 sortSList(sList)
+                #shared ride '1'
                 uTable.setVal(firstRider[0], "1")
+                #shared rides but cannot find another rider, so '3'
                 uTable.setVal(nextRider[0], "3")
 
             print("New Shared Ride", sList.listDetail(int(sList.size() - 2)))
+            #delete rider from list once accepted
             rList.deleteAt(i)
             return True
 
@@ -88,28 +99,34 @@ def findRides(rList):  # aList =Accepted Rides sList= Shared Rides rList = rider
     i = 0
 
     for driver in dList:
-
+        #retrieve the lat and long of driver[i]
         location = str(dList[i].driverlat) + "," + str(dList[i].driverlong)
-
+        #get rider location
         riderLoc = splitByComma(str(rider[1]))
-        # print(rider[1])
-        # print("location",location)
+        #if distance between rider and driver is less than 2
         if haversine(float(str(dList[i].driverlat)), float(str(dList[i].driverlong)), float(riderLoc[0]),
                      float(riderLoc[1])) < 2:
+            #store driver details         
             driverDetails = dList[i]
             print("distance within 5km")
+            #if shared ride == 1
             if int(rider[5]) == 1:
                 sharedCheck = findNearestRider(rList, sList, driverDetails)
                 if sharedCheck == True:
                     print("Shared Rides")
+                    #delete first rider
                     rList.deleteAt(0)
                     break
                 else:
                     print("No Shared Ride Found")
+                    #Putting him in a new ride
                     newRide = AcceptedRides(rider[0], rider[1], location, rider[2], rider[3], rider[4], rider[6],
                                             rider[5], driverDetails.driverID)
+                    #Adding new ride in aList
                     addUser(aList, newRide)
+                    #Sorting the accpeted ride list
                     sortAList(aList)
+                    #Accepted ride '1'
                     uTable.setVal(rider[0], "2")
                     # needa delete but whatevs
                     rList.deleteAt(0)
@@ -118,21 +135,24 @@ def findRides(rList):  # aList =Accepted Rides sList= Shared Rides rList = rider
             elif (int(rider[5]) == int(5)):
                 print("5 or 8")
                 if int(rider[5]) <= int(dList[i].seatNo):
+                    #store rider details in newRide
                     newRide = AcceptedRides(rider[0], rider[1], location, rider[2], rider[3], rider[4], rider[6],
                                             rider[5], driverDetails.driverID)
                     print("new Ride", newRide)
+                    #add new ride to accepted ride list
                     addUser(aList, newRide)
-
                     print(aList.listDetail(0))
+                    #sort accepted ride list
                     sortAList(aList)
+                    #set hash table to '2' which is accepted
                     uTable.setVal(rider[0], "2")
-
                     print("Rider Id")
                     print(rider[0])
                     # needa delete but whatevs
                     rList.deleteAt(0)
                     print("accepted", aList.listDetail(0))
                     break
+                #if no. of seats = 8
             elif (int(rider[5]) == int(8)):
                 if int(rider[5]) == int(dList[i].seatNo):
                     newRide = AcceptedRides(rider[0], rider[1], location, rider[2], rider[3], rider[4], rider[6],
@@ -141,9 +161,11 @@ def findRides(rList):  # aList =Accepted Rides sList= Shared Rides rList = rider
                     addUser(aList, newRide)
 
                     print(aList.listDetail(0))
+                    #sorting accepted ride list
                     sortAList(aList)
                     print("Rider Id")
                     print(rider[0])
+                    #setting hashtable to accepted
                     uTable.setVal(rider[0], "2")
                     # needa delete but whatevs
                     rList.deleteAt(0)
