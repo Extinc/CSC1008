@@ -410,6 +410,14 @@
                                 }
                             ]
                         };
+                        var marker = new mapboxgl.Marker()
+                                        .setLngLat(data['coordinates'][0])
+                                        .addTo(map);
+                        markers.push(marker)
+                        var marker_end = new mapboxgl.Marker()
+                                        .setLngLat(data['coordinates'][data['coordinates'].length - 1])
+                                        .addTo(map);
+                        markers.push(marker_end)
                         console.log(data);
                         map.addSource("route", {
                             'type': "geojson",
@@ -477,7 +485,7 @@
 
             function setMapOnAll(map) {
                 for (let i = 0; i < markers.length; i++) {
-                    markers[i].setMap(map);
+                    markers[i].remove();
                 }
             }
 
@@ -486,14 +494,7 @@
                 markers = [];
             }
 
-            function addMarker(position) {
-                const marker = new google.maps.Marker({
-                    position,
-                    map,
-                });
 
-                markers.push(marker);
-            }
         </script>
         <style>
             .ui-autocomplete {
