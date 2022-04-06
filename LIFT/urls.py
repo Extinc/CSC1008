@@ -16,7 +16,7 @@ urlpatterns = [
     path('bookingsearch/', homeview.booking_search),  # API CALL FOR DO BOOKING SEARCH
     # path('showPrice/',testview.showPrice),
     path('select_pickup/', testview.select_pickup),
-    path('findDriver/', BookingFunctions.findDriver),
+    path('findDriver/', api.findDriver),
     path('get_addr/', homeview.get_address),
     path('login', loginview.signin, name="Login"),
     path('register', loginview.register, name="Register"),

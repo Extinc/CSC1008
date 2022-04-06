@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import random
 
-from LIFT.codes.Haversine import haversine
+from LIFT.codes.BookingFunctions import haversine
 from django.contrib.auth.models import User, Group
 from LIFT.models.models import PointInfo, Drivers, UserActivity
 from LIFTMAIN.settings import DRIVE_EDGE_DATA, DRIVE_NODE_DATA
@@ -41,31 +41,31 @@ points_df = pd.DataFrame(
     list(PointInfo.objects.exclude(BUILDINGNAME__isnull=True).exclude(BUILDINGNAME__exact='', POSTALCODE__exact='').values('id', 'BUILDINGNAME', 'BLOCK', 'ROAD', 'POSTALCODE', 'lat', 'long')))
 
 def find_nearest(lat, long):
-    distance = points_df.apply(lambda row: pd.Series({"distance": haversine(long, lat, row['long'], row['lat'])}), result_type='expand', axis= 1)
+    distance = points_df.apply(lambda row: pd.Series({"distance": haversine(long, lat, row['long'], row['lat']) * 1000}), result_type='expand', axis= 1)
     df = pd.concat([points_df, distance], axis=1).sort_values(by='distance', ascending=True)
     df = df[df['POSTALCODE'].str.len() > 0]
     return df.head(5)
 
 
 # print(PointInfo.objects.all()[counte].lat)
-lastname = []
-with open('/Users/voidky/Documents/SIT_MODULE/CSC1008/DSAProjApp/LIFT/codes/names.txt') as f:
-    lines = f.readlines()
-    for data in lines:
-        lastname.append(data.rstrip('\n'))
-middlename = []
-with open('/Users/voidky/Documents/SIT_MODULE/CSC1008/DSAProjApp/LIFT/codes/middlename.txt') as f:
-    lines = f.readlines()
-    for data in lines:
-        middlename.append(data.rstrip('\n'))
-
-letter1 = []
-letter2 = []
-with open('/Users/voidky/Documents/SIT_MODULE/CSC1008/DSAProjApp/LIFT/codes/letter.txt') as f:
-    lines = f.readlines()
-    for data in lines:
-        letter1.append(data.rstrip('\n'))
-        letter2.append(data.rstrip('\n'))
+# lastname = []
+# with open('/Users/voidky/Documents/SIT_MODULE/CSC1008/DSAProjApp/LIFT/codes/names.txt') as f:
+#     lines = f.readlines()
+#     for data in lines:
+#         lastname.append(data.rstrip('\n'))
+# middlename = []
+# with open('/Users/voidky/Documents/SIT_MODULE/CSC1008/DSAProjApp/LIFT/codes/middlename.txt') as f:
+#     lines = f.readlines()
+#     for data in lines:
+#         middlename.append(data.rstrip('\n'))
+#
+# letter1 = []
+# letter2 = []
+# with open('/Users/voidky/Documents/SIT_MODULE/CSC1008/DSAProjApp/LIFT/codes/letter.txt') as f:
+#     lines = f.readlines()
+#     for data in lines:
+#         letter1.append(data.rstrip('\n'))
+#         letter2.append(data.rstrip('\n'))
 
 # namecounter = 0
 # # for j in range(len(name)):

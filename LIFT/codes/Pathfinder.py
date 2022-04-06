@@ -3,10 +3,11 @@ import json
 from django.db.models import Q
 from django.utils import timezone
 
-from LIFT.codes.Haversine import haversine
+# from LIFT.codes.Haversine import haversine
 from LIFT.codes.Routes import roadnode_df, roadedge_df
 from LIFT.datastructure.Graph import Graph
 from LIFT.models.models import PathCache
+from LIFT.codes.BookingFunctions import haversine
 
 
 class PathFinder:
@@ -27,7 +28,7 @@ class PathFinder:
         else:
             next_node = []
             nodecounter = 0
-            heuristic = haversine(startlong, startlat, endlong, endlat)
+            heuristic = haversine(startlong, startlat, endlong, endlat) * 1000
             self.graph.addNode(start)
             self.graph.addHeuristic(start, heuristic)
 
