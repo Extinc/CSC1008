@@ -29,15 +29,19 @@ def splitByComma(userString):
 def findNearestRider(rList,sList,driver):
 
     firstRider = splitString(str(rList.listDetail(0)))
+    # print("TEST EEFCODE 1 :  ",rList.listDetail(0))
     for i in range(1,rList.size()-1):
         location = str(dList[i].driverlat) +","+str(dList[i].driverlong)
         nextRider = splitString(str(rList.listDetail(int(i))))
         firstRiderLoc = splitByComma(str(firstRider[1]))
         nextRiderLoc= splitByComma(str(nextRider[1]))
         firstRiderDest = splitByComma(str(firstRider[3]))
-        
-        pToP =haversine(float(firstRiderLoc[0]),float(firstRiderLoc[1]),float(nextRiderLoc[0]),float(nextRiderLoc[1])) #compare pickup for rider 1 and next rider
-        pToD = haversine(float(firstRiderDest[0]),float(firstRiderDest[1]),float(nextRiderLoc[0]),float(nextRiderLoc[1])) #compare dropoff for rider 1 and pickup for rider2
+        # print("TEST EEFCODE 1 :  ",float(nextRiderLoc[0]))
+        print("TEST EEFCODE 1 first rider dest :  ",firstRiderDest)
+        print("TEST EEFCODE 1 next rider dest :  ",nextRiderLoc)
+        pToP =haversine(float(firstRiderLoc[1]),float(firstRiderLoc[0]),float(nextRiderLoc[1]),float(nextRiderLoc[0])) #compare pickup for rider 1 and next rider
+        #
+        pToD = haversine(float(firstRiderDest[1]),float(firstRiderDest[0]), float(nextRiderLoc[1]),float(nextRiderLoc[0])) #compare dropoff for rider 1 and pickup for rider2
         if(int(pToP) <5 or int(pToD)<5 and int(nextRider[5])==1): #check if in range
             if pToP>=pToD: 
                 newSR = SharedRides(firstRider[0],nextRider[0],firstRider[1],firstRider[3],nextRider[1],nextRider[3],location,firstRider[2],firstRider[5],driver.driverID) #for when its destination is closer to first rider so car goes from 
@@ -78,8 +82,8 @@ def findRides(rList): #aList =Accepted Rides sList= Shared Rides rList = ridersL
         location = str(dList[i].driverlat) +","+str(dList[i].driverlong)
         
         riderLoc = splitByComma(str(rider[1]))
-        print(rider[1])
-        print("location",location)
+        # print(rider[1])
+        # print("location",location)
         if haversine(float(str(dList[i].driverlat)),float(str(dList[i].driverlong)),float(riderLoc[0]),float(riderLoc[1])) <5:
             driverDetails = dList[i]
             print("distance within 5km")
