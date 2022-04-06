@@ -169,17 +169,14 @@ def get_address(request):
         searchload = {}
         for search in search_result:
             if search.BUILDINGNAME not in searchload.values():
-                if search.BUILDINGNAME!= "" and search.BUILDINGNAME != "null":
+                if search.BUILDINGNAME != "" and search.BUILDINGNAME != "null":
                     searchload[search.id] = search.BUILDINGNAME
-                    # payload.append(search.BUILDINGNAME)
                 if search.BLOCK != "":
                     if search.id not in searchload:
                         searchload[search.id] = "BLOCK " + str(search.BLOCK)
-                    # payload.append(search.BLOCK)
                 if search.POSTALCODE != "":
                     if search.id not in searchload:
                         searchload[search.id] = search.POSTALCODE
-                    # payload.append(search.POSTALCODE)
         return JsonResponse(searchload, safe=False)
 
 

@@ -331,35 +331,44 @@
             });
 
             $("#searchbtn").click(function () {
-                if ($("#tripdis").is(":visible")) {
-                    alert("Please end your trip before starting another.")
+                if (!$('#startlocation').val()) {
+                    alert("Please enter / choose a pickup location.");
+                }else if (!$('#endlocation').val()) {
+                    alert("Please enter a dropoff location.");
+                }else if ($("#typeofride").text().indexOf('Type of Ride') >= 0) {
+                    alert("Please select a type of ride");
                 } else {
-                    if (map.getLayer('line-animation')) {
-                        map.removeLayer('line-animation');
-                    }
-                    if (map.getSource('route')) {
-                        map.removeSource('route');
+                    if ($("#tripdis").is(":visible")) {
+                        alert("Please end your trip before starting another.");
+                    } else {
+                        if (map.getLayer('line-animation')) {
+                            map.removeLayer('line-animation');
+                        }
+                        if (map.getSource('route')) {
+                            map.removeSource('route');
+                        }
+
+                        var startloc = $("#hiddenstart").val();
+                        var endloc = $("#hiddenend").val();
+                        $.ajax({
+                            type: "POST",
+                            url: "/getPrice/",
+                            data: {
+                                csrfmiddlewaretoken: "{{csrf_token}}",
+                                starting: startloc,
+                                ending: endloc,
+                                //price: $('input[name="rideprice"]').val(),
+                            },
+                            success: function (result) {
+                                //   $("#result").html("<h2>Received!</h2>");
+                                {#$("#price").val(result);#}
+                                $("#farecontent").text("Price of Fare " + result + "\n Click confirm to confirm ride");
+                                $("#farecontent").attr("data-lift-fare", result)
+                                $('#faremodal').modal('show');
+                            },
+                        });
                     }
 
-                    var startloc = $("#hiddenstart").val();
-                    var endloc = $("#hiddenend").val();
-                    $.ajax({
-                        type: "POST",
-                        url: "/getPrice/",
-                        data: {
-                            csrfmiddlewaretoken: "{{csrf_token}}",
-                            starting: startloc,
-                            ending: endloc,
-                            //price: $('input[name="rideprice"]').val(),
-                        },
-                        success: function (result) {
-                            //   $("#result").html("<h2>Received!</h2>");
-                            {#$("#price").val(result);#}
-                            $("#farecontent").text("Price of Fare " + result + "\n Click confirm to confirm ride");
-                            $("#farecontent").attr("data-lift-fare", result)
-                            $('#faremodal').modal('show');
-                        },
-                    });
                 }
 
 
@@ -509,8 +518,8 @@
         <style>
             .ui-autocomplete {
                 z-index: 1030;
-                overflow:scroll;
-                height:30%;
+                overflow: scroll;
+                height: 30%;
             }
 
             .accordion-button:not(.collapsed) {
