@@ -35,17 +35,15 @@ class Graph:
         # node
         # And closed_lst is a list of nodes which have been visited
         # and who's neighbors have been always inspected
-        open_lst = set([start])
+        open_lst = {start}
         closed_lst = set([])
 
         # distance has present distances from start to all other nodes
         # the default value is +infinity
-        present_dist = {}
-        present_dist[start] = 0
+        present_dist = {start: 0}
 
         # adjacent_map contains an adjacent maps of all nodes
-        adjacent_map = {}
-        adjacent_map[start] = start
+        adjacent_map = {start: start}
 
         while len(open_lst) > 0:
             n = None

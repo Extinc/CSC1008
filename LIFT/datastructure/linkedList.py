@@ -70,13 +70,13 @@ class SinglyLinkedList:
             #   node previous to the index
             temp = self.head
             for i in range(1, index-1):
-                if(temp != None):
+                if(temp is not None):
                     temp = temp.next   
 
             #5. If the previous node is not null, make 
             #   newNode next as temp next and temp next 
             #   as newNode.
-            if(temp != None):
+            if(temp is not None):
                 newNode.next = temp.next
                 temp.next = newNode  
             else:
@@ -89,7 +89,7 @@ class SinglyLinkedList:
         prev = None
         temp = self.head
 
-        while temp != None and temp.data != value:
+        while temp is not None and temp.data != value:
             prev = temp
             temp = temp.next
 
@@ -98,7 +98,7 @@ class SinglyLinkedList:
             self.deleteAtHead()
 
         #Value found
-        elif temp != None:
+        elif temp is not None:
             prev.next = temp.next
             del temp
         #Value not found
@@ -166,5 +166,5 @@ class SinglyLinkedList:
 
     def isEmpty(self):
         current_node = self.head
-        return current_node == None
+        return current_node is None
  

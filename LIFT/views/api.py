@@ -1,8 +1,6 @@
 import datetime
-import math
 
 from django.db.models import Count, Q
-from django.http import JsonResponse
 
 from LIFT.codes import BookingFunctions
 from LIFT.codes.BookingFunctions import *
@@ -13,6 +11,7 @@ from LIFT.models import models
 from LIFT.models.models import PointInfo
 
 search_result = None
+
 
 def getPrice(request):
     start = request.POST['starting']
@@ -158,6 +157,7 @@ def findDriver(request):
         value = [driverId, driverName, carplate, rideType]
         return JsonResponse(value, safe=False)
 
+
 def get_address(request):
     if request.method == "GET":
         # search = request.GET.get('search')
@@ -186,6 +186,7 @@ def getNearest(request):
         result = find_nearest(float(request.GET['lat']), float(request.GET['long'])).to_json(orient='records')
         return JsonResponse({'data': result})
 
+
 def booking_search(request):
     if request.method == "POST":
         startid = request.POST['starting']
@@ -197,4 +198,3 @@ def booking_search(request):
         pf.find_path(start.lat, start.long, end.lat, end.long)
         geom = pf.generate_geojson('LineString')
         return JsonResponse(geom, safe=False)
-

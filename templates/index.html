@@ -156,11 +156,11 @@
                                     aria-controls="driverinfo_panel">
                                 <div class="row" style="width:95%">
 
-                                    <div class="col-md-9 col-lg-8">
-                                        Current Ride
+                                    <div class="col-md-9 col-lg-8 col-7" style="color: black;">
+                                        <p style="margin-bottom:0px;">Current Ride</p>
                                     </div>
 
-                                    <div class="col-md-3 col-lg-4">
+                                    <div class="col-md-3 col-lg-4 col-5" >
                                         <input class="disabled"
                                                style="border:none; width: 100%; text-align: right;"
                                                id="price"
@@ -370,7 +370,7 @@
                         $("#name").val(result[1]);
                         $("#carplate").val(result[2]);
                         if (result[3].toLowerCase().includes("share")) {
-                            $("#addinfoRide").text("You are currently sharing a ride with another people. Therefore, route might defer");
+                            $("#addinfoRide").text("You are currently sharing a ride with another people. Therefore, route might differ.");
                         } else {
                             $("#addinfoRide").text("NIL");
                         }
