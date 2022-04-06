@@ -1,8 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+
 from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY
+
+
 # Create your views here.
-from ..models.models import PointInfo
 
 
 @login_required(login_url='/login')

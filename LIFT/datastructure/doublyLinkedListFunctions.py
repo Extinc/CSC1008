@@ -16,7 +16,7 @@ class DoublyLinkedList:
     new_node = Node(new_data) # creating a new node with the desired value
     new_node.next = self.head # newly created node's next pointer will refer to the old head
 
-    if self.head != None: # Checks whether list is empty or not
+    if self.head is not None: # Checks whether list is empty or not
         self.head.prev = new_node # old head's previous pointer will refer to newly created node
         self.head = new_node # new node becomes the new head
         new_node.prev = None
@@ -31,7 +31,7 @@ class DoublyLinkedList:
       new_node = Node(new_data)
       new_node.prev = self.tail
 
-      if self.tail == None: # checks whether the list is empty, if so make both head and tail as new node
+      if self.tail is None: # checks whether the list is empty, if so make both head and tail as new node
         self.head = new_node 
         self.tail = new_node
         new_node.next = None # the first element's previous pointer has to refer to null
@@ -43,21 +43,21 @@ class DoublyLinkedList:
     
 
   def peek_front(self): # returns first element
-    if self.head == None: # checks whether list is empty or not
+    if self.head is None: # checks whether list is empty or not
       print("List is empty")
     else:
       return self.head.data
 
   
   def peek_back(self): # returns last element
-    if self.tail == None: # checks whether list is empty or not
+    if self.tail is None: # checks whether list is empty or not
       print("List is empty")
     else:
       return self.tail.data
   
 
   def pop_front(self): # removes and returns the first element
-    if self.head == None:
+    if self.head is None:
       print("List is empty")
     
     else:
@@ -69,7 +69,7 @@ class DoublyLinkedList:
   
   
   def pop_back(self): # removes and returns the last element
-    if self.tail == None:
+    if self.tail is None:
       print("List is empty")
 
     else:
@@ -80,30 +80,30 @@ class DoublyLinkedList:
       return temp.data
    
   def insert_before(self, temp_node, new_data): # Inserting a new node before a given node
-    if temp_node == None:
+    if temp_node is None:
       print("Given node is empty")
     
-    if temp_node != None:
+    if temp_node is not None:
       new_node = Node(new_data)
       new_node.prev = temp_node.prev
       temp_node.prev = new_node
       new_node.next = temp_node
-      if new_node.prev != None:
+      if new_node.prev is not None:
         new_node.prev.next = new_node
       
       if temp_node == self.head: # checks whether new node is being added before the first element
         self.head = new_node # makes new node the new head 
 
   def insert_after(self, temp_node, new_data): # Inserting a new node after a given node
-    if temp_node == None:
+    if temp_node is None:
       print("Given node is empty")
     
-    if temp_node != None:
+    if temp_node is not None:
       new_node = Node(new_data)
       new_node.next = temp_node.next
       temp_node.next = new_node
       new_node.prev = temp_node
-      if new_node.next != None:
+      if new_node.next is not None:
         new_node.next.prev = new_node
       
       if temp_node == self.tail: # checks whether new node is being added to the last element

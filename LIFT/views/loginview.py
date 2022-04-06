@@ -1,10 +1,8 @@
-from django.utils import timezone
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY
-from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 
 # Create your views here.

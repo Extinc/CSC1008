@@ -1,8 +1,6 @@
 import datetime
-import math
 
 from django.db.models import Count, Q
-from django.http import JsonResponse
 
 from LIFT.codes import BookingFunctions
 from LIFT.codes.BookingFunctions import *

@@ -1,15 +1,13 @@
 import math
+from math import radians, cos, sin, asin, sqrt
 
 from django.http import JsonResponse
+
 from LIFT.codes.AcceptedRides import AcceptedRides
-from LIFT.codes.Driver import Driver
 from LIFT.codes.RiderRequest import riderRequest
 from LIFT.codes.SharedRides import SharedRides
 from LIFT.datastructure.HashTable import HashTable
 from LIFT.datastructure.linkedList import SinglyLinkedList
-from LIFTMAIN.settings import ONEMAP_DEV_URL, ONEMAP_TOKEN
-from math import radians, cos, sin, asin, sqrt
-import requests
 from LIFT.models import models
 
 
@@ -109,7 +107,7 @@ def findRides(
             # if shared rides is chosen
             if int(rider[5]) == 1:
                 sharedCheck = findNearestRider(passengerList, sharedList, driverDetails)
-                if sharedCheck == True:
+                if sharedCheck:
                     print("Shared Rides")
                     passengerList.deleteAt(0)
                     break
@@ -253,7 +251,7 @@ def findRideIndex(list, smallest, size, userId):  # uses binary search
         print("userId in index", userId)
         currentId = splitString(str(list.showDetail(mid)))
         print(currentId[0])
-        if currentId[0] is None or int(mid) >= 0 and int(mid) <= 1:
+        if currentId[0] is None or 0 <= int(mid) <= 1:
             return 0
 
         # returns mid value
