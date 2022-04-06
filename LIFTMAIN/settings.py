@@ -97,15 +97,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CHANNEL_LAYERS = {
-    'default': {
-        ### Method 3: Via In-memory channel layer
-        ## Using this method.
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    },
-}
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 

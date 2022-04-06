@@ -5,7 +5,7 @@ from .views import api
 from .views import homeview, loginview
 
 urlpatterns = [
-    path('', homeview.landing_page, name="landing"),
+    path('', loginview.signin, name="Login"),
     path('index', homeview.index, name="HomePage"),
     path('getInfo/', api.getInfo),
     path('getPrice/', api.getPrice),
@@ -14,7 +14,7 @@ urlpatterns = [
     path('findDriver/', api.findDriver),
     path('get_addr/', api.get_address),
     path('endRide/', BookingFunctions.endRide),
-    path('login', loginview.signin, name="Login"),
+    # path('login', loginview.signin, name="Login"),
     path('register', loginview.register, name="Register"),
     path('signout', loginview.signout, name="Logout"),
 ]

@@ -4,12 +4,6 @@ from LIFTMAIN.settings import MAPBOX_PUBLIC_KEY
 # Create your views here.
 from ..models.models import PointInfo
 
-search_result = None
-
-
-def landing_page(request):
-    return render(request, 'landing.html')
-
 
 @login_required(login_url='/login')
 def index(request):
@@ -18,7 +12,8 @@ def index(request):
 
         args['mapbox_key'] = MAPBOX_PUBLIC_KEY
         fname = request.user.first_name
-        args['fname'] = fname
+        lname = request.user.last_name
+        args['fname'] = fname + " " + lname
         return render(request, 'index.html', args)
     else:
         return render(request, 'index.html', args)

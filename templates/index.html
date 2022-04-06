@@ -139,70 +139,79 @@
                                             class="trip_display"
                                     />
                                 </div>
-
                                 <div class="row mt-3">
-                                    <button type="submit" class="btn" onclick="confirmEnd()">End Ride</button>
-                                </div>
+                                    <p><b>Additional Info</b></p>
+                                    <p
+                                            id="addinfoRide"
+                                            class="trip_display"
+                                    ></p>
+                                    <div class="row mt-3">
+                                        <button type="submit" class="btn" onclick="confirmEnd()">End Ride</button>
+                                    </div>
 
+                                </div>
+                            </div>
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-mdb-toggle="collapse"
+                                        data-mdb-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                                        aria-controls="panelsStayOpen-collapseOne">
+                                    <div class="row" style="width:95%">
+
+                                        <div class="col-md-9 col-lg-8">
+                                            Current Ride
+                                        </div>
+
+                                        <div class="col-md-3 col-lg-4">
+                                            <input class="disabled"
+                                                   style="border:none; width: 100%; text-align: right;"
+                                                   id="price"
+                                                   name="rideprice"
+                                                   required
+                                                   size="10"
+                                                   placeholder="RIDE PRICE" readonly/>
+                                        </div>
+                                    </div>
+                                </button>
+                            </h2>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Modal : Price Fare-->
+                <div class="modal fade" id="faremodal" tabindex="-1" role="dialog"
+                     aria-labelledby="faremodalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="faremodalLongTitle">Price Fare</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p id="farecontent" data-lift-fare="0">Price of fair </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" id="farecancel" data-dismiss="modal">
+                                    CANCEL
+                                </button>
+                                <button type="button" class="btn btn-primary" id="fareaccept">OK</button>
                             </div>
                         </div>
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-mdb-toggle="collapse"
-                                    data-mdb-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                                    aria-controls="panelsStayOpen-collapseOne">
-                                <div class="row" style="width:95%">
-
-                                    <div class="col-md-9 col-lg-8">
-                                        Current Ride
-                                    </div>
-
-                                    <div class="col-md-3 col-lg-4">
-                                        <input class="disabled"
-                                               style="border:none; width: 100%; text-align: right;"
-                                               id="price"
-                                               name="rideprice"
-                                               required
-                                               size="10"
-                                               placeholder="RIDE PRICE" readonly/>
-                                    </div>
-                                </div>
-                            </button>
-                        </h2>
-
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Modal : Price Fare-->
-            <div class="modal fade" id="faremodal" tabindex="-1" role="dialog"
-                 aria-labelledby="faremodalTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="faremodalLongTitle">Price Fare</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p id="farecontent" data-lift-fare="0">Price of fair </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" id="farecancel" data-dismiss="modal">
-                                CANCEL
-                            </button>
-                            <button type="button" class="btn btn-primary" id="fareaccept">OK</button>
-                        </div>
                     </div>
                 </div>
-            </div>
 
-            <input type="hidden" name="" id="hiddenstart">
-            <input type="hidden" name="" id="hiddenend">
+                <input type="hidden" name="" id="hiddenstart">
+                <input type="hidden" name="" id="hiddenend">
         </form>
 
         <script>
+            const speedFactor = 30; // number of frames per longitude degree
+            let animation; // to store and cancel the animation
+            var route_counter = 1;
+
 
             var latitude = 0;
             var longitude = 0;
@@ -215,7 +224,7 @@
                         container: "map",
                         center: [position.coords.longitude, position.coords.latitude],
                         zoom: 17, // starting zoom
-                        style: "mapbox://styles/mapbox/navigation-day-v1",
+                        style: "mapbox://styles/exkingist/cl0s7xq5v001i14n5vioj61u5",
                     });
                     $.ajax({
                         type: "GET",
@@ -278,24 +287,12 @@
             }
 
 
-            $(".typechoice").on('click', function () {
-                console.log("TEST");
-                if ($(this).attr('id') === "fiveseaterchoice") {
-                    $("#typeofride").attr("data-lift-ridetype", "5 Seater");
-                } else if ($(this).attr('id') === "eightseaterchoice") {
-                    $("#typeofride").attr("data-lift-ridetype", "8 Seater");
-                } else if ($(this).attr('id') === "sharedchoice") {
-                    $("#typeofride").attr("data-lift-ridetype", "Shared Rides");
-                }
-                $("#typeofride").html($(this).html());
-            });
-
             $("#searchbtn").click(function () {
                 if (!$('#startlocation').val()) {
                     alert("Please enter / choose a pickup location.");
-                }else if (!$('#endlocation').val()) {
+                } else if (!$('#endlocation').val()) {
                     alert("Please enter a dropoff location.");
-                }else if ($("#typeofride").text().indexOf('Type of Ride') >= 0) {
+                } else if ($("#typeofride").text().indexOf('Type of Ride') >= 0) {
                     alert("Please select a type of ride");
                 } else {
                     if ($("#tripdis").is(":visible")) {
@@ -333,9 +330,7 @@
 
 
             });
-            $("#farecancel").click(function () {
-                $('#faremodal').modal('hide');
-            });
+
             $("#fareaccept").click(function () {
                 var startloc = $("#hiddenstart").val();
                 var endloc = $("#hiddenend").val();
@@ -377,7 +372,13 @@
                         $("#driverId").val(result[0]);
                         $("#name").val(result[1]);
                         $("#carplate").val(result[2]);
+                        if (result[3].toLowerCase().includes("share")) {
+                            $("#addinfoRide").text("You are currently sharing a ride with another people. Therefore, route might defer");
+                        } else {
+                            $("#addinfoRide").text("NIL");
+                        }
                         $("#typeRide").val(result[3]);
+
                         $("#tripdis").show();
                         getRoute();
                     }
