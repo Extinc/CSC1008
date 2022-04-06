@@ -91,17 +91,17 @@ def getInfo(request):
             priceDistance -= 350
     formatted_price = "{:.2f}".format(price)
     print("The price is: " + str(formatted_price))
-    rList = BookingFunctions.createUserList()
+    passengerList = BookingFunctions.createList()
     # User Object
     temp = riderRequest(request.user.id, str(startLoc.lat) + ',' + str(startLoc.long),
                         now.strftime("%Y-%m-%d-%H-%M-%S"), str(endLoc.lat) + ',' + str(endLoc.long), totalDistance,
                         typeOfRide,
                         formatted_price)
-    BookingFunctions.addUser(rList, temp)
-    print("rList size", rList.size())
-    BookingFunctions.findRides(rList)
+    BookingFunctions.addUser(passengerList, temp)
+    print("passengerList size", passengerList.size())
+    BookingFunctions.findRides(passengerList)
 
-    # BookingFunctions.findRides(rList,dList,aList,sList)
+    # BookingFunctions.findRides(passengerList,driverList,standardRideList,sharedList)
     return JsonResponse(formatted_price, safe=False)
 
 
@@ -111,11 +111,11 @@ def findDriver(request):
 
     # print("id", userId)
     if int(listStored) == 1:
-        print(sList.size())
-        position = findRideIndex(sList, 0, sList.size() - 1, userId)
+        print(sharedList.size())
+        position = findRideIndex(sharedList, 0, sharedList.size() - 1, userId)
         position = math.ceil(int(position))
         # print("pos", position)
-        rideDetail = splitString(str(sList.listDetail(int(position))))
+        rideDetail = splitString(str(sharedList.listDetail(int(position))))
         driverId = rideDetail[8]
         # print("driverId", driverId)
         driverName = models.Drivers.objects.get(driverID=driverId).name
@@ -127,10 +127,10 @@ def findDriver(request):
 
 
     elif int(listStored) == 2:
-        print(aList.size())
-        position = findRideIndex(aList, 0, aList.size() - 1, userId)
+        print(standardRideList.size())
+        position = findRideIndex(standardRideList, 0, standardRideList.size() - 1, userId)
         position = math.ceil(int(position))
-        rideDetail = splitString(str(aList.listDetail(int(position))))
+        rideDetail = splitString(str(standardRideList.listDetail(int(position))))
         driverId = rideDetail[7]
         # print("driverId", driverId)
         driverName = models.Drivers.objects.get(driverID=driverId).name
@@ -142,12 +142,12 @@ def findDriver(request):
 
 
     elif int(listStored) == 3:
-        print(sList.size())
-        mainId = findMainRider(sList, userId)
+        print(sharedList.size())
+        mainId = findMainRider(sharedList, userId)
         # print("main Id", mainId)
-        position = findRideIndex(sList, 0, sList.size() - 1, mainId)
+        position = findRideIndex(sharedList, 0, sharedList.size() - 1, mainId)
         position = math.ceil(int(position))
-        rideDetail = splitString(str(sList.listDetail(int(position))))
+        rideDetail = splitString(str(sharedList.listDetail(int(position))))
         driverId = rideDetail[8]
         # print("driverId", driverId)
         driverName = models.Drivers.objects.get(driverID=driverId).name

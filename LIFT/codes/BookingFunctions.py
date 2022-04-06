@@ -13,13 +13,13 @@ import requests
 from LIFT.models import models
 
 
-def createUserList():
-    userList = SinglyLinkedList()
-    return userList
+def createList():
+    list = SinglyLinkedList()
+    return list
 
 
-def addUser(userList, object):
-    userList.insertAtEnd(object)
+def addUser(list, object):
+    list.insertAtEnd(object)
 
 
 def splitString(userString):
@@ -30,12 +30,12 @@ def splitByComma(userString):
     return str(userString).split(',')
 
 
-def findNearestRider(rList, sList, driver):
-    firstRider = splitString(str(rList.listDetail(0)))
-    # print("TEST EEFCODE 1 :  ",rList.listDetail(0))
-    for i in range(1, rList.size() - 1):
-        location = str(dList[i].driverlat) + "," + str(dList[i].driverlong)
-        nextRider = splitString(str(rList.listDetail(int(i))))
+def findNearestRider(passengerList, sharedList, driver):
+    firstRider = splitString(str(passengerList.listDetail(0)))
+    # print("TEST EEFCODE 1 :  ",passengerList.listDetail(0))
+    for i in range(1, passengerList.size() - 1):
+        location = str(driverList[i].driverlat) + "," + str(driverList[i].driverlong)
+        nextRider = splitString(str(passengerList.listDetail(int(i))))
         firstRiderLoc = splitByComma(str(firstRider[1]))
         nextRiderLoc = splitByComma(str(nextRider[1]))
         firstRiderDest = splitByComma(str(firstRider[3]))
@@ -52,22 +52,24 @@ def findNearestRider(rList, sList, driver):
                 newSR = SharedRides(firstRider[0], nextRider[0], firstRider[1], firstRider[3], nextRider[1],
                                     nextRider[3], location, firstRider[2], firstRider[5],
                                     driver.driverID)  # for when its destination is closer to first rider so car goes from
-                addUser(sList, newSR)
+                addUser(sharedList, newSR)
                 uTable.setVal(firstRider[0],
                               "1")  # sharedRide = 1, AcceptedRides = 2. We just need to store an ID for one user since its a shared ride
-                print("New Shared Ride", sList.size())
+                print("New Shared Ride", sharedList.size())
             else:
                 newSR = SharedRides(firstRider[0], nextRider[0], firstRider[1], nextRider[1], firstRider[3],
                                     nextRider[3], location, firstRider[2], firstRider[5],
                                     driver.driverID)  # normal case where it picks up passenger along the way
 
-                addUser(sList, newSR)
-                sortSList(sList)
+                addUser(sharedList, newSR)
+                sortsharedList(sharedList)
+
+                #adds first rider and secondary rider into the hashmap
                 uTable.setVal(firstRider[0], "1")
                 uTable.setVal(nextRider[0], "3")
 
-            print("New Shared Ride", sList.listDetail(int(sList.size() - 2)))
-            rList.deleteAt(i)
+            print("New Shared Ride", sharedList.listDetail(int(sharedList.size() - 2)))
+            passengerList.deleteAt(i)
             return True
 
         return False
@@ -81,82 +83,87 @@ def findMainRider(list, userId):  # uses binary search
             return rideDetail[0]
 
 
-def findRides(rList):  # aList =Accepted Rides sList= Shared Rides rList = ridersList
-    addUser(rList, Rider2)  # add dummy rider
-    print("rider Detail", rList.listDetail(int(0)))
-    rider = splitString(str(rList.listDetail(int(0))))  # retrieve first rider details
+def findRides(passengerList):  # standardRideList =Accepted Rides sharedList= Shared Rides passengerList = ridersharedList
+    addUser(passengerList, Rider2)  # add dummy rider
+    print("rider Detail", passengerList.listDetail(int(0)))
+    rider = splitString(str(passengerList.listDetail(int(0))))  # retrieve first rider details
     i = 0
 
-    for driver in dList:
+    for driver in driverList:
 
-        location = str(dList[i].driverlat) + "," + str(dList[i].driverlong)
+        location = str(driverList[i].driverlat) + "," + str(driverList[i].driverlong)
 
         riderLoc = splitByComma(str(rider[1]))
         # print(rider[1])
         # print("location",location)
-        if haversine(float(str(dList[i].driverlat)), float(str(dList[i].driverlong)), float(riderLoc[0]),
-                     float(riderLoc[1])) < 2:
-            driverDetails = dList[i]
-            print("distance within 5km")
+        if haversine(float(str(driverList[i].driverlat)), float(str(driverList[i].driverlong)), float(riderLoc[0]),
+                     float(riderLoc[1])) < 2: #checks if distance is less than 2km
+            driverDetails = driverList[i]
+            print("distance within 2km")
+            #if shared rides is chosen
             if int(rider[5]) == 1:
-                sharedCheck = findNearestRider(rList, sList, driverDetails)
+                sharedCheck = findNearestRider(passengerList, sharedList, driverDetails)
                 if sharedCheck == True:
                     print("Shared Rides")
-                    rList.deleteAt(0)
+                    passengerList.deleteAt(0)
                     break
                 else:
+                    #if shared rides is chosen but no shared rides are found, add to accepted
                     print("No Shared Ride Found")
                     newRide = AcceptedRides(rider[0], rider[1], location, rider[2], rider[3], rider[4], rider[6],
                                             rider[5], driverDetails.driverID)
-                    addUser(aList, newRide)
-                    sortAList(aList)
+                    addUser(standardRideList, newRide)
+                    sortstandardRideList(standardRideList)
                     uTable.setVal(rider[0], "2")
                     # needa delete but whatevs
-                    rList.deleteAt(0)
-                    print("aList details,", aList.listDetail(int(0)))
+                    passengerList.deleteAt(0)
+                    print("standardRideList details,", standardRideList.listDetail(int(0)))
                     break
             elif (int(rider[5]) == int(5)):
+                #add to accepted rides
                 print("5 or 8")
-                if int(rider[5]) <= int(dList[i].seatNo):
+                if int(rider[5]) <= int(driverList[i].seatNo):
                     newRide = AcceptedRides(rider[0], rider[1], location, rider[2], rider[3], rider[4], rider[6],
                                             rider[5], driverDetails.driverID)
                     print("new Ride", newRide)
-                    addUser(aList, newRide)
+                    addUser(standardRideList, newRide)
 
-                    print(aList.listDetail(0))
-                    sortAList(aList)
+                    print(standardRideList.listDetail(0))
+                    sortstandardRideList(standardRideList)
                     uTable.setVal(rider[0], "2")
 
                     print("Rider Id")
                     print(rider[0])
                     # needa delete but whatevs
-                    rList.deleteAt(0)
-                    print("accepted", aList.listDetail(0))
+                    passengerList.deleteAt(0)
+                    print("accepted", standardRideList.listDetail(0))
                     break
             elif (int(rider[5]) == int(8)):
-                if int(rider[5]) == int(dList[i].seatNo):
+                 #add to accepted rides
+                if int(rider[5]) == int(driverList[i].seatNo):
                     newRide = AcceptedRides(rider[0], rider[1], location, rider[2], rider[3], rider[4], rider[6],
                                             rider[5], driverDetails.driverID)
 
-                    addUser(aList, newRide)
+                    addUser(standardRideList, newRide)
 
-                    print(aList.listDetail(0))
-                    sortAList(aList)
+                    print(standardRideList.listDetail(0))
+                    sortstandardRideList(standardRideList)
                     print("Rider Id")
                     print(rider[0])
                     uTable.setVal(rider[0], "2")
                     # needa delete but whatevs
-                    rList.deleteAt(0)
-                    print("accepted", aList.listDetail(0))
+                    passengerList.deleteAt(0)
+                    print("accepted", standardRideList.listDetail(0))
                     break
             else:
-                print(dList[i].seatNo)
+                print(driverList[i].seatNo)
                 print("no same seat")
                 break
 
         i += 1
 
 
+    #find which type of rides the user is in
 def findList(userId):  # hashmap to delete
     print(uTable)
     listStored = uTable.getVal(str(userId))
@@ -164,41 +171,44 @@ def findList(userId):  # hashmap to delete
     print(str(listStored))
     return listStored
 
-
-def sortAList(list):
+    #sort Accepted List
+def sortstandardRideList(list):
     for m in range(list.size() - 1, 0, -1):
         for n in range(m):
 
-            aRide1 = splitString(str(aList.listDetail(int(n))))
-            aRide2 = splitString(str(aList.listDetail(int(n + 1))))
+            aRide1 = splitString(str(standardRideList.listDetail(int(n))))
+            aRide2 = splitString(str(standardRideList.listDetail(int(n + 1))))
             print("1", aRide1[0])
             print("2", aRide2[0])
             if (aRide2[0] is not None):
                 if aRide1[0] > aRide2[0]:
+                    #add new accepted rides entry
                     temp = AcceptedRides(aRide1[0], aRide1[1], aRide1[2], aRide1[2], aRide1[3], aRide1[4], aRide1[5],
                                          aRide1[6], aRide1[7])
 
-                    aList.deleteAt(n)
-                    addUser(aList, temp)
+                    standardRideList.deleteAt(n)
+                    addUser(standardRideList, temp)
 
         print("one set")
 
 
-def sortSList(list):
+    #sort Shared List
+def sortsharedList(list):
     for m in range(list.size() - 1, 0, -1):
         for n in range(m):
-
-            sRide1 = splitString(str(sList.listDetail(int(n))))
-            sRide2 = splitString(str(sList.listDetail(int(n + 1))))
+            #
+            sRide1 = splitString(str(sharedList.listDetail(int(n))))
+            sRide2 = splitString(str(sharedList.listDetail(int(n + 1))))
             print("1", sRide1[0])
             print("2", sRide2[0])
             if (sRide2[0] is not None):
+                #delete the entry and add it to the end
                 if sRide1[0] > sRide2[0]:
                     temp = AcceptedRides(sRide1[0], sRide1[1], sRide1[2], sRide1[2], sRide1[3], sRide1[4], sRide1[5],
                                          sRide1[6], sRide1[7], sRide1[8], sRide1[9])
 
-                    aList.deleteAt(n)
-                    addUser(aList, temp)
+                    standardRideList.deleteAt(n)
+                    addUser(standardRideList, temp)
 
         print("one set")
 
@@ -221,21 +231,9 @@ def haversine(lon1, lat1, lon2, lat2):
     return km
 
 
-def distanceCalculation(startLocation, endLocation):
-    urls = ONEMAP_DEV_URL + "/privateapi/routingsvc/route"
-    params = {}
-    params["start"] = str(startLocation)
-    params["end"] = str(endLocation)
-    params["routeType"] = "drive"
-    params['token'] = ONEMAP_TOKEN
-    response = requests.get(urls, params=params)
-    # print(response.json()["route_summary"]["total_distance"])
-    totaldistance = response.json()["route_summary"]["total_distance"]
-    print("totaldistance is : " + str(totaldistance))
-    return totaldistance
-
 
 def findRideIndex(list, smallest, size, userId):  # uses binary search
+
     # def binarySearch(arr, l, r, x): #l = first value r = last val x = value we searching
     if size > smallest:
         mid = smallest + (size - smallest) / 2
@@ -247,6 +245,7 @@ def findRideIndex(list, smallest, size, userId):  # uses binary search
         if currentId[0] is None or int(mid) >= 0 and int(mid) <= 1:
             return 0
 
+        #returns mid value
         elif int(currentId[0]) == int(userId):
             return mid
 
@@ -264,31 +263,36 @@ def endRide(request):
     userId = request.POST['userId']
     listStored = findList(userId)
 
+        #for Shared Rides
     if int(listStored) == 1:
-        print(sList.size())
+        print(sharedList.size())
         print("main id", userId)
-        position = findRideIndex(sList, 0, sList.size() - 1, userId)
+        position = findRideIndex(sharedList, 0, sharedList.size() - 1, userId)
         position = math.ceil(int(position))
-        sList.deleteAt(position)
+        sharedList.deleteAt(position)
         uTable.delVal(userId)
         ended = "Shared Ride Has Ended"
         return JsonResponse(ended, safe=False)
+
+         #for Accepted Rides
     elif int(listStored) == 2:
-        print(aList.size())
+        print(standardRideList.size())
         print("main id", userId)
-        position = findRideIndex(aList, 0, aList.size() - 1, userId)
+        position = findRideIndex(standardRideList, 0, standardRideList.size() - 1, userId)
         position = math.ceil(int(position))
-        aList.deleteAt(int(position))
+        standardRideList.deleteAt(int(position))
         uTable.delVal(userId)
         ended = "Normal Ride Has Ended"
         return JsonResponse(ended, safe=False)
+
+        #for when shared rides is chosen but no other riders are nearby
     elif int(listStored) == 3:
-        print(sList.size())
-        mainId = findMainRider(sList, userId)
+        print(sharedList.size())
+        mainId = findMainRider(sharedList, userId)
         print("main id", mainId)
-        position = findRideIndex(sList, 0, sList.size() - 1, mainId)
+        position = findRideIndex(sharedList, 0, sharedList.size() - 1, mainId)
         position = math.ceil(int(position))
-        sList.deleteAt(position)
+        sharedList.deleteAt(position)
         uTable.delVal(mainId)
         uTable.delVal(userId)
         ended = "Shared Ride Has Ended"
@@ -296,11 +300,22 @@ def endRide(request):
 
 
 # creating all the Linked List and functions we will use
-dList = models.Drivers.objects.all()
-rList = createUserList()
-aList = createUserList()
-sList = createUserList()
+
+#Linked List for Drivers
+driverList = models.Drivers.objects.all()
+
+#Linked List for Rider
+passengerList = createList()    
+
+#Linked List for Accepted Rides
+standardRideList = createList()
+
+#Linked List for Shared Rides
+sharedList = createList()
+
+#Hash Table for sharing of rides
 uTable = HashTable()
+
 Rider2 = riderRequest("2103", "1.4240931,103.8390675", "1331522", "1.4410467,103.839182", 31023, 1,
                       '20')
 
