@@ -301,5 +301,6 @@ rList = createUserList()
 aList = createUserList()
 sList = createUserList()
 uTable = HashTable()
-Rider2 = riderRequest("2103", "1.3349499314823845,103.87193456740948", "1331522", "1.4410467,103.839182", 31023, 1,
+Rider2 = riderRequest("2103", "1.4240931,103.8390675", "1331522", "1.4410467,103.839182", 31023, 1,
                       '20')
+

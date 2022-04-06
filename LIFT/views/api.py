@@ -12,6 +12,7 @@ from LIFT.codes.Routes import find_nearest
 from LIFT.models import models
 from LIFT.models.models import PointInfo
 
+search_result = None
 
 def getPrice(request):
     start = request.POST['starting']

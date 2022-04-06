@@ -19,15 +19,15 @@
 }
 
 @font-face {
-  font-family: 'icomoon';
-  src:  url('../fonts/icomoon.eot?ycd9vs');
-  src:  url('../fonts/icomoon.eot?ycd9vs#iefix') format('embedded-opentype'),
+    font-family: 'icomoon';
+    src: url('../fonts/icomoon.eot?ycd9vs');
+    src: url('../fonts/icomoon.eot?ycd9vs#iefix') format('embedded-opentype'),
     url('../fonts/icomoon.ttf?ycd9vs') format('truetype'),
     url('../fonts/icomoon.woff?ycd9vs') format('woff'),
     url('../fonts/icomoon.svg?ycd9vs#icomoon') format('svg');
-  font-weight: normal;
-  font-style: normal;
-  font-display: block;
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
 }
 
 [class^="icon-"], [class*=" icon-"] {
@@ -56,7 +56,27 @@
     content: "\e900";
 }
 
-.trip_display{
-    border:none;
+.trip_display {
+    border: none;
     background: transparent;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    background-color: #39b97b !important;
+}
+
+.btn-primary {
+    background-color: #39b97b !important;
+}
+
+.btn-primary:hover, .btn-primary:active, .dropdown-item:active{
+    background-color: #2e9865 !important;
+    border-color: #2e9865 !important;
+    box-shadow: 0 0 0 .1rem #31a46d !important;
+}
+
+.btn-primary:focus{
+    background-color: #2e9865 !important;
+    border-color: #2e9865 !important;
+    box-shadow: 0 0 0 .1rem #31a46d !important;
 }

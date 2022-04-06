@@ -1,31 +1,33 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Navigation Bar">
-    <div class="container-xl">
-        <a class="navbar-brand" href="#">
-            <img src="{% static '/logo1.svg' %}" alt="logo1" style="height:80px">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#liftNavBar"
-                aria-controls="liftNavBar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="liftNavBar">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/index">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/test">TestPage</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/booking">Book Ride</a>
-                </li>
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+     id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark w-100 h-100">
+        <div class="d-flex align-items-center justify-content-center">
+            <a href="/index">
+                <img src="{% static '/logo1.svg' %}" alt="logo1" style="height:100%">
+            </a>
+        </div>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" style="font-size: 1rem;" aria-current="page">
+                    <i class="fa-regular fa-house bi me-2"></i>
+                    <b>Home</b>
+                </a>
+            </li>
+        </ul>
+        <hr>
+        <div class="drop down">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+               id="dropdownUser1" data-mdb-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-user rounded-circle me-2"></i>
+                <strong>{{ fname }}</strong>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                <li><a class="dropdown-item" href="/signout">Sign out</a></li>
             </ul>
-            {% if request.user.is_authenticated %}
-                <a class="btn btn-primary border-width-2 d-none d-lg-inline-block lift-button" href="/signout">LOGOUT</a>
-            {% else %}
-                <a class="btn btn-primary border-width-2 d-none d-lg-inline-block lift-button" href="/login">LOGIN</a>
-            {% endif %}
         </div>
     </div>
-</nav>
+</div>
