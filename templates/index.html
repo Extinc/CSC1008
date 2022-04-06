@@ -134,59 +134,56 @@
             <div id="map" style="position:absolute; width: 100%; height: 100%; "></div>
             <div class="row">
 
-                <div class="accordion position-fixed fixed-bottom mb-4 col-md-5 col-sm-5 col-10 mx-auto"
-                     id="accordionPanelsStayOpenExample">
+                <div class="accordion position-fixed fixed-bottom mb-4 col-lg-3 col-md-5 col-sm-5 col-10 mx-auto"
+                     id="tripdis" style="display: none;">
                     <div class="accordion-item">
                         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
                              aria-labelledby="headingOne">
                             <div class="accordion-body">
-                                <label for="driverId"><b>Driver Id</b></label>
-                                <p></p>
-                                <input
-                                        name="driverId"
-                                        id="driverId"
-                                        readonly
-                                        class="readonly"
-                                />
-                                <p></p>
-                                <label for="dName"><b>Driver Name</b></label>
-                                <p></p>
-                                <input
-                                        name="name"
-                                        id="name"
-                                        readonly
-                                        class="readonly"
-                                />
-                                <p></p>
-                                <label for="carplate"></label>
-                                <input
-                                        name="carplate"
-                                        id="carplate"
-                                        readonly
-                                        class="readonly"
-                                />
-                                <p></p>
-                                <label for="typeRide"><b>Type Of Ride</b></label>
-                                <p></p>
-                                <input
-                                        name="typeRide"
-                                        id="typeRide"
-                                        readonly
-                                        class="readonly"
-                                />
-                                {#                                <label for="rideprice"> Price of ride is</label>#}
-                                {#                                <input#}
-                                {#                                        type="text"#}
-                                {#                                        id="price"#}
-                                {#                                        name="rideprice"#}
-                                {#                                        required#}
-                                {#                                        minlength="4"#}
-                                {#                                        maxlength="8"#}
-                                {#                                        size="10"#}
-                                {#                                        readonly#}
-                                {#                                        class="readonly"#}
-                                {#                                />#}
-                                <button type="submit" class="btn" onclick="confirmEnd()">End Ride</button>
+                                <div class="row">
+                                    <label for="driverId"><b>Driver Id</b></label>
+                                    <input
+                                            name="driverId"
+                                            id="driverId"
+                                            readonly
+                                            class="trip_display"
+                                    />
+                                </div>
+
+                                <div class="row mt-3">
+                                    <label for="name"><b>Driver Name</b></label>
+                                    <input
+                                            name="name"
+                                            id="name"
+                                            readonly
+                                            class="trip_display"
+                                    />
+                                </div>
+
+                                <div class="row mt-3">
+                                    <label for="carplate"><b>Car Plate</b></label>
+                                    <input
+                                            name="carplate"
+                                            id="carplate"
+                                            readonly
+                                            class="trip_display"
+                                    />
+                                </div>
+
+                                <div class="row mt-3">
+                                    <label for="typeRide"><b>Type Of Ride</b></label>
+                                    <input
+                                            name="typeRide"
+                                            id="typeRide"
+                                            readonly
+                                            class="trip_display"
+                                    />
+                                </div>
+
+                                <div class="row mt-3">
+                                    <button type="submit" class="btn" onclick="confirmEnd()">End Ride</button>
+                                </div>
+
                             </div>
                         </div>
                         <h2 class="accordion-header" id="headingOne">
@@ -195,18 +192,16 @@
                                     aria-controls="panelsStayOpen-collapseOne">
                                 <div class="row" style="width:95%">
 
-                                    <div class="col-md-9">
+                                    <div class="col-md-9 col-lg-8">
                                         Current Ride
                                     </div>
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-3 col-lg-4">
                                         <input class="disabled"
-                                               style="border:none; width: 100%"
+                                               style="border:none; width: 100%; text-align: right;"
                                                id="price"
                                                name="rideprice"
                                                required
-                                               minlength="4"
-                                               maxlength="8"
                                                size="10"
                                                placeholder="RIDE PRICE" readonly/>
                                     </div>
@@ -253,6 +248,76 @@
             var longitude = 0;
             var map;
             mapboxgl.accessToken = "{{ mapbox_key }}";
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(position => {
+
+                    map = new mapboxgl.Map({
+                        container: "map",
+                        pitch: 45,
+                        center: [position.coords.longitude, position.coords.latitude],
+                        zoom: 17, // starting zoom
+                        style: "mapbox://styles/mapbox/navigation-day-v1",
+                    });
+                    $.ajax({
+                        type: "GET",
+                        url: "/findnearest/",
+                        cache: true,
+                        data: {
+                            'lat': position.coords.latitude,
+                            'long': position.coords.longitude
+                        }, success: function (result) {
+                            const data = JSON.parse(result["data"]);
+                            console.log(data);
+                            for (var i = 0; i < data.length; i++) {
+                                var obj = data[i];
+                                if (obj.POSTALCODE === 'NIL') {
+                                    var marker = new mapboxgl.Marker()
+                                        .setLngLat([obj.long, obj.lat])
+                                        .setPopup(new mapboxgl.Popup().setHTML("<h id='nodebuilding'>" + obj.BUILDINGNAME + "</h><p id='nodeidhidden' class='d-none'>" + obj.id + "</p>"))
+                                        .addTo(map);
+                                } else {
+                                    var marker = new mapboxgl.Marker()
+                                        .setLngLat([obj.long, obj.lat])
+                                        .setPopup(new mapboxgl.Popup().setHTML("<h id='nodebuilding'>" + obj.BUILDINGNAME + "</h><p> " + obj.POSTALCODE + "</p> <p  id='nodeidhidden'  class='d-none'>" + obj.id + "</p>"))
+                                        .addTo(map);
+                                }
+
+
+                            }
+                        }
+                    });
+                    map.addControl(new mapboxgl.NavigationControl(), 'bottom-left');
+                    const geolocate = new mapboxgl.GeolocateControl({
+                        positionOptions: {
+                            enableHighAccuracy: true,
+                        },
+                        trackUserLocation: true
+                    });
+                    map.addControl(geolocate, 'bottom-left');
+
+                    // Used to Get lat and longitude coordinates
+                    // TODO: USE THIS LOCATION when user press.
+                    geolocate.on('geolocate', function (position) {
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+                    });
+
+
+                    map.on('load', () => {
+                        // Insert the layer beneath any symbol layer.
+                        map.resize();
+                        const layers = map.getStyle().layers;
+                        const labelLayerId = layers.find(
+                            (layer) => layer.type === 'symbol' && layer.layout['text-field']
+                        ).id;
+
+                        map.resize();
+                    });
+
+
+                });
+            }
+
 
             $(".typechoice").on('click', function () {
                 console.log("TEST");
@@ -300,7 +365,7 @@
                     type: "POST",
                     url: "/getInfo/",
                     data: {
-                        reply:false,
+                        reply: false,
                         csrfmiddlewaretoken: "{{csrf_token}}",
                         starting: startloc,
                         ending: endloc,
@@ -324,7 +389,7 @@
                     type: "POST",
                     url: "/findDriver/",
                     data: {
-                        reply:false,
+                        reply: false,
                         csrfmiddlewaretoken: "{{csrf_token}}",
                         userId: "2",
                     },
@@ -333,6 +398,7 @@
                         $("#name").val(result[1]);
                         $("#carplate").val(result[2]);
                         $("#typeRide").val(result[3]);
+                        $("#tripdis").show();
                         getRoute();
                     }
                 })
@@ -379,7 +445,7 @@
                                 "line-cap": "round",
                             },
                             paint: {
-                                "line-color": "#ee2323",
+                                "line-color": "#0f48ff",
                                 "line-width": 8,
                             },
                         });

@@ -55,3 +55,8 @@
     font-size: 40px;
     content: "\e900";
 }
+
+.trip_display{
+    border:none;
+    background: transparent;
+}
