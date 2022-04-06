@@ -91,18 +91,17 @@ def findRides(
     addUser(passengerList, Rider2)  # add dummy rider
     print("rider Detail", passengerList.showDetail(int(0)))
     rider = splitString(str(passengerList.showDetail(int(0))))  # retrieve first rider details
-    i = 0
 
     for driver in driverList:
 
-        location = str(driverList[i].driverlat) + "," + str(driverList[i].driverlong)
+        location = str(driver.driverlat) + "," + str(driver.driverlong)
 
         riderLoc = splitByComma(str(rider[1]))
         # print(rider[1])
         # print("location",location)
-        if haversine(float(str(driverList[i].driverlat)), float(str(driverList[i].driverlong)), float(riderLoc[0]),
+        if haversine(float(str(driver.driverlat)), float(str(driver.driverlong)), float(riderLoc[0]),
                      float(riderLoc[1])) < 2:  # checks if distance is less than 2km
-            driverDetails = driverList[i]
+            driverDetails = driver
             print("distance within 2km")
             # if shared rides is chosen
             if int(rider[5]) == 1:
@@ -127,7 +126,7 @@ def findRides(
             elif (int(rider[5]) == int(5)):
                 # add to accepted rides
                 print("5 or 8")
-                if int(rider[5]) <= int(driverList[i].seatNo):
+                if int(rider[5]) <= int(driver.seatNo):
                     newRide = AcceptedRides(rider[0], rider[1], location, rider[2], rider[3], rider[4], rider[6],
                                             rider[5], driverDetails.driverID)
                     print("new Ride", newRide)
@@ -145,7 +144,7 @@ def findRides(
                 # if no. of seats = 8
             elif (int(rider[5]) == int(8)):
                 # add to accepted rides
-                if int(rider[5]) == int(driverList[i].seatNo):
+                if int(rider[5]) == int(driver.seatNo):
                     newRide = AcceptedRides(rider[0], rider[1], location, rider[2], rider[3], rider[4], rider[6],
                                             rider[5], driverDetails.driverID)
 
@@ -166,7 +165,6 @@ def findRides(
                 print("no same seat")
                 break
 
-        i += 1
 
     # find which type of rides the user is in
 
