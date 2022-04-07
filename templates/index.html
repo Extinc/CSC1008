@@ -488,7 +488,14 @@
 
 
             $("#alertmodal_close").click(function () {
+                let isEnd = 0
+                if ($("#alert_title").text().toLowerCase().includes("thank you")) {
+                    isEnd = 1;
+                }
                 alertclose();
+                if (isEnd === 1) {
+                    location.reload();
+                }
             })
 
             $("#confirm_close").click(function () {
@@ -510,9 +517,9 @@
                         userId: "2",
                     },
                     success: function (result) {
-                        alert("Thank You For Riding With Us")
+                        showalert("Thank You", "Hope you enjoyed the ride with us.");
+                        clearRideDetails();
 
-                        clearRideDetails()
                     }
                 })
             }
@@ -534,6 +541,7 @@
                 $("#carplate").val(" ");
                 $("#typeRide").val(" ");
                 $("#tripdis").hide();
+                deleteMarkers();
             }
 
         </script>
