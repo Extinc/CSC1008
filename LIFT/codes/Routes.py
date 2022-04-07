@@ -9,7 +9,7 @@ edge_data = []
 node_data = []
 
 """
-To Read the edge data and store it within pandas
+To Read the edge data
 """
 f = open(DRIVE_EDGE_DATA)
 data = json.load(f)
@@ -21,7 +21,7 @@ for feature in data["features"]:
 f.close()
 
 """
-To Read all the node data and store it within pandas
+To Read all the node data
 """
 f = open(DRIVE_NODE_DATA)
 data = json.load(f)
@@ -32,6 +32,9 @@ for feature in data["features"]:
                       "geometry_type": feature["geometry"]["type"], "geometry": feature["geometry"]["coordinates"]})
 f.close()
 
+'''
+Store node & edge into pandas dataframe
+'''
 roadedge_df = pd.DataFrame(edge_data)
 roadnode_df = pd.DataFrame(node_data)
 points_df = pd.DataFrame(
