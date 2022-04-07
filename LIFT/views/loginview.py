@@ -15,7 +15,6 @@ def signin(request):
         password = request.POST['pass']
 
         user = authenticate(username=username, password=password)
-        args = {}
         # MISSING USER AUTHENTICATION
 
         if user is not None:
