@@ -1,6 +1,6 @@
 # LIFT RIDE HAILING APP 
 
-### INSTALLATION GUIDE / RUNNING THE APP
+### INSTALLATION GUIDE
 
 **Create a Virtual Environment**
 ```
