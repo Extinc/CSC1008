@@ -36,11 +36,15 @@ class PathFinder:
 
             # Using haversine to calculate the distance for heuristic
             heuristic = haversine(startlong, startlat, endlong, endlat) * 1000
+
+            # First add the starting node and heuristic to the graph
             self.graph.addNode(start)
             self.graph.addHeuristic(start, heuristic)
 
+            # Filter and only keep edge that is connected to the starting node
             filtered = roadedge_df.loc[roadedge_df['source'] == start].values
 
+            # add the edge connected to the starting node to the graph
             for node in filtered:
                 templat = roadnode_df.loc[roadnode_df['id'] == node[1]]['y'].values[0]
                 templong = roadnode_df.loc[roadnode_df['id'] == node[1]]['x'].values[0]
@@ -49,6 +53,8 @@ class PathFinder:
                 self.graph.addHeuristic(node[1], heuristic)
                 next_node.append(node[1])
 
+            # Continuously add in nodes till it reach the end node.
+            # TO build the graph where all possible edges are cnnected between the starting node and end node.
             while end not in next_node:
                 filtered = roadedge_df.loc[roadedge_df['source'] == next_node[nodecounter]].values
                 for node in filtered:
@@ -68,12 +74,12 @@ class PathFinder:
 
             # store the graph in the database
             # if exist update if do not exist create in database
-            obj, created = PathCache.objects.update_or_create(source=start, destination=end,
-                                                              defaults={'source': start, 'destination': end,
+            _, _ = PathCache.objects.update_or_create(source=start, destination=end,
+                                                      defaults={'source': start, 'destination': end,
                                                                         'DateTime': timezone.now(),
                                                                         'graph': json.dumps(self.graph.adj_list),
                                                                         'heuristic': json.dumps(self.graph.heuristic)})
-
+            del next_node
         self.shortest_path = self.graph.pathfind_astar(start, end)
 
     # Function to generate the geojson data for plotting the route

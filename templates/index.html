@@ -144,7 +144,7 @@
                                     <p id="addinfoRide" class="trip_display"></p>
                                 </div>
                                 <div class="row d-flex align-items-center justify-content-center mt-3">
-                                    <button type="submit" class="btn" onclick="confirmEnd()">End Ride</button>
+                                    <button type="button" class="btn" onclick="confirmEnd()">End Ride</button>
                                 </div>
                             </div>
 
@@ -160,7 +160,7 @@
                                         <p style="margin-bottom:0px;">Current Ride</p>
                                     </div>
 
-                                    <div class="col-md-3 col-lg-4 col-5" >
+                                    <div class="col-md-3 col-lg-4 col-5">
                                         <input class="disabled"
                                                style="border:none; width: 100%; text-align: right;"
                                                id="price"
@@ -199,6 +199,8 @@
                     </div>
                 </div>
 
+                {% include 'base/confirm_modal.html' %}
+                {% include 'base/alert_modal.html' %}
                 <input type="hidden" name="" id="hiddenstart">
                 <input type="hidden" name="" id="hiddenend">
             </div>
@@ -286,11 +288,11 @@
 
             $("#searchbtn").click(function () {
                 if (!$('#startlocation').val()) {
-                    alert("Please enter / choose a pickup location.");
+                    showalert("Incorrect Pickup Location", "Please enter / choose a pickup location.");
                 } else if (!$('#endlocation').val()) {
-                    alert("Please enter a dropoff location.");
+                    showalert("Incorrect Dropoff Location", "Please enter a dropoff location.");
                 } else if ($("#typeofride").text().indexOf('Type of Ride') >= 0) {
-                    alert("Please select a type of ride");
+                    showalert("Invalid Type of Ride", "Please select a type of ride");
                 } else {
                     if ($("#tripdis").is(":visible")) {
                         alert("Please end your trip before starting another.");
@@ -456,14 +458,48 @@
                 });
             }
 
-            function confirmEnd() {
-
-                if (confirm("Click OK To End Ride")) {
-                    endRide();
-                } else {
-
-                }
+            function showalert(title, content) {
+                $("#alert_title").text(title);
+                $("#alert_content").text(content);
+                $("#alertModal").modal('show');
             }
+
+            function showconfirm(title, content) {
+                $("#confirm_title").text(title);
+                $("#confirm_content").text(content);
+                $(".confirmModal").modal('show');
+            }
+
+            function alertclose() {
+                $("#alert_title").text("");
+                $("#alert_content").text("");
+                $("#alertModal").modal('hide');
+            }
+
+            function confirmclose() {
+                $("#confirm_title").text("");
+                $("#confirm_content").text("");
+                $(".confirmModal").modal('hide');
+            }
+
+            function confirmEnd() {
+                showconfirm("End Ride Confirmation", "Press OK to End Ride");
+            }
+
+
+            $("#alertmodal_close").click(function () {
+                alertclose();
+            })
+
+            $("#confirm_close").click(function () {
+                confirmclose();
+            })
+
+
+            $("#confirm_accept").click(function () {
+                confirmclose();
+                endRide();
+            })
 
             function endRide() {
                 $.ajax({
@@ -475,10 +511,8 @@
                     },
                     success: function (result) {
                         alert("Thank You For Riding With Us")
-                        $("#driverId").val(" ");
-                        $("#name").val(" ");
-                        $("#carplate").val(" ");
-                        $("#typeRide").val(" ");
+
+                        clearRideDetails()
                     }
                 })
             }
@@ -494,6 +528,13 @@
                 markers = [];
             }
 
+            function clearRideDetails() {
+                $("#driverId").val(" ");
+                $("#name").val(" ");
+                $("#carplate").val(" ");
+                $("#typeRide").val(" ");
+                $("#tripdis").hide();
+            }
 
         </script>
         <style>

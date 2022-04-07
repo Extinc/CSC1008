@@ -56,7 +56,6 @@ def findNearestRider(passengerList, sharedList, driver):
                 addUser(sharedList, newSR)
                 uTable.setVal(firstRider[0],
                               "1")  # sharedRide = 1, AcceptedRides = 2. We just need to store an ID for one user since its a shared ride
-                print("New Shared Ride", sharedList.size())
             else:
                 newSR = SharedRides(firstRider[0], nextRider[0], firstRider[1], nextRider[1], firstRider[3],
                                     nextRider[3], location, firstRider[2], firstRider[5],
@@ -84,7 +83,8 @@ def findMainRider(list, userId):  # uses binary search
             return rideDetail[0]
 
 
-def findRides(passengerList):  # standardRideList =Accepted Rides sharedList= Shared Rides passengerList = ridersharedList
+def findRides(
+        passengerList):  # standardRideList =Accepted Rides sharedList= Shared Rides passengerList = ridersharedList
     addUser(passengerList, Rider2)  # add dummy rider
     rider = splitString(str(passengerList.showDetail(int(0))))  # retrieve first rider details
 
@@ -144,7 +144,6 @@ def findRides(passengerList):  # standardRideList =Accepted Rides sharedList= Sh
             else:
                 break
 
-
     # find which type of rides the user is in
 
 
@@ -161,8 +160,6 @@ def sortstandardRideList(list):
 
             aRide1 = splitString(str(standardRideList.showDetail(int(n))))
             aRide2 = splitString(str(standardRideList.showDetail(int(n + 1))))
-            print("1", aRide1[0])
-            print("2", aRide2[0])
             if (aRide2[0] is not None):
                 if aRide1[0] > aRide2[0]:
                     # add new accepted rides entry
@@ -171,9 +168,6 @@ def sortstandardRideList(list):
 
                     standardRideList.deleteAt(n)
                     addUser(standardRideList, temp)
-
-        print("one set")
-
     # sort Shared List
 
 
@@ -183,8 +177,7 @@ def sortsharedList(list):
             #
             sRide1 = splitString(str(sharedList.showDetail(int(n))))
             sRide2 = splitString(str(sharedList.showDetail(int(n + 1))))
-            print("1", sRide1[0])
-            print("2", sRide2[0])
+
             if (sRide2[0] is not None):
                 # delete the entry and add it to the end
                 if sRide1[0] > sRide2[0]:
@@ -193,8 +186,6 @@ def sortsharedList(list):
 
                     standardRideList.deleteAt(n)
                     addUser(standardRideList, temp)
-
-        print("one set")
 
 
 def haversine(lon1, lat1, lon2, lat2):
@@ -211,7 +202,6 @@ def haversine(lon1, lat1, lon2, lat2):
     c = 2 * asin(sqrt(a))
     # Radius of earth in kilometers is 6371
     km = 6371 * c
-    # print(km)
     return km
 
 
@@ -220,11 +210,7 @@ def findRideIndex(list, smallest, size, userId):  # uses binary search
     # def binarySearch(arr, l, r, x): #l = first value r = last val x = value we searching
     if size > smallest:
         mid = smallest + (size - smallest) / 2
-        print(mid)
-        print(size)
-        print("userId in index", userId)
         currentId = splitString(str(list.showDetail(mid)))
-        print(currentId[0])
         if currentId[0] is None or 0 <= int(mid) <= 1:
             return 0
 
@@ -249,8 +235,6 @@ def endRide(request):
 
     # for Shared Rides
     if int(listStored) == 1:
-        print(sharedList.size())
-        print("main id", userId)
         position = findRideIndex(sharedList, 0, sharedList.size() - 1, userId)
         position = math.ceil(int(position))
         sharedList.deleteAt(position)
@@ -260,8 +244,6 @@ def endRide(request):
 
         # for Accepted Rides
     elif int(listStored) == 2:
-        print(standardRideList.size())
-        print("main id", userId)
         position = findRideIndex(standardRideList, 0, standardRideList.size() - 1, userId)
         position = math.ceil(int(position))
         standardRideList.deleteAt(int(position))
@@ -271,9 +253,7 @@ def endRide(request):
 
         # for when shared rides is chosen but no other riders are nearby
     elif int(listStored) == 3:
-        print(sharedList.size())
         mainId = findMainRider(sharedList, userId)
-        print("main id", mainId)
         position = findRideIndex(sharedList, 0, sharedList.size() - 1, mainId)
         position = math.ceil(int(position))
         sharedList.deleteAt(position)
