@@ -181,7 +181,7 @@ def sortsharedList(list):
             if (sRide2[0] is not None):
                 # delete the entry and add it to the end
                 if sRide1[0] > sRide2[0]:
-                    temp = AcceptedRides(sRide1[0], sRide1[1], sRide1[2], sRide1[2], sRide1[3], sRide1[4], sRide1[5],
+                    temp = SharedRides(sRide1[0], sRide1[1], sRide1[2], sRide1[3], sRide1[4], sRide1[5],
                                          sRide1[6], sRide1[7], sRide1[8], sRide1[9])
 
                     standardRideList.deleteAt(n)
