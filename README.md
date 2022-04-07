@@ -1,9 +1,6 @@
 # LIFT RIDE HAILING APP 
-_____________________________________________________________________
 
-## INSTALLATION GUIDE / RUNNING THE APP
-
-### BOTH
+### INSTALLATION GUIDE / RUNNING THE APP
 
 **Create a Virtual Environment**
 ```
@@ -31,3 +28,5 @@ python manage.py runserver (python2)
 
 python3 manage.py runserver (python3)
 ```
+
+_____________________________________________________________________
