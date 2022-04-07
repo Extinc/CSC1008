@@ -157,12 +157,12 @@
                                 <div class="row" style="width:95%">
 
                                     <div class="col-md-9 col-lg-8 col-7" style="color: black;">
-                                        <p style="margin-bottom:0px;">Current Ride</p>
+                                        <p style="margin-bottom:0px;font-weight:bold;">Current Ride</p>
                                     </div>
 
                                     <div class="col-md-3 col-lg-4 col-5">
                                         <input class="disabled"
-                                               style="border:none; width: 100%; text-align: right;"
+                                               style="border:none; width: 100%; text-align: right; font-weight:bold;"
                                                id="price"
                                                name="rideprice"
                                                required
@@ -211,7 +211,7 @@
             let animation; // to store and cancel the animation
             var route_counter = 1;
             let markers = [];
-
+            let isAtStart = true;
             var latitude = 0;
             var longitude = 0;
             var map;
@@ -318,7 +318,7 @@
                             success: function (result) {
                                 //   $("#result").html("<h2>Received!</h2>");
                                 {#$("#price").val(result);#}
-                                $("#farecontent").text("Price of Fare " + result + "\n Click confirm to confirm ride");
+                                $("#farecontent").text("Price of Fare $" + result + "\n Click confirm to confirm ride");
                                 $("#farecontent").attr("data-lift-fare", result);
                                 $('#faremodal').modal('show');
                             },
@@ -350,7 +350,7 @@
                     }, success: function (result) {
                         getDriverDetails();
                         $('#faremodal').modal('hide');
-                        $("#price").val(fare);
+                        $("#price").val("$" +fare);
 
                     }
                 });
@@ -426,6 +426,17 @@
                             'data': geojson
                         });
 
+                        const target = isAtStart ? data['coordinates'][data['coordinates'].length - 1] : data['coordinates'][0];
+                        isAtStart = !isAtStart;
+                        map.flyTo({
+                            center: target,
+                            zoom: 15,
+                            bearing: 0,
+                            speed: 0.5, // make the flying slow
+                            curve: 1, // change the speed at which it zooms out
+                            easing: (t) => t,
+                            essential: true
+                        });
                         map.addLayer({
                             id: "line-animation",
                             type: "line",
