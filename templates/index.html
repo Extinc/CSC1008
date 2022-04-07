@@ -295,7 +295,7 @@
                     showalert("Invalid Type of Ride", "Please select a type of ride");
                 } else {
                     if ($("#tripdis").is(":visible")) {
-                        alert("Please end your trip before starting another.");
+                        showalert("Ongoing Ride", "Please end your trip before starting another.")
                     } else {
                         if (map.getLayer('line-animation')) {
                             map.removeLayer('line-animation');
@@ -435,7 +435,7 @@
                                 "line-cap": "round",
                             },
                             paint: {
-                                "line-color": "#0f48ff",
+                                "line-color": "#46bb81",
                                 "line-width": 8,
                             },
                         });

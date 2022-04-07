@@ -87,3 +87,4 @@ $(".typechoice").on('click', function () {
 $("#farecancel").click(function () {
     $('#faremodal').modal('hide');
 });
+

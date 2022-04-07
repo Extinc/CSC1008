@@ -15,7 +15,9 @@ class PathFinder:
         self.graph = Graph()
         self.shortest_path = None
 
-    # This function is used to build graph
+    '''
+    This function is used to build graph
+    '''
     def find_path(self, startlat, startlong, endlat, endlong):
         self.graph = Graph()
         end = roadnode_df.loc[(roadnode_df['x'] == endlong) & (roadnode_df['y'] == endlat)]['id'].values[0]
@@ -76,13 +78,15 @@ class PathFinder:
             # if exist update if do not exist create in database
             _, _ = PathCache.objects.update_or_create(source=start, destination=end,
                                                       defaults={'source': start, 'destination': end,
-                                                                        'DateTime': timezone.now(),
-                                                                        'graph': json.dumps(self.graph.adj_list),
-                                                                        'heuristic': json.dumps(self.graph.heuristic)})
+                                                                'DateTime': timezone.now(),
+                                                                'graph': json.dumps(self.graph.adj_list),
+                                                                'heuristic': json.dumps(self.graph.heuristic)})
             del next_node
         self.shortest_path = self.graph.pathfind_astar(start, end)
 
-    # Function to generate the geojson data for plotting the route
+    '''
+    Function to generate the geojson data for plotting the route
+    '''
     def generate_geojson(self, type):
         geom = {'type': type, 'coordinates': []}
         for i in range(len(self.shortest_path) - 1):
