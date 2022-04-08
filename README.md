@@ -1,5 +1,20 @@
 # LIFT RIDE HAILING APP 
+
 ## P3 Group 4
+
+```
+Team Members & Student ID
+
+ABDULLAH RAHMAN 2100972
+LIM KEI YIANG   2100593
+SHYAM PRASAD    2100756
+IZZ DANIAL      2100735
+```
+
+### PRESENTATION VIDEO
+
+[P3 Group 4 Presentation Url Here](https://www.youtube.com/watch?v=ORVA-YTV9h0)
+
 ### INSTALLATION GUIDE
 
 **Create a Virtual Environment**
