@@ -21,7 +21,6 @@ def getPrice(request):
     endLoc = PointInfo.objects.get(id=end)
     totalDistance = BookingFunctions.haversine(startLoc.long, startLoc.lat, endLoc.long,
                                                endLoc.lat)
-    print("updated", totalDistance)
     priceDistance = totalDistance
 
     # Price calculation
@@ -38,7 +37,6 @@ def getPrice(request):
             price += 0.22
             priceDistance -= 0.35
     formatted_price = "{:.2f}".format(price)
-    print("The price is: " + str(formatted_price))
     return JsonResponse(formatted_price, safe=False)
 
 
@@ -52,27 +50,19 @@ def getInfo(request):
         typeOfRide = 8
     elif str(typeOfRide) == 'Shared Rides':
         typeOfRide = 1
-    print("type of ride", typeOfRide)
 
     # Current time
-    # print(request.POST['pickUpTime'])
     if str(request.POST['pickUpTime']) == 'Now':
         now = datetime.datetime.now()
-    # print(now.strftime("%Y %m %d %H %M %S"))
-
-    # User ID
-    # print("TEST " + str(request.user.id))  # use this to get user ID
 
     # Distance
     start = request.POST['starting']
     end = request.POST['ending']
 
-    # print(end)
     startLoc = PointInfo.objects.get(id=start)
     endLoc = PointInfo.objects.get(id=end)
     totalDistance = BookingFunctions.haversine(startLoc.long, startLoc.lat, endLoc.long,
                                                endLoc.lat)
-    print("updated", totalDistance)
     priceDistance = totalDistance
 
     # Price calculation
@@ -89,7 +79,6 @@ def getInfo(request):
             price += 0.22
             priceDistance -= 350
     formatted_price = "{:.2f}".format(price)
-    print("The price is: " + str(formatted_price))
     passengerList = BookingFunctions.createList()
     # User Object
     temp = riderRequest(request.user.id, str(startLoc.lat) + ',' + str(startLoc.long),
@@ -97,7 +86,6 @@ def getInfo(request):
                         typeOfRide,
                         formatted_price)
     BookingFunctions.addUser(passengerList, temp)
-    print("passengerList size", passengerList.size())
     BookingFunctions.findRides(passengerList)
 
     # BookingFunctions.findRides(passengerList,driverList,standardRideList,sharedList)
@@ -108,9 +96,7 @@ def findDriver(request):
     userId = request.user.id
     listStored = findList(int(userId))
 
-    # print("id", userId)
     if int(listStored) == 1:
-        print(sharedList.size())
         position = findRideIndex(sharedList, 0, sharedList.size() - 1, userId)
         position = math.ceil(int(position))
         # print("pos", position)
@@ -126,7 +112,6 @@ def findDriver(request):
 
 
     elif int(listStored) == 2:
-        print(standardRideList.size())
         position = findRideIndex(standardRideList, 0, standardRideList.size() - 1, userId)
         position = math.ceil(int(position))
         rideDetail = splitString(str(standardRideList.showDetail(int(position))))
@@ -141,7 +126,6 @@ def findDriver(request):
 
 
     elif int(listStored) == 3:
-        print(sharedList.size())
         mainId = findMainRider(sharedList, userId)
         # print("main Id", mainId)
         position = findRideIndex(sharedList, 0, sharedList.size() - 1, mainId)
