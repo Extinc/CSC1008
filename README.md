@@ -1,5 +1,5 @@
 # LIFT RIDE HAILING APP 
-
+## P3 Group 4
 ### INSTALLATION GUIDE
 
 **Create a Virtual Environment**
@@ -36,5 +36,13 @@ Note:
 Do execute this in virtual environment / environment
 where required packages are installed.
 ```
+
+### Test account
+```
+Username : testuser0
+password : test1234
+
+```
+
 
 _____________________________________________________________________
