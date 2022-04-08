@@ -31,6 +31,10 @@ pip3 install -r requirements.txt (python3)
 python manage.py runserver (python2)
 
 python3 manage.py runserver (python3)
+
+Note: 
+Do execute this in virtual environment / environment
+where required packages are installed.
 ```
 
 _____________________________________________________________________
