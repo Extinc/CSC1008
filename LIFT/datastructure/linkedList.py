@@ -28,9 +28,7 @@ class SinglyLinkedList:
             temp = temp.next
             counter += 1
 
-        if temp is None:
-            print('search error: invalid index')
-        else:
+        if temp is not None:
             return temp
             
     def insertAtEnd(self, object):
@@ -115,9 +113,7 @@ class SinglyLinkedList:
             temp = temp.next
             counter += 1
 
-        if temp is None:
-            print('search error: invalid index')
-        else:
+        if temp is not None:
             if prev is None:
                 self.head = temp.next
             else:
@@ -146,9 +142,7 @@ class SinglyLinkedList:
             temp = temp.next
             counter += 1
 
-        if temp is None:
-            print('search error: invalid index')
-        else:
+        if temp is not None:
             return temp.list
         
 
