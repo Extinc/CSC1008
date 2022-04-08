@@ -30,16 +30,14 @@ class Graph:
 
     # A star path finding Algorithm to find the shortest_path within the graph
     def pathfind_astar(self, start, destination):
-        # In this open_lst is a lisy of nodes which have been visited, but who's
-        # neighbours haven't all been always inspected, It starts off with the start
-        # node
+        # In this open_lst is a list of nodes which have been visited, but who's
+        # neighbours haven't all been always visited, It start with the starting node
         # And closed_lst is a list of nodes which have been visited
-        # and who's neighbors have been always inspected
+        # and who's neighbors have been always visited
         open_lst = {start}
         closed_lst = set([])
 
         # distance has present distances from start to all other nodes
-        # the default value is +infinity
         present_dist = {start: 0}
 
         # adjacent_map contains an adjacent maps of all nodes
@@ -48,13 +46,13 @@ class Graph:
         while len(open_lst) > 0:
             n = None
 
-            # it will find a node with the lowest value of f() -
+            # it will find a node with the lowest value of f() = g() + h() :
             for v in open_lst:
                 if n is None or present_dist[v] + self.h(v) < present_dist[n] + self.h(n):
                     n = v
 
             if n is None:
-                print('Path does not exist!')
+                print('Path is not existent!')
                 return None
 
             # if the current node is the stop
@@ -71,6 +69,7 @@ class Graph:
                 reconst_path.reverse()
 
                 print('Path found: {}'.format(reconst_path))
+                # Path is found Return the shortest path found
                 return reconst_path
 
             # for all the neighbors of the current node do the following
@@ -83,7 +82,7 @@ class Graph:
                     present_dist[m] = present_dist[n] + distance
 
                 # otherwise, check if it's quicker to first visit n, then m
-                # and if it is, update par data and poo data
+                # and if it is, update the data
                 # and if the node was in the closed_lst, move it to open_lst
                 else:
                     if present_dist[m] > present_dist[n] + distance:
@@ -99,5 +98,5 @@ class Graph:
             open_lst.remove(n)
             closed_lst.add(n)
 
-        print('Path does not exist!')
+        print('Path is not existent!')
         return None

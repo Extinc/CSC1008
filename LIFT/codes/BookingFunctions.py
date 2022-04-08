@@ -280,6 +280,6 @@ sharedList = createList()
 # Hash Table for sharing of rides
 uTable = HashTable()
 
-Rider2 = riderRequest("2103", "1.375975,103.8475754", "1331522", "1.4410467,103.839182", 31023, 1,
+Rider2 = riderRequest("2103", "1.4240477,103.8390045", "1331522", "1.4410467,103.839182", 31023, 1,
                       '20')
 

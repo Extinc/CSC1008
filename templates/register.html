@@ -1,6 +1,11 @@
 {% extends 'base/login_register.html' %}
 
 {% block login_register_content %}
+    <style>
+        .bglr {
+            height: 100vh !important;
+        }
+    </style>
     <form method="post" action="">
         {% csrf_token %}
         <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Register Account</h5>
@@ -47,9 +52,5 @@
         <p class="mb-5 pb-lg-2" style="color: #393f81;">Have an account? <a
                 href="/" style="color: #393f81;">Login here</a></p>
     </form>
-    <style>
-        .bglr {
-            height: 100% !important;
-        }
-    </style>
+
 {% endblock login_register_content %}
