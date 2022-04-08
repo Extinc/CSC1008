@@ -9,7 +9,11 @@ python3 -m venv /path/to/new/virtual/environment (python3)
 ```
 **Activate Python Environment**
 ```
+MAC OS/LINUX
 source /path/to/new/virtual/environment/bin/activate
+
+WINDOWS
+.\env\Scripts\activate
 ```
 
 **Installion of required packages**
